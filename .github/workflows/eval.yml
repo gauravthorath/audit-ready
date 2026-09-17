@@ -1,0 +1,89 @@
+# The gate that costs money (CR-7). It runs the labelled sets through the real
+# models and holds the metrics to the floors in audit/eval/thresholds.yaml.
+#
+# Why it is a separate workflow from tests.yml: a full run is ~130k prompt
+# tokens and needs a provider key, so it is scoped to the paths that can
+# actually move a number — a prompt, a rubric, retrieval, the agent graph, the
+# thresholds themselves — plus a manual button for everything else.
+name: eval gate
+
+on:
+  pull_request:
+    paths:
+      - "core/prompts.py"
+      - "core/judge.py"
+      - "core/rag.py"
+      - "core/retrieval.py"
+      - "core/guardrails.py"
+      - "core/tools.py"
+      - "assistant/prompts.py"
+      - "assistant/agent.py"
+      - "assistant/data/checklists/**"
+      - "audit/prompts.py"
+      - "audit/graph.py"
+      - "audit/eval/**"
+      - "assistant/eval/**"
+  workflow_dispatch:
+    inputs:
+      rerun:
+        description: "Re-run the evals rather than only checking committed numbers"
+        type: boolean
+        default: true
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: uv sync --frozen
+
+      - name: Is a provider key available?
+        id: key
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$OPENROUTER_API_KEY" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            # A fork, or a clone by someone marking the work, has no secret.
+            # Failing there would be noise about their setup, not our code —
+            # so say so plainly and still check the committed numbers.
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::no OPENROUTER_API_KEY — checking committed numbers only"
+          fi
+
+      - name: Re-run the evals
+        if: steps.key.outputs.available == 'true' && inputs.rerun != false
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          # Pinned deliberately: a gate whose model can drift is measuring the
+          # provider's week, not this pull request.
+          AUDITREADY_MODEL: openai/gpt-4o-mini
+          AUDITREADY_JUDGE_MODEL: google/gemini-2.5-flash
+        run: |
+          uv run python assistant/eval/run_eval.py --out /tmp/assistant.json
+          uv run python audit/eval/run_eval.py --out /tmp/audit.json
+          # Compare the fresh run, not the committed one: the committed file is
+          # what the author claims, /tmp is what this code actually does.
+          cp /tmp/assistant.json assistant/eval/results.json
+          cp /tmp/audit.json audit/eval/results.json
+
+      - name: Metrics hold their floors
+        run: uv run python audit/eval/gate.py --floors
+
+      - name: Publish the run
+        if: always() && steps.key.outputs.available == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: |
+            /tmp/assistant.json
+            /tmp/audit.json
+          if-no-files-found: ignore

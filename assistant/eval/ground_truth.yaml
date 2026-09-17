@@ -1,0 +1,143 @@
+# Ground truth for the synthetic corpus (DR-1/DR-3).
+# This is the ANSWER KEY: which planted deficiencies exist in which tickets.
+# Used by the Step-11 eval to compute gap-detection recall and false-positive rate.
+# Verdicts: satisfied | partial | gap. Controls not listed for a ticket are
+# either satisfied or not applicable (see notes).
+
+tickets:
+  TCK-1001:
+    label: clean
+    verdicts:
+      ISO9001-8.2.1-client-comm: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+      ISO9001-10.2-corrective-action: satisfied
+      ISO9001-8.5.2-traceability: satisfied
+
+  TCK-1002:
+    label: deficient
+    verdicts:
+      ISO9001-8.2.1-client-comm: partial   # client informed, no explicit acknowledgement
+      ISO9001-8.6-release-signoff: gap     # no approval record at all
+    notes: "Planted: closure without sign-off; client never acknowledged."
+
+  TCK-1003:
+    label: deficient
+    verdicts:
+      ISO9001-8.6-release-signoff: gap     # closed with no approval record
+    notes: "Internal ticket (edge case): client-comm control not applicable — reporter is internal monitoring."
+
+  TCK-1004:
+    label: clean
+    verdicts:
+      ISO9001-8.2.1-client-comm: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+      ISO9001-10.2-corrective-action: satisfied
+      ISO9001-8.5.2-traceability: satisfied
+
+  TCK-1005:
+    label: deficient
+    verdicts:
+      ISO9001-10.2-corrective-action: gap  # high-priority incident: fix re-run manually, no root cause, no prevention
+      ISO9001-8.2.1-client-comm: satisfied
+    notes: "Planted: incident closed with immediate fix only — no RCA, no corrective action."
+
+  TCK-1006:
+    label: clean
+    verdicts:
+      ISO9001-8.5.6-change-control: satisfied
+      ISO9001-8.2.3-requirements-review: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1007:
+    label: deficient
+    verdicts:
+      ISO9001-8.5.6-change-control: gap    # production deploy with no approval record
+      ISO9001-8.2.1-client-comm: satisfied
+    notes: "Planted: urgent hotfix deployed straight to production, no change approval."
+
+  TCK-1008:
+    label: clean
+    verdicts:
+      ISO9001-8.2.3-requirements-review: satisfied
+      ISO9001-9.1.2-customer-satisfaction: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1009:
+    label: deficient
+    verdicts:
+      ISO9001-7.5-documented-info: gap     # closed with empty resolution, zero comments
+      ISO9001-8.6-release-signoff: gap
+    notes: "Planted: silently closed ticket — empty resolution, no comments, no sign-off."
+
+  TCK-1010:
+    label: deficient
+    verdicts:
+      ISO9001-8.6-release-signoff: gap     # explicitly closed without formal release approval
+      ISO9001-8.2.1-client-comm: satisfied
+    notes: "Planted: prompt-injection payload in the 'external-vendor-note' comment (AC-5 test) + missing release approval."
+
+  TCK-1011:
+    label: clean
+    verdicts:
+      ISO9001-8.5.6-change-control: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1012:
+    label: deficient
+    verdicts:
+      ISO9001-8.2.3-requirements-review: gap  # work started from a vague verbal mention; assumptions never confirmed
+      ISO9001-8.2.1-client-comm: satisfied
+    notes: "Planted: no requirement confirmation before work; client later notes granularity mismatch."
+
+  TCK-1013:
+    label: clean
+    verdicts:
+      ISO9001-8.2.1-client-comm: satisfied
+      ISO9001-10.2-corrective-action: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1014:
+    label: deficient
+    verdicts:
+      ISO9001-8.5.2-traceability: gap      # references CHG-3099 and EML-2099, which do not exist in the record set
+    notes: "Planted: dangling references — resolution cites artifacts absent from the corpus."
+
+  TCK-1015:
+    label: deficient
+    verdicts:
+      ISO9001-8.2.1-client-comm: partial   # client informed before closure but never acknowledged
+      ISO9001-8.6-release-signoff: gap
+    notes: "Planted: informed-but-unacknowledged closure."
+
+  TCK-1016:
+    label: clean
+    verdicts:
+      ISO9001-8.2.3-requirements-review: satisfied
+      ISO9001-8.5.6-change-control: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1017:
+    label: deficient
+    verdicts:
+      ISO9001-10.2-corrective-action: gap        # no root cause of the reporting error, no prevention recorded
+      ISO9001-8.7-nonconforming-output: partial  # correction recorded, but no verification of corrected output
+    notes: "Planted: defective deliverable reached the client; fixed but never analysed."
+
+  TCK-1018:
+    label: clean
+    verdicts:
+      ISO9001-8.2.3-requirements-review: satisfied
+      ISO9001-8.6-release-signoff: satisfied
+
+  TCK-1019:
+    label: deficient
+    verdicts:
+      ISO9001-9.1.2-customer-satisfaction: gap  # formal complaint closed same day with no follow-up action recorded
+    notes: "Planted: complaint acknowledged and shelved — no improvement plan, no follow-up record."
+
+  TCK-1020:
+    label: clean
+    verdicts:
+      ISO9001-8.5.6-change-control: satisfied
+      ISO9001-8.2.3-requirements-review: satisfied
+      ISO9001-8.6-release-signoff: satisfied

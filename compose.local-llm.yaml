@@ -1,0 +1,49 @@
+# Overlay: the whole stack, LLM included, inside the compose network (CR-4).
+#
+#   docker compose -f compose.yaml -f compose.local-llm.yaml up
+#
+# Why this exists. "Self-hosted" is only a real claim if the judging call can
+# also stay inside the boundary, and the judging call is the one place evidence
+# text leaves the process. Ollama serves an OpenAI-compatible route at /v1, so
+# the app needs no code change — only the base URL and a model name that the
+# local server recognises.
+#
+# First run has to pull the weights once, from the host that has network:
+#   docker compose -f compose.yaml -f compose.local-llm.yaml run --rm \
+#     ollama ollama pull qwen2.5:7b-instruct
+#
+# A 7B model will not match gpt-4o-mini on the eval — that is the trade the
+# deployment makes, and `audit/eval/run_eval.py` is how a customer measures
+# it on their own hardware before trusting it.
+services:
+  auditready:
+    environment:
+      AUDITREADY_LLM_BASE_URL: http://ollama:11434/v1
+      AUDITREADY_LLM_API_KEY: not-needed
+      AUDITREADY_MODEL: qwen2.5:7b-instruct
+      AUDITREADY_JUDGE_MODEL: qwen2.5:7b-instruct
+    depends_on:
+      - ollama
+
+  # The API is the same image and the same rule: every judging call goes to
+  # the local model, so the React front end is air-gapped too.
+  api:
+    environment:
+      AUDITREADY_LLM_BASE_URL: http://ollama:11434/v1
+      AUDITREADY_LLM_API_KEY: not-needed
+      AUDITREADY_MODEL: qwen2.5:7b-instruct
+      AUDITREADY_JUDGE_MODEL: qwen2.5:7b-instruct
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama:0.12.3
+    volumes:
+      - ollama:/root/.ollama
+    # Not published to the host: only the app container needs to reach it.
+    expose:
+      - "11434"
+    restart: unless-stopped
+
+volumes:
+  ollama:

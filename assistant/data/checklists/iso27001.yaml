@@ -1,0 +1,173 @@
+# ISO/IEC 27001:2022 Annex A — SAMPLE subset for AuditReady (CR-5, NFR-4).
+#
+# Second checklist pack. Its job is to prove that a standard is DATA, not
+# code: the engine (core/, audit/) loads this file through the same
+# load_pack() path as iso9001.yaml and nothing in Python knows it exists.
+#
+# Every title, description and rubric below is written in our own words to
+# describe what an auditor would look for in a service-desk record. No ISO
+# text is reproduced; clause numbers are used only as references. This is a
+# demonstration subset, not a certification checklist.
+#
+# Verdict vocabulary (shared with every pack): satisfied | partial | gap |
+# not_applicable. Each rubric names the condition for all four so the judge
+# never has to guess.
+
+pack:
+  id: iso27001-sample
+  standard: "ISO/IEC 27001:2022"
+  version: 0.1.2   # 0.1.2 — A.5.27 rubric says the corrective fix is the remedy, not the
+                   #         preventive measure (the model read a fleet-wide patch rollout as
+                   #         prevention and finalized a partial as satisfied in 2 of 4 runs)
+                   # 0.1.1 — A.5.17 rubric names what counts as a stated channel / direct enrolment (Step 20 eval)
+  description: >
+    Six own-worded controls from Annex A (2022 numbering) that a managed
+    IT-services provider can evidence from tickets, emails and change
+    records: access provisioning, authentication information, change
+    management, technical vulnerabilities, learning from incidents, and
+    test information. Information security here includes availability, so
+    operational incidents are in scope for the incident controls.
+
+controls:
+  - control_id: ISO27001-A.5.18-access-provisioning
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.5.18"
+    title: "Access rights granted only on recorded authorisation"
+    description: >
+      When a record grants, extends or revokes access (accounts, VPN
+      profiles, admin rights, environment credentials), the access must be
+      authorised by an identifiable owner or manager before it is provisioned,
+      and the provisioning for the named people must be confirmed.
+    expected_evidence:
+      - "An approval by a named manager or system owner (email, comment or sign-off field) that predates provisioning"
+      - "A comment or resolution confirming the access was created for the named people"
+    sufficiency_rubric: >
+      SATISFIED when the record names who authorised the access (or points to
+      a linked email that does) AND confirms provisioning was completed for
+      the people or accounts named. PARTIAL when access was provisioned but
+      the approval is only asserted without an identifiable approver or
+      record, or when approval exists but completion is not confirmed. GAP
+      when access was granted with no approval evidence at all. NOT
+      APPLICABLE when the ticket does not grant, change or revoke anyone's
+      access.
+    citation_required: true
+    severity: major
+
+  - control_id: ISO27001-A.5.17-authentication-info
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.5.17"
+    title: "Secret authentication information handled securely"
+    description: >
+      Passwords, VPN credentials, API keys and MFA enrolment secrets must be
+      delivered through a secure or out-of-band channel (or enrolled directly
+      by the user) and must never appear in ticket or email text.
+    expected_evidence:
+      - "A statement of how credentials were delivered (secure channel, password manager, direct enrolment)"
+      - "Absence of any credential value in comments, resolution or linked emails"
+    sufficiency_rubric: >
+      SATISFIED when the record states that credentials were delivered via a
+      secure or out-of-band channel, or that users enrolled directly, and no
+      secret value appears anywhere in the record. A statement such as
+      "credentials shared securely" or "sent out-of-band" counts as stating
+      the channel; account holders enrolling their own MFA counts as direct
+      enrolment. PARTIAL when credentials were issued and nothing at all is
+      said about how they reached the user. GAP when a secret value appears
+      in the record or credentials were sent in plain email. NOT APPLICABLE
+      when no credentials, keys or MFA secrets were issued or reset.
+    citation_required: true
+    severity: major
+
+  - control_id: ISO27001-A.8.32-change-management
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.8.32"
+    title: "Changes to production systems approved before implementation"
+    description: >
+      A change to production systems, configuration, devices or fleet-wide
+      software must be approved by an authorised approver before it is
+      implemented, and its implementation and verification must be recorded.
+    expected_evidence:
+      - "A linked change record with a named approver and an approval time earlier than implementation"
+      - "A comment or resolution recording implementation and verification"
+    sufficiency_rubric: >
+      SATISFIED when a change record (or an equivalent comment) names an
+      authorised approver with an approval time that precedes implementation,
+      AND the record shows the change was implemented and verified. PARTIAL
+      when approval exists but is unnamed, undated or later than
+      implementation, or when implementation is recorded without any
+      verification. GAP when production was changed with no approval record.
+      NOT APPLICABLE when the ticket made no change to production systems,
+      configuration or deployed software.
+    citation_required: true
+    severity: major
+
+  - control_id: ISO27001-A.8.8-technical-vulnerabilities
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.8.8"
+    title: "Reported vulnerabilities remediated and verified"
+    description: >
+      When a security scan finding, vendor security advisory or deviation
+      from the security baseline is raised, the record must show the finding
+      was remediated (or its risk explicitly accepted) and the remediation
+      verified.
+    expected_evidence:
+      - "The finding or advisory that triggered the work"
+      - "A record of remediation completed with verification, or a documented risk acceptance"
+    sufficiency_rubric: >
+      SATISFIED when the record shows the vulnerability or advisory was
+      remediated with the completion verified, or names who accepted the
+      residual risk and why. PARTIAL when remediation is planned or started
+      but completion or verification is not recorded. GAP when a security
+      finding is closed with no remediation or risk-acceptance evidence. NOT
+      APPLICABLE when the ticket was not raised for a vulnerability, scan
+      finding, security advisory or baseline deviation.
+    citation_required: true
+    severity: major
+
+  - control_id: ISO27001-A.5.27-incident-learning
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.5.27"
+    title: "Incidents analysed and used to prevent recurrence"
+    description: >
+      For an incident affecting confidentiality, integrity or availability of
+      a service, the record must identify the root cause and record a
+      preventive measure that reduces the chance of recurrence, either
+      completed or tracked in a linked change or checklist update.
+    expected_evidence:
+      - "A root-cause statement in the comments or resolution"
+      - "A preventive action recorded as done, or a linked change or process update that carries it"
+    sufficiency_rubric: >
+      SATISFIED when the record states a root cause AND records a preventive
+      measure (a monitoring addition, a checklist or process update, or a
+      linked change) intended to stop recurrence. Deploying, patching or
+      rolling out the corrective fix is the REMEDY, not the preventive
+      measure: it stops this occurrence, so on its own it does not satisfy
+      the second requirement however widely it was rolled out. PARTIAL when
+      only one of the two is present: a root cause without any preventive
+      measure beyond the fix itself, or a preventive measure without a stated
+      root cause. GAP when the incident was closed with an immediate fix
+      only, with neither root cause nor prevention recorded. NOT APPLICABLE
+      when the ticket is not an incident.
+    citation_required: true
+    severity: minor
+
+  - control_id: ISO27001-A.8.33-test-information
+    standard: "ISO/IEC 27001:2022"
+    clause: "A.8.33"
+    title: "Test and sandbox environments use protected or synthetic data"
+    description: >
+      When a test, staging or sandbox environment is provisioned or
+      populated, the record must show that it is isolated from production and
+      that the data in it is synthetic, anonymised or otherwise protected to
+      the same level as production data.
+    expected_evidence:
+      - "A statement that the environment is separate from production"
+      - "A statement of the data source: synthetic, anonymised or protected"
+    sufficiency_rubric: >
+      SATISFIED when the record states both that the environment is isolated
+      from production AND that its data is synthetic, anonymised or protected
+      equivalently. PARTIAL when only one of the two is stated. GAP when
+      production data was copied into a test or sandbox environment with no
+      protection mentioned. NOT APPLICABLE when the ticket does not provision
+      or populate a test, staging or sandbox environment.
+    citation_required: true
+    severity: minor

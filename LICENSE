@@ -1,0 +1,42 @@
+AuditReady
+Copyright 2026 Gaurav Thorat. All rights reserved.
+
+PROPRIETARY AND CONFIDENTIAL
+
+This software and its accompanying documentation, data, prompts, checklist
+packs, evaluation harness and results are the proprietary work of Gaurav
+Thorat. No licence is granted except as stated below.
+
+You may not copy, modify, merge, publish, distribute, sublicense, sell,
+host as a service, or create derivative works from any part of this
+repository without prior written permission from the copyright holder.
+
+PERMITTED USE
+
+1. Evaluation on request. Any person or organisation given access by the
+   copyright holder may read and run this software for the purpose of
+   evaluating it. That permission covers evaluation only: it grants no right
+   to redistribute, reuse, host or build upon the work, and it may be
+   withdrawn at any time.
+
+THIRD-PARTY SOFTWARE
+
+Dependencies are the property of their respective authors and remain under
+their own licences. They are declared in pyproject.toml and pinned in
+uv.lock. Nothing here alters those licences.
+
+NO WARRANTY
+
+The software is provided "as is", without warranty of any kind, express or
+implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose and noninfringement. In no event shall the
+copyright holder be liable for any claim, damages or other liability
+arising from the software or its use.
+
+NOT A CERTIFICATION TOOL
+
+AuditReady drafts findings for a human to verify and sign. It does not
+certify compliance with any standard, and its output is not an audit
+opinion. See NOTICE and README.md.
+
+For permissions beyond this licence, contact the copyright holder.

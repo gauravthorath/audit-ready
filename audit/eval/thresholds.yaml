@@ -1,0 +1,80 @@
+# Eval gate thresholds (CR-7). What may not regress, and by how much.
+#
+# Two ideas are encoded here, and they are not the same idea:
+#
+#   `min` / `max`  — a floor or ceiling on a metric. Set with a band below the
+#                    number on record, not at it, because temperature 0 is not
+#                    determinism: a single labelled pair moving between runs is
+#                    provider noise (LEARNING.md Step 20).
+#
+#                    A band must be at least ONE PAIR wide or it cannot do its
+#                    job, and what one pair is worth depends on the denominator:
+#
+#                      pooled false positives   46 satisfied pairs   0.022
+#                      iso9001 false positives  31 satisfied pairs   0.032
+#                      iso27001 false positives 15 satisfied pairs   0.067
+#                      pooled gap recall        18 gaps              0.056
+#                      iso27001 gap recall       6 gaps              0.167
+#
+#                    Eyeballing it got several of these wrong. The iso27001
+#                    false-positive ceiling was 0.12 over a record of 0.067, a
+#                    band of 0.053 — narrower than the smallest change that can
+#                    occur. It could not absorb one pair, and on 2026-09-11 it
+#                    broke in four consecutive runs. The iso9001 exact-agreement
+#                    floor had a margin of 0.005, a fifth of a pair.
+#
+#   the exception  — `gap_recall` is floored at 1.0 with no band at all. Every
+#                    other metric trades off against something; this one is the
+#                    product. A planted deficiency that survives to audit day is
+#                    the failure the whole system exists to prevent, so one lost
+#                    gap fails the gate even if it is noise. Re-run and prove it.
+#
+# Numbers on record: v2 pooled 0.941 exact / 0.043 FP (2026-09-11 run D,
+# gpt-4o-mini, temperature 0, iso9001 pack 0.1.1 + iso27001 pack 0.1.2).
+# Across the two post-fix runs: pooled exact 0.941 in both, pooled FP
+# 0.043-0.065, citation validity 0.926-0.941, gap recall and flagged recall 1.0
+# in both, zero deficiencies finalized as compliant in either.
+#
+# Seven runs over 2026-09-03 and 2026-09-11 showed the model itself moves: one
+# pair (TCK-1004 x A.8.32) was satisfied on 09-03 and deficient in all four
+# runs on 09-11, with no code change. A hosted model is the one eval input that
+# cannot be pinned, which is why results files now stamp system_model. Sprint
+# 2's single-call judge reproduced to three decimals over the same window; the
+# multi-call agent moved nine pairs. Extra model calls buy variance.
+
+"assistant/eval/results.json":
+  compliance.metrics.gap_recall:            {min: 1.0}
+  compliance.metrics.flagged_recall:        {min: 1.0}
+  compliance.metrics.exact_agreement:       {min: 0.91}
+  compliance.metrics.false_positive_rate:   {max: 0.07}
+  compliance.metrics.citation_validity:     {min: 0.89}
+  # Part B is graded by a different model than the one under test (Step 21), so
+  # it is a real signal now rather than self-marking — but it is a 12-question
+  # sample, so the bands are wider.
+  rag.metrics.faithfulness:                 {min: 0.90}
+  rag.metrics.citation_presence_rate:       {min: 1.0}
+  rag.metrics.source_recall:                {min: 0.88}
+  rag.metrics.answer_correctness:           {min: 0.58}
+
+"audit/eval/results.json":
+  pooled.gap_recall:                        {min: 1.0}
+  pooled.exact_agreement:                   {min: 0.91}   # worst post-fix 0.941
+  # The same claim as gap recall, stated over every deficiency rather than
+  # only gaps: nothing planted may go unnoticed. Zero band, same reasoning.
+  # It failed in three of five pre-fix runs, both times a rubric hole: A.5.27
+  # read a patch rollout as prevention, 8.2.1 read an outbound "we are done"
+  # email as client acknowledgement. Both closed in packs 0.1.2 / 0.1.1.
+  pooled.flagged_recall:                    {min: 1.0}
+  pooled.false_positive_rate:               {max: 0.09}   # worst 0.065 + one pair
+  pooled.citation_validity:                 {min: 0.88}   # worst 0.926 - two pairs
+  # An error is a pair the agent could not judge at all. The batch runner
+  # isolates errors instead of crashing, which means they can hide; count them.
+  pooled.errors:                            {max: 0}
+  # Per-pack floors as well as pooled: a pack can rot while the pool holds,
+  # and the second pack (22 pairs) is the one a third pack would resemble.
+  packs.iso9001.metrics.gap_recall:         {min: 1.0}
+  packs.iso9001.metrics.exact_agreement:    {min: 0.89}   # worst 0.935; old margin 0.005
+  packs.iso9001.metrics.false_positive_rate: {max: 0.10}   # worst 0.065 + one pair
+  packs.iso27001.metrics.gap_recall:        {min: 1.0}
+  packs.iso27001.metrics.exact_agreement:   {min: 0.86}
+  packs.iso27001.metrics.false_positive_rate: {max: 0.14}   # worst 0.067 + one pair

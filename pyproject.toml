@@ -1,0 +1,64 @@
+[project]
+name = "auditready"
+version = "0.1.0"
+description = "AuditReady — a grounded, cited AI assistant for compliance audit-readiness (ISO 9001 first)"
+requires-python = ">=3.12,<3.13"
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = [
+    "chromadb>=1.5.9",
+    "langchain-mcp-adapters>=0.3.2",
+    "langchain-openai>=1.4.1",
+    "langgraph>=1.2.11",
+    "openai>=2.48.0",
+    "pydantic>=2.13.4",
+    "python-dotenv>=1.2.2",
+    "pyyaml>=6.0.3",
+    "sentence-transformers>=5.6.1",
+    # Declared only so the CPU-wheel pin below can reach it: a `tool.uv.sources`
+    # entry applies to direct dependencies, and torch would otherwise arrive
+    # transitively through sentence-transformers, out of reach of the override.
+    "torch>=2.13.0,<2.14",
+    "streamlit>=1.60.0",
+    "httpx>=0.28.1",
+    "fastapi>=0.141.1",
+    "psycopg[binary]>=3.2",
+    "pgvector>=0.4",
+    "psycopg-pool>=3.2",
+    "pyjwt[crypto]>=2.13",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# Install core/, assistant/ and audit/ as importable packages (editable install via uv sync).
+# This is why `from core.llm import chat` works from anywhere — no sys.path hacks.
+[tool.hatch.build.targets.wheel]
+packages = ["core", "assistant", "audit"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+# Unit tests live in tests/ and never call the LLM or touch the vector store —
+# they cover the pure-function layer (guardrails, checklist validation, LLM
+# response parsing, chunking) so they run in seconds, offline, deterministically.
+# The API-dependent paths are exercised by scripts/smoke_*.py instead.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+# CPU-only torch on Linux (CR-4). sentence-transformers pulls torch, and the
+# default Linux wheel drags the whole CUDA toolkit with it — around 6 GB of
+# GPU runtime for an embedding model that runs on the CPU in this app and in
+# the container. `explicit = true` means nothing else resolves from this
+# index, and the marker keeps macOS development on the ordinary PyPI wheel.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]

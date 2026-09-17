@@ -1,0 +1,1915 @@
+{
+  "components": {
+    "schemas": {
+      "AuditRequest": {
+        "properties": {
+          "control_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Control Ids"
+          },
+          "pack_id": {
+            "title": "Pack Id",
+            "type": "string"
+          },
+          "ticket_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ticket Ids"
+          }
+        },
+        "required": [
+          "pack_id"
+        ],
+        "title": "AuditRequest",
+        "type": "object"
+      },
+      "ChatOut": {
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "completion_tokens": {
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "prompt_tokens": {
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "session": {
+            "$ref": "#/components/schemas/SessionOut"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          },
+          "tool_calls": {
+            "items": {
+              "$ref": "#/components/schemas/ToolCallOut"
+            },
+            "title": "Tool Calls",
+            "type": "array"
+          }
+        },
+        "required": [
+          "session_id",
+          "answer",
+          "tool_calls",
+          "prompt_tokens",
+          "completion_tokens",
+          "session"
+        ],
+        "title": "ChatOut",
+        "type": "object"
+      },
+      "ChatRequest": {
+        "properties": {
+          "question": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          }
+        },
+        "required": [
+          "question"
+        ],
+        "title": "ChatRequest",
+        "type": "object"
+      },
+      "CommentOut": {
+        "properties": {
+          "author": {
+            "title": "Author",
+            "type": "string"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "timestamp": {
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "author",
+          "timestamp",
+          "body"
+        ],
+        "title": "CommentOut",
+        "type": "object"
+      },
+      "ControlOut": {
+        "properties": {
+          "citation_required": {
+            "title": "Citation Required",
+            "type": "boolean"
+          },
+          "clause": {
+            "title": "Clause",
+            "type": "string"
+          },
+          "control_id": {
+            "title": "Control Id",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "expected_evidence": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Expected Evidence",
+            "type": "array"
+          },
+          "severity": {
+            "enum": [
+              "major",
+              "minor"
+            ],
+            "title": "Severity",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "control_id",
+          "clause",
+          "title",
+          "severity",
+          "description",
+          "expected_evidence",
+          "citation_required"
+        ],
+        "title": "ControlOut",
+        "type": "object"
+      },
+      "CostOut": {
+        "properties": {
+          "basis": {
+            "title": "Basis",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "usd": {
+            "title": "Usd",
+            "type": "number"
+          }
+        },
+        "required": [
+          "usd",
+          "basis",
+          "model"
+        ],
+        "title": "CostOut",
+        "type": "object"
+      },
+      "EndChatOut": {
+        "properties": {
+          "ended": {
+            "title": "Ended",
+            "type": "boolean"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "ended"
+        ],
+        "title": "EndChatOut",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthOut": {
+        "properties": {
+          "auth": {
+            "title": "Auth",
+            "type": "string"
+          },
+          "corpus_dir": {
+            "title": "Corpus Dir",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          },
+          "sessions": {
+            "title": "Sessions",
+            "type": "string"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string"
+          },
+          "vector_store": {
+            "title": "Vector Store",
+            "type": "string"
+          },
+          "web_origins": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Web Origins",
+            "type": "array"
+          }
+        },
+        "required": [
+          "ok",
+          "auth",
+          "sessions",
+          "model",
+          "corpus_dir",
+          "vector_store",
+          "web_origins",
+          "time"
+        ],
+        "title": "HealthOut",
+        "type": "object"
+      },
+      "LimitsOut": {
+        "properties": {
+          "audits_per_hour": {
+            "title": "Audits Per Hour",
+            "type": "integer"
+          },
+          "chat_per_minute": {
+            "title": "Chat Per Minute",
+            "type": "integer"
+          },
+          "max_pairs_per_run": {
+            "title": "Max Pairs Per Run",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_per_minute",
+          "audits_per_hour",
+          "max_pairs_per_run"
+        ],
+        "title": "LimitsOut",
+        "type": "object"
+      },
+      "PackOut": {
+        "description": "A checklist pack. Invalid packs are listed too \u2014 with `error` set and no id.",
+        "properties": {
+          "controls": {
+            "items": {
+              "$ref": "#/components/schemas/ControlOut"
+            },
+            "title": "Controls",
+            "type": "array"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "standard": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Standard"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "path",
+          "error",
+          "controls"
+        ],
+        "title": "PackOut",
+        "type": "object"
+      },
+      "PairRowOut": {
+        "additionalProperties": true,
+        "description": "One (ticket, control) result. Shape from run_control, or batch's error row.",
+        "properties": {
+          "attempts": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attempts"
+          },
+          "citation_check": {
+            "additionalProperties": true,
+            "title": "Citation Check",
+            "type": "object"
+          },
+          "citations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Citations",
+            "type": "array"
+          },
+          "completion_tokens": {
+            "default": 0,
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "control_id": {
+            "title": "Control Id",
+            "type": "string"
+          },
+          "control_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Control Title"
+          },
+          "elapsed_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Elapsed Ms"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "evidence_chunks": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Chunks",
+            "type": "array"
+          },
+          "evidence_queries": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Queries",
+            "type": "array"
+          },
+          "prompt_tokens": {
+            "default": 0,
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          },
+          "security_flags": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Security Flags",
+            "type": "array"
+          },
+          "severity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Severity"
+          },
+          "status": {
+            "enum": [
+              "verdict",
+              "needs_review",
+              "error"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "ticket_id": {
+            "title": "Ticket Id",
+            "type": "string"
+          },
+          "trace": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Trace",
+            "type": "array"
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict"
+          },
+          "verification": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VerificationOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "ticket_id",
+          "control_id",
+          "status"
+        ],
+        "title": "PairRowOut",
+        "type": "object"
+      },
+      "PerControlOut": {
+        "properties": {
+          "clause": {
+            "title": "Clause",
+            "type": "string"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "satisfied_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Satisfied Rate"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "clause",
+          "severity",
+          "counts",
+          "satisfied_rate"
+        ],
+        "title": "PerControlOut",
+        "type": "object"
+      },
+      "PricingOut": {
+        "properties": {
+          "completion_usd_per_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completion Usd Per M"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "prompt_usd_per_m": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Usd Per M"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "model",
+          "prompt_usd_per_m",
+          "completion_usd_per_m",
+          "source"
+        ],
+        "title": "PricingOut",
+        "type": "object"
+      },
+      "ProgressOut": {
+        "properties": {
+          "done": {
+            "title": "Done",
+            "type": "integer"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "done",
+          "total",
+          "label"
+        ],
+        "title": "ProgressOut",
+        "type": "object"
+      },
+      "RecordSummaryOut": {
+        "properties": {
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee"
+          },
+          "closed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closed"
+          },
+          "comments": {
+            "default": 0,
+            "title": "Comments",
+            "type": "integer"
+          },
+          "created": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created"
+          },
+          "linked_changes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked Changes",
+            "type": "array"
+          },
+          "linked_emails": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked Emails",
+            "type": "array"
+          },
+          "priority": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Priority"
+          },
+          "reporter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reporter"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "ticket_id": {
+            "title": "Ticket Id",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          }
+        },
+        "required": [
+          "ticket_id"
+        ],
+        "title": "RecordSummaryOut",
+        "type": "object"
+      },
+      "ReportOut": {
+        "description": "`audit.batch.BatchReport.to_dict()` \u2014 dataclass fields plus the derived lists.",
+        "properties": {
+          "completion_tokens": {
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "control_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Control Ids",
+            "type": "array"
+          },
+          "elapsed_ms": {
+            "default": 0,
+            "title": "Elapsed Ms",
+            "type": "integer"
+          },
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/PairRowOut"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "generated_at": {
+            "title": "Generated At",
+            "type": "string"
+          },
+          "open_gaps": {
+            "items": {
+              "$ref": "#/components/schemas/PairRowOut"
+            },
+            "title": "Open Gaps",
+            "type": "array"
+          },
+          "pack_id": {
+            "title": "Pack Id",
+            "type": "string"
+          },
+          "per_control": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PerControlOut"
+            },
+            "title": "Per Control",
+            "type": "object"
+          },
+          "prompt_tokens": {
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "readiness_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Readiness Score"
+          },
+          "review_queue": {
+            "items": {
+              "$ref": "#/components/schemas/PairRowOut"
+            },
+            "title": "Review Queue",
+            "type": "array"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/PairRowOut"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "standard": {
+            "title": "Standard",
+            "type": "string"
+          },
+          "ticket_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Ticket Ids",
+            "type": "array"
+          },
+          "total_pairs": {
+            "title": "Total Pairs",
+            "type": "integer"
+          },
+          "verified_pairs": {
+            "title": "Verified Pairs",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pack_id",
+          "standard",
+          "generated_at",
+          "ticket_ids",
+          "control_ids",
+          "rows",
+          "per_control",
+          "readiness_score",
+          "verified_pairs",
+          "total_pairs",
+          "prompt_tokens",
+          "completion_tokens",
+          "open_gaps",
+          "review_queue",
+          "errors"
+        ],
+        "title": "ReportOut",
+        "type": "object"
+      },
+      "RunOut": {
+        "description": "A run in flight or finished. `report` and `cost` appear once status is `done`.",
+        "properties": {
+          "cost": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CostOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "files": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Files",
+            "type": "object"
+          },
+          "pack_id": {
+            "title": "Pack Id",
+            "type": "string"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/ProgressOut"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ReportOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "live",
+              "file"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "started_at": {
+            "title": "Started At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "running",
+              "done",
+              "error"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "pack_id",
+          "status",
+          "started_at",
+          "progress",
+          "error",
+          "source",
+          "files"
+        ],
+        "title": "RunOut",
+        "type": "object"
+      },
+      "SessionOut": {
+        "properties": {
+          "completion_tokens": {
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "cost_basis": {
+            "title": "Cost Basis",
+            "type": "string"
+          },
+          "cost_usd": {
+            "title": "Cost Usd",
+            "type": "number"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "prompt_tokens": {
+            "title": "Prompt Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "cost_usd",
+          "cost_basis",
+          "model"
+        ],
+        "title": "SessionOut",
+        "type": "object"
+      },
+      "SessionSummaryOut": {
+        "description": "One of your conversations, as the picker shows it. Never carries the messages.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "session_id": {
+            "title": "Session Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "turns": {
+            "title": "Turns",
+            "type": "integer"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "title",
+          "turns",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SessionSummaryOut",
+        "type": "object"
+      },
+      "SpendOut": {
+        "description": "Today's spend for the caller and the deployment, the caps, and what remains (null = unlimited).",
+        "properties": {
+          "actor": {
+            "title": "Actor",
+            "type": "string"
+          },
+          "actor_budget_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Budget Usd"
+          },
+          "basis": {
+            "title": "Basis",
+            "type": "string"
+          },
+          "deployment_budget_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deployment Budget Usd"
+          },
+          "deployment_today_usd": {
+            "title": "Deployment Today Usd",
+            "type": "number"
+          },
+          "limits": {
+            "$ref": "#/components/schemas/LimitsOut"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "remaining_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remaining Usd"
+          },
+          "today_usd": {
+            "title": "Today Usd",
+            "type": "number"
+          }
+        },
+        "required": [
+          "actor",
+          "today_usd",
+          "actor_budget_usd",
+          "deployment_today_usd",
+          "deployment_budget_usd",
+          "remaining_usd",
+          "model",
+          "basis",
+          "limits"
+        ],
+        "title": "SpendOut",
+        "type": "object"
+      },
+      "StartAuditOut": {
+        "properties": {
+          "estimated_calls": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Estimated Calls",
+            "type": "array"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "total_pairs": {
+            "title": "Total Pairs",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "run_id",
+          "total_pairs",
+          "estimated_calls"
+        ],
+        "title": "StartAuditOut",
+        "type": "object"
+      },
+      "TicketOut": {
+        "additionalProperties": true,
+        "description": "The full record, as the judge reads it. Unknown keys survive (see module doc).",
+        "properties": {
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee"
+          },
+          "closed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Closed"
+          },
+          "comments": {
+            "items": {
+              "$ref": "#/components/schemas/CommentOut"
+            },
+            "title": "Comments",
+            "type": "array"
+          },
+          "created": {
+            "title": "Created",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "linked_changes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked Changes",
+            "type": "array"
+          },
+          "linked_emails": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Linked Emails",
+            "type": "array"
+          },
+          "priority": {
+            "title": "Priority",
+            "type": "string"
+          },
+          "reporter": {
+            "title": "Reporter",
+            "type": "string"
+          },
+          "resolution": {
+            "title": "Resolution",
+            "type": "string"
+          },
+          "signoff": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Signoff"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "ticket_id": {
+            "title": "Ticket Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_id",
+          "title",
+          "type",
+          "priority",
+          "status",
+          "created",
+          "reporter",
+          "description",
+          "comments",
+          "linked_changes",
+          "linked_emails",
+          "resolution"
+        ],
+        "title": "TicketOut",
+        "type": "object"
+      },
+      "ToolCallOut": {
+        "description": "One tool invocation. `result` is whatever the tool returned \u2014 JSON if it was JSON.",
+        "properties": {
+          "args": {
+            "additionalProperties": true,
+            "title": "Args",
+            "type": "object"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "result": {
+            "title": "Result"
+          }
+        },
+        "required": [
+          "name",
+          "args"
+        ],
+        "title": "ToolCallOut",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VerificationOut": {
+        "additionalProperties": true,
+        "properties": {
+          "agrees": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agrees"
+          },
+          "checks": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Checks",
+            "type": "array"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Issues",
+            "type": "array"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict"
+          }
+        },
+        "title": "VerificationOut",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "AuditReadyBearer": {
+        "description": "Required when AUDITREADY_AUTH is token or oidc; ignored when it is none.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "HTTP boundary over the AuditReady engine. Holds no business logic.",
+    "title": "AuditReady API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/audit": {
+      "get": {
+        "operationId": "list_audits_audit_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RunOut"
+                  },
+                  "title": "Response List Audits Audit Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "List Audits"
+      },
+      "post": {
+        "description": "Start a batch audit and return immediately with a run id.\n\nUnknown ids fail HERE, synchronously, before a thread or a token is spent \u2014\n`run_batch` already checks them, and doing it up front turns a 500 five\nseconds later into a 404 now. The same rule covers the limits: too many\nruns, too many pairs, or a run the day's budget cannot pay for are all\nrefused here, with the estimate in the sentence.",
+        "operationId": "start_audit_audit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartAuditOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Start Audit"
+      }
+    },
+    "/audit/{run_id}": {
+      "get": {
+        "operationId": "get_audit_audit__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Get Audit"
+      }
+    },
+    "/audit/{run_id}/events": {
+      "get": {
+        "description": "Progress as server-sent events, ending with the terminal status.\n\nPolling the run record every 400ms is deliberate over pushing from the\nworker thread: the worker never has to know a client exists, and a client\nthat disconnects costs nothing.",
+        "operationId": "audit_events_audit__run_id__events_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/event-stream": {}
+            },
+            "description": "progress events, then `end`"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Audit Events"
+      }
+    },
+    "/audit/{run_id}/report.md": {
+      "get": {
+        "operationId": "audit_markdown_audit__run_id__report_md_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Audit Markdown"
+      }
+    },
+    "/chat": {
+      "get": {
+        "description": "Your conversations, newest first. Never anyone else's.",
+        "operationId": "my_chats_chat_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SessionSummaryOut"
+                  },
+                  "title": "Response My Chats Chat Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "My Chats"
+      },
+      "post": {
+        "description": "One conversational turn. The agent keeps memory across turns of a session.\n\nErrors follow the Streamlit page exactly (FR-15): a guardrail violation is\nsafe to show verbatim (400); the model being down is a 503 with a plain\nsentence; anything else is a 500 with no detail, because a stack trace in a\nbrowser is a leak, not a diagnostic. Over the rate limit or the daily\nbudget is a 429 that says so \u2014 refused before a token is spent.",
+        "operationId": "chat_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Chat"
+      }
+    },
+    "/chat/{session_id}": {
+      "delete": {
+        "operationId": "end_chat_chat__session_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndChatOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "End Chat"
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Unauthenticated on purpose: a health probe that needs a secret is not a health probe.\n\nThe container's HEALTHCHECK and any orchestrator call this, so it must\nanswer before a credential exists. It reports `auth` so \"is this deployment\nopen to anyone?\" is answerable without reading someone's environment.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/packs": {
+      "get": {
+        "description": "Every checklist pack, invalid ones included with their error (not hidden).",
+        "operationId": "packs_packs_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PackOut"
+                  },
+                  "title": "Response Packs Packs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Packs"
+      }
+    },
+    "/pricing": {
+      "get": {
+        "operationId": "pricing_pricing_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "model",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Pricing"
+      }
+    },
+    "/records": {
+      "get": {
+        "operationId": "records_records_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RecordSummaryOut"
+                  },
+                  "title": "Response Records Records Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Records"
+      }
+    },
+    "/records/{ticket_id}": {
+      "get": {
+        "operationId": "record_records__ticket_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ticket_id",
+            "required": true,
+            "schema": {
+              "title": "Ticket Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Record"
+      }
+    },
+    "/spend": {
+      "get": {
+        "operationId": "spend_spend_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "AuditReadyBearer": []
+          }
+        ],
+        "summary": "Spend"
+      }
+    }
+  }
+}

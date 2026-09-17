@@ -1,0 +1,11 @@
+# The image builds from source; nothing generated on the host goes in.
+node_modules
+.next
+out
+.env*
+!.env.local.example
+*.log
+.DS_Store
+README.md
+AGENTS.md
+CLAUDE.md

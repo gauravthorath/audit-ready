@@ -1,0 +1,35 @@
+# The build context is deliberately narrow: what goes in here is what a
+# customer's image contains, and anything secret or regenerable must not.
+
+# Secrets and personal notes
+.env
+.env.*
+!.env.example
+LEARNING.md
+TODO.md
+
+# Regenerable / host-specific
+.venv/
+.chroma/
+.chroma-live/
+__pycache__/
+*.pyc
+.pytest_cache/
+.git/
+.github/
+.claude/
+
+# Third-party evidence snapshots (fetched at run time, never baked in)
+assistant/data/live/
+assistant/data/live-*/
+.chroma-live*/
+
+# The web app has its own Dockerfile and context (./web); keep its
+# node_modules and build output out of the Python image's context.
+web/node_modules/
+web/.next/
+
+# Build artifacts of past runs
+reports/
+docs/*.pdf
+.DS_Store

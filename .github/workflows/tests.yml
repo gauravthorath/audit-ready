@@ -1,0 +1,60 @@
+# Every push: the checks that cost nothing. No API key, no network beyond the
+# package index, seconds not minutes — so there is never a reason to skip them.
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The eval-staleness check compares `git log -1` times per file, and
+          # the default shallow clone (depth 1) gives every file the same commit
+          # time — which would make the check silently pass whatever the state
+          # of the repo. Full history or the gate is theatre.
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --frozen
+
+      - name: Unit tests (offline, no API key)
+        run: uv run pytest
+
+      - name: core/ stays framework-agnostic
+        # NFR-1: the engine must not learn about the framework wrapped around
+        # it. A grep is a crude architecture test, but it is the one that fails
+        # at the moment the import is added rather than at the rewrite.
+        run: |
+          if grep -rn "langchain\|langgraph" core/; then
+            echo "::error::core/ imported a framework — see CLAUDE.md, NFR-1"
+            exit 1
+          fi
+          echo "core/ is clean"
+
+      - name: Secrets and derived data absent from git
+        run: |
+          if git ls-files | grep -E "^\.env$|\.chroma|LEARNING\.md"; then
+            echo "::error::a secret or derived-data path is tracked"
+            exit 1
+          fi
+          if git grep -qiE "sk-or-v1-[a-z0-9]{16}"; then
+            echo "::error::an API key shaped string is committed"
+            exit 1
+          fi
+          echo "no secrets tracked"
+
+      - name: Eval on record is not stale
+        # Free half of the gate: does the committed results.json still describe
+        # this code? The other half (the metrics themselves) needs tokens and
+        # runs in eval.yml.
+        run: uv run python audit/eval/gate.py --freshness

@@ -1,0 +1,26 @@
+Message-ID: <c2@northwind-logistics.example>
+From: Tomasz Lewandowski <tomasz.l@northwind-logistics.example>
+To: servicedesk@meridian-it.example
+Date: Tue, 07 Apr 2026 09:05:00 +0200
+Subject: Order-tracking API still stale this morning (TCK-1004)
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="===============8038532584279136660=="
+
+--===============8038532584279136660==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+(HTML message — see rendered version)
+
+--===============8038532584279136660==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p>Morning,</p><p>The tracking API showed <b>3-hour-old statuses<=
+/b> again between 07:00 and 08:30. This is the second occurrence after the fi=
+x on TCK-1004. Can you confirm whether the cache invalidation change actually=
+ shipped?</p><p>Regards,<br>Tomasz</p></body></html>
+
+--===============8038532584279136660==--

@@ -1,0 +1,153 @@
+# Self-hosted AuditReady (CR-4): `cp .env.example .env`, then `docker compose up`.
+#
+# Three services, one engine:
+#
+#   web         http://localhost:3000   the React front end (web/)
+#   api         http://localhost:8000   FastAPI over core/ + audit/ (api/)
+#   auditready  http://localhost:8501   the Streamlit surface — same image as
+#                                       `api`, different command; the fallback
+#
+# `api` and `auditready` are the SAME image built once from ./Dockerfile; the
+# command decides which surface runs. The LLM lives wherever
+# `AUDITREADY_LLM_BASE_URL` points; leave it unset and it is OpenRouter, set it
+# and no call in the app goes anywhere else. For a stack with no outbound calls
+# at all, add the overlay:
+#
+#   docker compose -f compose.yaml -f compose.local-llm.yaml up
+#
+# Only the React app? `docker compose up web api`.
+#
+# Vector store: Chroma (embedded, default) or Postgres + pgvector. The `db`
+# service is always there; the API only talks to it when
+# AUDITREADY_VECTOR_STORE=pgvector (in .env or on the command line):
+#
+#   AUDITREADY_VECTOR_STORE=pgvector docker compose up
+#
+# Running the engine outside Docker against the same Postgres:
+#   docker compose up -d db
+#   AUDITREADY_VECTOR_STORE=pgvector \
+#   AUDITREADY_PG_DSN=postgresql://auditready:auditready@localhost:5432/auditready \
+#     uv run uvicorn api.main:app --port 8000
+services:
+  db:
+    # Postgres 17 with the vector extension preinstalled; the schema itself
+    # (table, HNSW index) is created by core/pgvector_store.py on first use.
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: ${AUDITREADY_PG_USER:-auditready}
+      POSTGRES_PASSWORD: ${AUDITREADY_PG_PASSWORD:-auditready}
+      POSTGRES_DB: ${AUDITREADY_PG_DB:-auditready}
+    ports:
+      - "${AUDITREADY_PG_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUDITREADY_PG_USER:-auditready} -d ${AUDITREADY_PG_DB:-auditready}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        # Inlined into the browser bundle at build time: this is where the
+        # user's BROWSER reaches the API, i.e. the api service's published
+        # port on the host — not the compose-network name. Rebuild with your
+        # public URL when deploying behind a hostname.
+        NEXT_PUBLIC_API_URL: ${AUDITREADY_API_URL:-http://localhost:8000}
+    image: auditready-web:0.1.0
+    ports:
+      - "${AUDITREADY_WEB_PORT:-3000}:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: auditready:0.1.0
+    command:
+      - uvicorn
+      - api.main:app
+      - --host=0.0.0.0
+      - --port=8000
+      # The API logs its own `http.request` line with the correlation id;
+      # uvicorn's access line has no id and would double every request.
+      - --no-access-log
+    ports:
+      - "${AUDITREADY_API_PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      AUDITREADY_PERSIST_DIR: /app/.chroma
+      AUDITREADY_CORPUS_DIR: /app/assistant/data/corpus
+      # CORS: the origin the browser loads the React app from.
+      AUDITREADY_WEB_ORIGIN: ${AUDITREADY_WEB_ORIGIN:-http://localhost:3000}
+      # One JSON object per log line, every line carrying the request id the
+      # browser sent (X-Request-ID) and the run id it started. Follow one user
+      # action end to end with:  docker compose logs api | grep <request_id>
+      AUDITREADY_LOG_FORMAT: ${AUDITREADY_LOG_FORMAT:-json}
+      AUDITREADY_LOG_LEVEL: ${AUDITREADY_LOG_LEVEL:-INFO}
+      # chroma (default) or pgvector; the DSN points at the db service above.
+      AUDITREADY_VECTOR_STORE: ${AUDITREADY_VECTOR_STORE:-chroma}
+      # memory (default) or postgres. With postgres a chat conversation
+      # survives a restart of this container and is shared across workers.
+      AUDITREADY_SESSION_STORE: ${AUDITREADY_SESSION_STORE:-memory}
+      # none | token | oidc. Left open by default so `docker compose up` works
+      # out of the box; set it before the port is reachable by anyone else.
+      AUDITREADY_AUTH: ${AUDITREADY_AUTH:-none}
+      AUDITREADY_API_TOKENS: ${AUDITREADY_API_TOKENS:-}
+      AUDITREADY_PG_DSN: postgresql://${AUDITREADY_PG_USER:-auditready}:${AUDITREADY_PG_PASSWORD:-auditready}@db:5432/${AUDITREADY_PG_DB:-auditready}
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Its own index volume. The entrypoint ingests into an empty store on
+      # first start; two containers doing that into one sqlite file at the
+      # same moment is a race, so each surface owns its index.
+      - chroma-api:/app/.chroma
+      # Batch reports land on the host so they outlive the container — and so
+      # the API can list runs made from the CLI, and vice versa.
+      - ./reports:/app/reports
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/health').read()"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    restart: unless-stopped
+
+  auditready:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: auditready:0.1.0
+    ports:
+      - "${AUDITREADY_PORT:-8501}:8501"
+    # Credentials and model choice come from .env — never from this file, which
+    # is committed. Copy .env.example first; compose fails fast if it is absent.
+    env_file:
+      - .env
+    environment:
+      # Written here rather than in .env so a customer editing .env cannot
+      # accidentally point the store at a path that is not on the volume.
+      AUDITREADY_PERSIST_DIR: /app/.chroma
+      AUDITREADY_CORPUS_DIR: /app/assistant/data/corpus
+    volumes:
+      # The index only. The corpus is in the image and the evidence a customer
+      # connects to (audit/connectors.py) is fetched into a snapshot they
+      # mount themselves — nothing here writes back into the source systems.
+      - chroma:/app/.chroma
+      - ./reports:/app/reports
+    restart: unless-stopped
+
+volumes:
+  chroma:
+  chroma-api:
+  pgdata:

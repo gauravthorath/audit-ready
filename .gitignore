@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Data / secrets
+*.key
+
+# Personal learning journal (stays local, never submitted)
+LEARNING.md
+
+# Vector store (regenerable from corpus — never commit derived data)
+.chroma/
+*.chroma/
+
+# Claude Code: third-party skills installed per-machine stay untracked;
+# project-authored skills, CLAUDE.md and .claude/settings.json are shared config
+.claude/skills/frontend-design/
+.claude/settings.local.json
+
+# OS
+.DS_Store
+
+# Streamlit
+.streamlit/secrets.toml
+
+# batch report artifacts (regenerable; commit a curated sample under docs/ if wanted)
+reports/
+
+# Live evidence snapshots (regenerable from the connector; provenance-stamped)
+assistant/data/live/
+assistant/data/live-*/
+.chroma-live*/
+.chroma-live/
+
+# Local status scratch file (not part of the submission)
+TODO.md
+
+# Marketing / portfolio narrative kit (local: drafts, screenshots, story bank)
+marketing/
+
+# Coverage run artifacts
+.coverage
+htmlcov/
+
+# Personal preparation docs — for the author, not the reviewer (the submission
+# keeps DEMO.md and V2_PLAN.md; these two are the rehearsal and the self-check)
+docs/REHEARSAL.md
+docs/WALKTHROUGH.md
+
+# Agent guides that `next dev` regenerates into web/ — tooling, not product
+web/AGENTS.md
+web/CLAUDE.md

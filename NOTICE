@@ -1,0 +1,18 @@
+AuditReady
+Copyright 2026 Gaurav Thorat. All rights reserved.
+
+Proprietary and confidential. See LICENSE for the terms, which grant
+evaluation access only and no right to redistribute or reuse this work.
+
+This product includes software developed by third parties; their licences
+apply to their own code. Direct dependencies and their licences are
+declared in pyproject.toml and pinned in uv.lock.
+
+The checklist packs under assistant/data/checklists/ are own-worded
+paraphrases of clause intent written for this project. They are not the
+text of ISO 9001 or ISO 27001, which are copyrighted by ISO, and they are
+not a substitute for the standards. A user who holds a licence to a
+standard supplies their own criteria text in their own pack.
+
+The corpus under assistant/data/corpus/ is synthetic. It contains no client,
+employer or personal data.

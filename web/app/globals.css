@@ -1,0 +1,470 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens — the same palette as marketing/deck, so the product and the
+ * slides read as one thing. IBM Plex via next/font (see layout.tsx).
+ */
+@theme {
+  --color-ink: #1b2430;
+  --color-body: #4a5563;
+  --color-dim: #6b7480;
+  --color-line: #e1e5ea;
+  --color-neutral: #f3f5f7;
+  --color-paper: #ffffff;
+
+  --color-green: #0f6e56;
+  --color-green-bg: #e3f3ec;
+  --color-blue: #185fa5;
+  --color-blue-bg: #e4eef9;
+  --color-amber: #b4540a;
+  --color-amber-bg: #fbeadd;
+  --color-red: #b42318;
+  --color-red-bg: #fdecec;
+
+  --font-sans: var(--font-plex-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-neutral);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Small, reusable primitives kept in CSS so JSX stays about content. */
+.card {
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(27, 36, 48, 0.04);
+}
+
+/* Keyboard focus is visible everywhere, in the brand green, never removed. */
+:where(button, a, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* The score ledger — the page's one signature element. A reading, not a
+   dashboard: the readiness figure, the denominator as a literal fraction, and
+   the counts as a ruled row. Wraps under itself on a narrow column instead of
+   clipping. */
+.ledger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(27, 36, 48, 0.04);
+  overflow: hidden;
+}
+.ledger > * { padding: 18px 22px; }
+.ledger-score {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  border-right: 1px solid var(--color-line);
+  flex: 0 0 auto;
+}
+.ledger-score .pct {
+  font-family: var(--font-mono);
+  font-size: 44px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.ledger-frac {
+  display: inline-grid;
+  grid-template-columns: auto;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--color-ink);
+}
+.ledger-frac .num { font-size: 20px; font-weight: 600; padding: 0 4px 3px; border-bottom: 1.5px solid var(--color-ink); }
+.ledger-frac .den { font-size: 15px; padding-top: 3px; color: var(--color-body); }
+.ledger-counts {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 320px;
+  gap: 0;
+  padding: 0;
+}
+.ledger-counts > div {
+  flex: 1 1 120px;
+  padding: 18px 20px;
+  border-right: 1px solid var(--color-line);
+  min-width: 0;
+}
+.ledger-counts > div:last-child { border-right: 0; }
+.ledger-counts .val {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  font-size: 13px;
+  color: var(--color-body);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--color-green); color: var(--color-ink); }
+
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; }
+.tbl th {
+  position: sticky; top: 0; z-index: 1;
+  text-align: left; font-weight: 600; color: var(--color-dim); font-size: 11px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 9px 12px; border-bottom: 1px solid var(--color-line);
+  background: var(--color-paper);
+}
+.tbl td { padding: 11px 12px; border-bottom: 1px solid var(--color-line); vertical-align: top; }
+.tbl tbody tr:hover td { background: color-mix(in srgb, var(--color-neutral) 60%, transparent); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl .num { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tbl .num.zero { color: var(--color-dim); }
+
+.trace li { font-family: var(--font-mono); font-size: 12.5px; }
+.trace li::marker { color: var(--color-dim); }
+
+pre.wrap { white-space: pre-wrap; word-break: break-word; }
+
+@theme inline {
+  --font-heading: var(--font-plex-sans), system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* shadcn semantic tokens, bound to the deck palette above. One source of
+     colour: change --color-green and every primary button follows. */
+  --background: var(--color-paper); /* controls sit on white; the page ground is set on body above */
+  --foreground: var(--color-ink);
+  --card: var(--color-paper);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-paper);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-green);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-neutral);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-neutral);
+  --muted-foreground: var(--color-dim);
+  --accent: var(--color-green-bg);
+  --accent-foreground: var(--color-green);
+  --destructive: var(--color-red);
+  --border: var(--color-line);
+  --input: var(--color-line);
+  --ring: var(--color-green);
+  --chart-1: var(--color-green);
+  --chart-2: var(--color-blue);
+  --chart-3: var(--color-amber);
+  --chart-4: var(--color-red);
+  --chart-5: var(--color-dim);
+  --radius: 0.5rem;
+  --sidebar: var(--color-paper);
+  --sidebar-foreground: var(--color-ink);
+  --sidebar-primary: var(--color-green);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--color-neutral);
+  --sidebar-accent-foreground: var(--color-ink);
+  --sidebar-border: var(--color-line);
+  --sidebar-ring: var(--color-green);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+/* ---------------------------------------------------------------------------
+ * Dark theme. next-themes puts `.dark` on <html> before first paint (inline
+ * script), so there is no flash. Every colour above is a token, so the theme
+ * is one block of overrides — no component knows which theme it is in.
+ *
+ * The dark steps were picked, not inverted: text/status colours were checked
+ * against the card surface (#171d25) and the page ground (#0f1419) and all sit
+ * above WCAG AA 4.5:1 (dim 5.3, red 5.9, blue 6.9, green 7.6, amber 7.7).
+ * ------------------------------------------------------------------------- */
+.dark {
+  color-scheme: dark;
+
+  --color-ink: #e7ebf0;
+  --color-body: #b4bcc7;
+  --color-dim: #8791a0;
+  --color-line: #2a3341;
+  --color-neutral: #0f1419;  /* page ground, hover fills */
+  --color-paper: #171d25;    /* cards, controls */
+
+  --color-green: #4cc38a;
+  --color-green-bg: #12312a;
+  --color-blue: #6aa9f0;
+  --color-blue-bg: #14283f;
+  --color-amber: #e8a04c;
+  --color-amber-bg: #3a2a12;
+  --color-red: #f0736b;
+  --color-red-bg: #3f1c1a;
+
+  /* the primary button is a light green in the dark theme, so its label is ink-dark */
+  --primary-foreground: #0f1419;
+  --sidebar-primary-foreground: #0f1419;
+}
+.dark .card,
+.dark .ledger {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------------------------------------------------------------------------
+ * Charts. Pure CSS/SVG — the marks are thin, the ink is the data, the chrome is
+ * recessive. The 2px "surface gap" between stacked segments is a border in the
+ * surface colour, so segments read as distinct without a stroke around them.
+ * ------------------------------------------------------------------------- */
+.stack {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--color-neutral);
+}
+.stack > .seg {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  border-right: 2px solid var(--color-paper);
+  transition: width 300ms ease;
+}
+.stack > .seg:last-child { border-right: 0; }
+.stack.lg { height: 14px; }
+
+.seg-satisfied      { background: var(--color-green); }
+.seg-partial        { background: var(--color-amber); }
+.seg-gap            { background: var(--color-red); }
+.seg-not_applicable { background: var(--color-dim); opacity: 0.55; }
+.seg-needs_review   { background: var(--color-amber); opacity: 0.5; }
+.seg-error          { background: var(--color-red); opacity: 0.45; }
+
+.dot-satisfied      { background: var(--color-green); }
+.dot-partial        { background: var(--color-amber); }
+.dot-gap            { background: var(--color-red); }
+.dot-not_applicable { background: var(--color-dim); opacity: 0.55; }
+.dot-needs_review   { background: var(--color-amber); opacity: 0.5; }
+.dot-error          { background: var(--color-red); opacity: 0.45; }
+
+/* Hover/focus tooltip for a mark. `data-tip` carries the text so the value is
+   also in the DOM for screen readers via aria-label on the mark itself. */
+.tip { position: relative; }
+.tip::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+  z-index: 5;
+}
+.tip:hover::after,
+.tip:focus-visible::after { opacity: 1; }
+
+/* A single horizontal bar row: label · track · value. Track is a lighter step
+   of the same hue, so state reads across the whole bar. */
+.hbar {
+  display: grid;
+  grid-template-columns: minmax(72px, 130px) 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+}
+.hbar .track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-neutral);
+  overflow: hidden;
+}
+.hbar .fill {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background: var(--color-blue);
+  transition: width 300ms ease;
+}
+button.hbar {
+  width: 100%;
+  text-align: left;
+  padding: 4px 6px;
+  margin: 0 -6px;
+  border-radius: 6px;
+}
+button.hbar:hover { background: var(--color-neutral); }
+button.hbar[aria-pressed="false"] .fill { opacity: 0.35; }
+button.hbar[aria-pressed="false"] { color: var(--color-dim); }
+
+/* Column chart: bars grow from a shared baseline; ≤24px thick, 4px rounded cap. */
+.cols {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 64px;
+  padding-top: 4px;
+  border-bottom: 1px solid var(--color-line);
+}
+.cols > .col {
+  flex: 1 1 0;
+  max-width: 24px;
+  min-width: 6px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 4px 4px 0 0;
+  overflow: visible;
+}
+.cols .col-fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: var(--color-blue);
+  transition: height 300ms ease;
+}
+.cols .col-fill + .col-fill { border-radius: 0; border-top: 2px solid var(--color-paper); }
+.cols .col.current .col-fill { background: var(--color-green); }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12px;
+  color: var(--color-body);
+}
+.legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sw { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+
+/* Segmented control (view toggle, theme toggle). */
+.seg-ctl {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: var(--color-neutral);
+}
+.seg-ctl > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--color-dim);
+  line-height: 1;
+}
+.seg-ctl > button:hover { color: var(--color-ink); }
+.seg-ctl > button[aria-pressed="true"] {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  box-shadow: 0 1px 2px rgba(27, 36, 48, 0.08);
+}
+
+/* Grid-view cards: the same card, tightened, with a hover lift that stays
+   subtle. `.selected` is the open one. */
+.tile {
+  text-align: left;
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper);
+  padding: 14px 16px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.tile:hover { border-color: color-mix(in srgb, var(--color-green) 55%, var(--color-line)); }
+.tile.selected {
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-green) 18%, transparent);
+}
