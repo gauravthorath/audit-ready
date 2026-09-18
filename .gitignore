@@ -40,8 +40,12 @@ assistant/data/live-*/
 # Local status scratch file (not part of the submission)
 TODO.md
 
-# Marketing / portfolio narrative kit (local: drafts, screenshots, story bank)
-marketing/
+# Marketing / portfolio narrative kit stays local — drafts, screenshots, the
+# story bank, the deck and the measurement runs are working material, and some
+# of it names things that should never reach a repository. The public landing
+# page is the exception: it is already deployed, so it is versioned here.
+marketing/*
+!marketing/site/
 
 # Coverage run artifacts
 .coverage

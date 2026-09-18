@@ -1,0 +1,1351 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("js");</script>
+<title>AuditReady</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='1' y='1' width='22' height='22' rx='5.5' fill='%230F6E56'/%3E%3Cpath d='M7 12.4l3.3 3.3L17.4 8.6' fill='none' stroke='%23fff' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M7.5 18.6h9' fill='none' stroke='%23fff' stroke-opacity='.6' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@1,400&display=swap">
+<style>
+  /* ---- tokens: light is the base, every colour declared here ---------- */
+  :root {
+    --bg:          #FBFBFC;
+    --bg-sunk:     #F3F5F7;
+    --surface:     #FFFFFF;
+    --ink:         #1B2430;
+    --body:        #4A5563;
+    --muted:       #6B7480;
+    --rule:        #DFE4EA;
+    --rule-firm:   #C4CCD5;
+    --green:       #0F6E56;
+    --green-soft:  #E3F3EC;
+    --blue:        #185FA5;
+    --blue-soft:   #E4EEF9;
+    --orange:      #B4540A;
+    --orange-soft: #FBEBDD;
+    --shadow:      0 1px 2px rgba(27, 36, 48, .05), 0 8px 24px -12px rgba(27, 36, 48, .12);
+    --glow:        rgba(15, 110, 86, .12);
+    --glow-2:      rgba(24, 95, 165, .08);
+    --grid:        rgba(27, 36, 48, .055);
+    --spot:        rgba(15, 110, 86, .07);
+    --sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:          #12181F;
+      --bg-sunk:     #0D1319;
+      --surface:     #1A222B;
+      --ink:         #E9EDF1;
+      --body:        #B3BDC7;
+      --muted:       #8593A0;
+      --rule:        #29333D;
+      --rule-firm:   #3D4A57;
+      --green:       #52C29D;
+      --green-soft:  #10332A;
+      --blue:        #74B0EA;
+      --blue-soft:   #14283B;
+      --orange:      #E9974F;
+      --orange-soft: #33220F;
+      --shadow:      0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .5);
+      --glow:        rgba(82, 194, 157, .20);
+      --glow-2:      rgba(116, 176, 234, .12);
+      --grid:        rgba(233, 237, 241, .05);
+      --spot:        rgba(82, 194, 157, .10);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:          #12181F;
+    --bg-sunk:     #0D1319;
+    --surface:     #1A222B;
+    --ink:         #E9EDF1;
+    --body:        #B3BDC7;
+    --muted:       #8593A0;
+    --rule:        #29333D;
+    --rule-firm:   #3D4A57;
+    --green:       #52C29D;
+    --green-soft:  #10332A;
+    --blue:        #74B0EA;
+    --blue-soft:   #14283B;
+    --orange:      #E9974F;
+    --orange-soft: #33220F;
+    --shadow:      0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .5);
+    --glow:        rgba(82, 194, 157, .20);
+    --glow-2:      rgba(116, 176, 234, .12);
+    --grid:        rgba(233, 237, 241, .05);
+    --spot:        rgba(82, 194, 157, .10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--body);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .skip {
+    position: absolute; left: -9999px; top: 0;
+    background: var(--ink); color: var(--bg);
+    padding: 10px 16px; z-index: 50; font: 500 14px/1 var(--sans);
+  }
+  .skip:focus { left: 12px; top: 12px; }
+
+  a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--green); outline-offset: 3px; border-radius: 2px;
+  }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  @media (max-width: 640px) { .wrap { padding: 0 20px; } }
+
+  /* ---- masthead -------------------------------------------------------- */
+  .top {
+    border-bottom: 1px solid var(--rule);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 20;
+  }
+  .top-in { display: flex; align-items: center; gap: 28px; height: 60px; }
+  .mark {
+    display: flex; align-items: center; gap: 9px;
+    font: 600 15.5px/1 var(--sans); color: var(--ink);
+    letter-spacing: -.01em; text-decoration: none; white-space: nowrap;
+  }
+  .mark svg { display: block; }
+  .foot-mark { display: inline-flex; align-items: center; gap: 8px; }
+  .top-nav { display: flex; gap: 22px; margin-left: auto; }
+  .top-nav a {
+    font: 500 13.5px/1 var(--sans); color: var(--body);
+    text-decoration: none; white-space: nowrap;
+  }
+  .top-nav a:hover { color: var(--ink); }
+  .lic {
+    font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+    color: var(--green); background: var(--green-soft);
+    padding: 5px 9px; border-radius: 3px; white-space: nowrap;
+  }
+  @media (max-width: 860px) { .top-nav { display: none; } .lic { margin-left: auto; } }
+
+  /* ---- hero ------------------------------------------------------------ */
+  .hero { padding: 76px 0 60px; border-bottom: 1px solid var(--rule); }
+  .eyebrow {
+    font: 500 11.5px/1 var(--mono); letter-spacing: .13em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 22px;
+  }
+  h1 {
+    font: 700 clamp(38px, 6vw, 62px)/1.05 var(--sans);
+    letter-spacing: -.028em; color: var(--ink);
+    margin: 0 0 24px; max-width: 20ch; text-wrap: balance;
+  }
+  h1 em { font-style: normal; color: var(--green); }
+  .lede {
+    font-size: clamp(17px, 2.1vw, 19.5px); line-height: 1.58;
+    max-width: 62ch; margin: 0 0 18px; color: var(--body);
+  }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .scope {
+    max-width: 62ch; margin: 0 0 34px; font-size: 14.5px; color: var(--muted);
+    border-left: 2px solid var(--rule-firm); padding-left: 14px;
+  }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    font: 600 14.5px/1 var(--sans); text-decoration: none;
+    padding: 13px 20px; border-radius: 4px; border: 1px solid transparent;
+    transition: background .15s, border-color .15s;
+  }
+  .btn-solid { background: var(--ink); color: var(--bg); }
+  .btn-solid:hover { background: var(--green); }
+  .btn-ghost { border-color: var(--rule-firm); color: var(--ink); background: transparent; }
+  .btn-ghost:hover { border-color: var(--ink); }
+  .cta-note { font: 400 13px/1.5 var(--mono); color: var(--muted); }
+
+  /* ---- headline figures ------------------------------------------------ */
+  .figs { background: var(--bg-sunk); border-bottom: 1px solid var(--rule); padding: 34px 0; }
+  .figs-grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+  @media (max-width: 780px) { .figs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .fig-n {
+    font: 600 clamp(28px, 4vw, 37px)/1 var(--mono);
+    font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+    color: var(--ink); display: block; margin-bottom: 7px;
+  }
+  .fig-l { font-size: 13.5px; line-height: 1.4; color: var(--body); display: block; }
+  .fig-s { font: 400 12px/1.4 var(--mono); color: var(--muted); display: block; margin-top: 3px; }
+  .figs-foot {
+    margin: 26px 0 0; padding-top: 18px; border-top: 1px solid var(--rule);
+    font: 400 12.5px/1.6 var(--mono); color: var(--muted);
+  }
+
+  /* ---- the documentary spine ------------------------------------------- */
+  .sec { border-bottom: 1px solid var(--rule); padding: 66px 0; }
+  .sec-grid { display: grid; grid-template-columns: 152px minmax(0, 1fr); gap: 0 44px; }
+  @media (max-width: 900px) { .sec-grid { grid-template-columns: 1fr; gap: 18px; } }
+  .rail { position: relative; }
+  .rail-n {
+    font: 500 11.5px/1 var(--mono); letter-spacing: .1em;
+    color: var(--green); display: block; margin-bottom: 8px;
+  }
+  .rail-l {
+    font: 500 11.5px/1.45 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); display: block;
+  }
+  h2 {
+    font: 600 clamp(25px, 3.4vw, 33px)/1.18 var(--sans);
+    letter-spacing: -.021em; color: var(--ink);
+    margin: 0 0 20px; max-width: 26ch; text-wrap: balance;
+  }
+  h3 {
+    font: 600 16px/1.4 var(--sans); color: var(--ink);
+    margin: 0 0 7px; letter-spacing: -.008em;
+  }
+  /* An h3 opening a block after a table gets the breathing room a <p> inherits
+     for free. Scoped to that one arrangement so the h3s that open a card are
+     left alone. */
+  .t-scroll + .prose h3:first-child { margin-top: 30px; }
+  .prose { max-width: 66ch; }
+  .prose p { margin: 0 0 17px; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  code {
+    font: 400 .885em/1 var(--mono); background: var(--bg-sunk);
+    border: 1px solid var(--rule); border-radius: 3px; padding: 2px 5px;
+    color: var(--ink); white-space: nowrap;
+  }
+
+  /* ---- walkthrough clip (portrait video beside its caption) ----------- */
+  .clip {
+    display: grid; grid-template-columns: 268px minmax(0, 1fr); gap: 0 36px;
+    align-items: center; margin: 0 0 40px; padding: 22px 26px 22px 22px;
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 6px;
+    box-shadow: var(--shadow);
+  }
+  .clip video {
+    display: block; width: 100%; aspect-ratio: 9 / 16; background: #0D1319;
+    border-radius: 6px; border: 1px solid var(--rule-firm);
+  }
+  .clip-eyebrow {
+    font: 500 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--green); margin: 0 0 12px;
+  }
+  .clip h3 { font-size: 21px; line-height: 1.28; margin-bottom: 12px; max-width: 24ch; text-wrap: balance; }
+  .clip p { margin: 0 0 14px; max-width: 52ch; }
+  .clip-meta {
+    display: flex; flex-wrap: wrap; gap: 6px 22px;
+    font: 400 12.5px/1.5 var(--mono); color: var(--muted);
+  }
+  .clip-meta b { color: var(--ink); font-weight: 500; }
+  @media (max-width: 760px) {
+    .clip { grid-template-columns: 1fr; gap: 20px; padding: 18px; }
+    .clip video { max-width: 300px; margin: 0 auto; }
+  }
+
+  /* ---- pipeline diagram ------------------------------------------------ */
+  .diagram {
+    margin: 30px 0 0; padding: 26px 24px; background: var(--surface);
+    border: 1px solid var(--rule); border-radius: 6px; overflow-x: auto;
+  }
+  .diagram svg { display: block; min-width: 700px; width: 100%; height: auto; }
+  .d-box  { fill: var(--bg-sunk); stroke: var(--rule-firm); stroke-width: 1; }
+  .d-box-j { fill: var(--green-soft); stroke: var(--green); stroke-width: 1; }
+  .d-box-v { fill: var(--blue-soft); stroke: var(--blue); stroke-width: 1; }
+  .d-box-ok { fill: var(--green-soft); stroke: var(--green); stroke-width: 1; }
+  .d-box-park { fill: var(--orange-soft); stroke: var(--orange); stroke-width: 1; }
+  .d-t  { font: 500 12.5px var(--mono); fill: var(--ink); }
+  .d-tj { font: 500 12.5px var(--mono); fill: var(--green); }
+  .d-tv { font: 500 12.5px var(--mono); fill: var(--blue); }
+  .d-tp { font: 500 12.5px var(--mono); fill: var(--orange); }
+  .d-s  { font: 400 10.5px var(--mono); fill: var(--muted); }
+  .d-arrow { stroke: var(--rule-firm); stroke-width: 1.4; fill: none; }
+  .d-arrow-loop { stroke: var(--blue); stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; }
+
+  /* ---- disposition bar ------------------------------------------------- */
+  .bar-block { margin-top: 30px; }
+  .bar {
+    display: flex; height: 40px; border-radius: 4px; overflow: hidden;
+    border: 1px solid var(--rule-firm);
+  }
+  .bar-fin {
+    flex: 0 0 89.7%; background: var(--green-soft);
+    border-right: 1px solid var(--rule-firm);
+    display: flex; align-items: center; padding-left: 14px;
+    font: 500 12.5px/1 var(--mono); color: var(--green);
+  }
+  .bar-park {
+    flex: 1 1 auto; background: var(--orange-soft);
+    display: flex; align-items: center; padding-left: 12px;
+    font: 500 12.5px/1 var(--mono); color: var(--orange);
+    overflow: hidden; white-space: nowrap;
+  }
+  .bar-key {
+    display: flex; flex-wrap: wrap; gap: 8px 26px; margin-top: 12px;
+    font: 400 12.5px/1.5 var(--mono); color: var(--muted);
+  }
+  .bar-key b { color: var(--ink); font-weight: 500; }
+
+  /* ---- tables ---------------------------------------------------------- */
+  .t-scroll { overflow-x: auto; margin-top: 30px; }
+  table { border-collapse: collapse; width: 100%; min-width: 660px; font-size: 14px; }
+  caption {
+    text-align: left; font: 500 11.5px/1.5 var(--mono);
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); padding-bottom: 11px;
+  }
+  th, td { text-align: right; padding: 11px 10px; border-bottom: 1px solid var(--rule); }
+  th:first-child, td:first-child { text-align: left; padding-left: 0; }
+  th:last-child, td:last-child { padding-right: 0; }
+  thead th {
+    font: 500 11.5px/1.35 var(--mono); letter-spacing: .04em;
+    text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--rule-firm); vertical-align: bottom;
+  }
+  tbody td { font-variant-numeric: tabular-nums; font-family: var(--mono); color: var(--body); }
+  tbody td:first-child { font-family: var(--sans); color: var(--ink); font-weight: 500; }
+  .row-pool td { border-top: 1px solid var(--rule-firm); color: var(--ink); font-weight: 600; }
+  .row-pool td:first-child { font-weight: 600; }
+  .t-foot { margin: 13px 0 0; font: 400 12.5px/1.65 var(--mono); color: var(--muted); }
+
+  /* ---- retraction quote ------------------------------------------------ */
+  .quote {
+    margin: 32px 0 0; padding: 24px 26px;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-left: 3px solid var(--orange); border-radius: 0 5px 5px 0;
+  }
+  .quote p {
+    margin: 0; font: italic 400 18.5px/1.52 var(--serif);
+    color: var(--ink); max-width: 46ch;
+  }
+  .quote cite {
+    display: block; margin-top: 13px; font: 400 12px/1.5 var(--mono);
+    color: var(--muted); font-style: normal;
+  }
+
+  /* ---- feature list (no cards) ----------------------------------------- */
+  .rows { margin-top: 28px; border-top: 1px solid var(--rule); }
+  .row {
+    display: grid; grid-template-columns: 30px minmax(0, 1fr);
+    gap: 0 16px; padding: 20px 0; border-bottom: 1px solid var(--rule);
+  }
+  .row-ic { color: var(--green); padding-top: 2px; }
+  .row-ic svg { display: block; }
+  .row p { margin: 0; max-width: 62ch; font-size: 14.8px; }
+
+  /* ---- the limits section (deliberately loud) -------------------------- */
+  .limits { background: var(--bg-sunk); }
+  .lim-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px; margin-top: 30px; background: var(--rule-firm);
+    border: 1px solid var(--rule-firm); border-radius: 5px; overflow: hidden;
+  }
+  @media (max-width: 760px) { .lim-grid { grid-template-columns: 1fr; } }
+  .lim { background: var(--bg); padding: 22px 22px 24px; }
+  .lim-tag {
+    font: 500 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--orange); display: block; margin-bottom: 10px;
+  }
+  .lim p { margin: 0; font-size: 14.3px; line-height: 1.6; }
+
+  /* ---- code sample ----------------------------------------------------- */
+  .term {
+    margin-top: 28px; background: var(--bg-sunk); border: 1px solid var(--rule);
+    border-radius: 6px; overflow-x: auto;
+  }
+  .term-bar {
+    padding: 9px 16px; border-bottom: 1px solid var(--rule);
+    font: 500 11px/1 var(--mono); letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .term pre {
+    margin: 0; padding: 18px 16px; font: 400 13px/1.85 var(--mono);
+    color: var(--ink); white-space: pre;
+  }
+  .term .c { color: var(--muted); }
+  .term .g { color: var(--green); }
+
+  /* ---- closing --------------------------------------------------------- */
+  .close { padding: 74px 0; border-bottom: 1px solid var(--rule); }
+  .close h2 { max-width: 30ch; }
+  .lic-grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 40px; margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--rule);
+  }
+  @media (max-width: 760px) { .lic-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .lic-k {
+    font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); display: block; margin-bottom: 8px;
+  }
+  .lic-v { font-size: 14.3px; line-height: 1.55; color: var(--ink); }
+
+  footer { padding: 32px 0 46px; }
+  .foot-in {
+    display: flex; flex-wrap: wrap; gap: 14px 28px;
+    align-items: baseline; justify-content: space-between;
+    font: 400 12.5px/1.6 var(--mono); color: var(--muted);
+  }
+  footer a { color: var(--muted); }
+
+  /* ---- motion ---------------------------------------------------------- */
+  /* Restrained, documentary pace: content settles into place, nothing bounces.
+     Every rule below is keyed off html.js, which is only set when the visitor
+     has not asked for reduced motion — so without JS or with that preference,
+     the page is fully visible and static. */
+  :root { --ease-out: cubic-bezier(.2, .7, .2, 1); --ease-draw: cubic-bezier(.4, 0, .2, 1); }
+
+  /* hero: staggered settle on load */
+  @keyframes settle { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .js .hero .eyebrow, .js .hero h1, .js .hero .lede, .js .hero .scope, .js .hero .cta-row {
+    animation: settle .7s var(--ease-out) both;
+  }
+  .js .hero .eyebrow { animation-delay: .05s; }
+  .js .hero h1      { animation-delay: .15s; }
+  .js .hero .lede   { animation-delay: .30s; }
+  .js .hero .scope  { animation-delay: .42s; }
+  .js .hero .cta-row{ animation-delay: .52s; }
+  h1 em {
+    background: linear-gradient(currentColor, currentColor) no-repeat 0 92% / 0% 3px;
+    padding-bottom: 2px;
+  }
+  .js h1 em { animation: underline .6s var(--ease-out) 1s both; }
+  @keyframes underline { to { background-size: 100% 3px; } }
+  h1 em { background-size: 100% 3px; }
+  .js h1 em { background-size: 0% 3px; }
+
+  /* masthead: gains depth once the page scrolls under it */
+  .top { transition: box-shadow .3s, background-color .3s; }
+  .top.scrolled {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px);
+    box-shadow: 0 1px 0 var(--rule), 0 8px 24px -16px rgba(27, 36, 48, .25);
+  }
+  .top-nav a { position: relative; padding: 4px 0; transition: color .2s; }
+  .top-nav a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 1.5px;
+    background: var(--green); transform: scaleX(0); transform-origin: left;
+    transition: transform .3s var(--ease-out);
+  }
+  .top-nav a:hover::after, .top-nav a.active::after { transform: scaleX(1); }
+  .top-nav a.active { color: var(--ink); }
+  .mark svg { transition: transform .4s var(--ease-out); }
+  .mark:hover svg { transform: rotate(-6deg) scale(1.06); }
+
+  /* scroll reveal: sections settle as they enter the viewport */
+  .js .rv { opacity: 0; transform: translateY(16px); }
+  .js .rv.in { opacity: 1; transform: none; transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+  .js .rail { opacity: 0; transition: opacity .5s; }
+  .js .rail.in { opacity: 1; }
+  .rail-n { position: relative; padding-top: 10px; }
+  .rail-n::before {
+    content: ""; position: absolute; left: 0; top: 0; height: 2px; width: 28px;
+    background: var(--green); transform: scaleX(0); transform-origin: left;
+    transition: transform .6s var(--ease-out) .1s;
+  }
+  .rail.in .rail-n::before, html:not(.js) .rail-n::before { transform: scaleX(1); }
+
+  /* headline figures: ruled by a hairline that draws in under each number */
+  .figs-grid > div { position: relative; padding-top: 14px; }
+  .figs-grid > div::before {
+    content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 1px;
+    background: var(--rule-firm); transform: scaleX(0); transform-origin: left;
+    transition: transform .8s var(--ease-out);
+  }
+  .figs-grid > div.in::before, html:not(.js) .figs-grid > div::before { transform: scaleX(1); }
+
+  /* pipeline diagram: boxes appear in order, arrows draw, the re-judge loop keeps moving */
+  .js .diagram rect, .js .diagram text { opacity: 0; transition: opacity .5s var(--ease-out); transition-delay: calc(var(--i, 0) * 55ms); }
+  .js .diagram.in rect, .js .diagram.in text { opacity: 1; }
+  .js .diagram .d-arrow { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset .6s var(--ease-draw); transition-delay: calc(var(--i, 0) * 55ms); }
+  .js .diagram.in .d-arrow { stroke-dashoffset: 0; }
+  .js .diagram .d-arrow-loop { opacity: 0; transition: opacity .6s; transition-delay: calc(var(--i, 0) * 55ms + .3s); }
+  .js .diagram.in .d-arrow-loop { opacity: 1; animation: march 1.6s linear infinite; }
+  @keyframes march { to { stroke-dashoffset: -14; } }
+  .diagram { transition: border-color .3s, box-shadow .3s; }
+  .diagram:hover { border-color: var(--rule-firm); box-shadow: var(--shadow); }
+
+  /* disposition bar: fills to its measured share */
+  .bar-fin { white-space: nowrap; overflow: hidden; }
+  .js .bar-block .bar-fin { flex-basis: 0%; transition: flex-basis 1.2s var(--ease-out) .15s; }
+  .js .bar-block.in .bar-fin { flex-basis: 89.7%; }
+
+  /* hover micro-interactions */
+  .btn { transition: background .2s, border-color .2s, transform .2s var(--ease-out), box-shadow .2s; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -10px rgba(27, 36, 48, .45); }
+  .btn:active { transform: translateY(0); box-shadow: none; }
+  .btn svg { transition: transform .25s var(--ease-out); }
+  .btn:hover svg { transform: translateX(3px); }
+  .row { transition: background-color .25s; }
+  .row-ic svg path { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .5s var(--ease-draw) .2s; }
+  .row.in .row-ic svg path, html:not(.js) .row-ic svg path { stroke-dashoffset: 0; }
+  .lim { transition: background-color .25s; }
+  .lim:hover { background: var(--surface); }
+  tbody tr { transition: background-color .2s; }
+  tbody tr:hover td { background: var(--bg-sunk); }
+  .quote { transition: border-left-width .25s, transform .3s var(--ease-out); }
+  .quote:hover { transform: translateX(2px); }
+  .clip { transition: box-shadow .3s, transform .4s var(--ease-out); }
+  .clip:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(27, 36, 48, .06), 0 18px 40px -18px rgba(27, 36, 48, .25); }
+  .term-bar { position: relative; }
+  .term-bar::before {
+    content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); margin-right: 9px; vertical-align: -1px;
+  }
+  .js .term-bar::before { animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  a { transition: color .2s, text-decoration-color .2s; }
+
+  /* ---- ambient background (hero + close) --------------------------------
+     A ledger grid that fades out toward the text, two soft colour fields that
+     drift very slowly, and a spotlight that follows the cursor. All of it is
+     tuned per theme: faint on the light page, luminous on the dark one. */
+  .hero, .close { position: relative; isolation: isolate; overflow: hidden; }
+  .hero::before, .close::before {
+    content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(120% 90% at 80% 0%, #000 30%, transparent 85%);
+    mask-image: radial-gradient(120% 90% at 80% 0%, #000 30%, transparent 85%);
+  }
+  .hero::after, .close::after {
+    content: ""; position: absolute; inset: -30%; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(38% 42% at 78% 28%, var(--glow), transparent 70%),
+      radial-gradient(30% 34% at 20% 90%, var(--glow-2), transparent 70%);
+    filter: blur(28px);
+  }
+  .js .hero::after, .js .close::after { animation: drift 22s ease-in-out infinite alternate; }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(-4%, 3%, 0) scale(1.08); }
+  }
+  .spot {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0;
+    background: radial-gradient(260px 260px at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
+    transition: opacity .6s;
+  }
+  .hero:hover .spot { opacity: 1; }
+  /* a thin scan line sweeps the figures strip once when it appears — the "ruler" pass */
+  .figs { position: relative; overflow: hidden; }
+  .figs::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 140px; left: -160px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--glow), transparent);
+    opacity: 0;
+  }
+  .js .figs.in::after { animation: sweep 1.6s var(--ease-out) .2s 1 both; }
+  @keyframes sweep { 0% { left: -160px; opacity: 0; } 15% { opacity: 1; } 100% { left: 110%; opacity: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="mark" href="#main">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="1" y="1" width="22" height="22" rx="5.5" fill="#0F6E56"/>
+        <path d="M7 12.4l3.3 3.3L17.4 8.6" fill="none" stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7.5 18.6h9" fill="none" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      AuditReady
+    </a>
+    <nav class="top-nav" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#evidence">Evaluation</a>
+      <a href="#cost">Cost &amp; speed</a>
+      <a href="#deploy">Deployment</a>
+      <a href="#limits">Limits</a>
+    </nav>
+    <span class="lic">Self-hosted</span>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ================= hero ================= -->
+  <section class="hero">
+    <div class="spot" aria-hidden="true"></div>
+    <div class="wrap">
+      <p class="eyebrow">ISO 9001 &nbsp;·&nbsp; ISO 27001 &nbsp;·&nbsp; self-hosted</p>
+      <h1>Every verdict cites the record it came from, or <em>it isn't a verdict</em>.</h1>
+      <p class="lede">
+        AuditReady reads the tickets, change records and email threads you already have, tests
+        them against a checklist standard, and returns a per-control readiness report where
+        <strong>each finding is anchored to a specific record and timestamp</strong>. What it can't
+        verify, it hands to a human instead of guessing.
+      </p>
+      <p class="scope">
+        Built and evaluated on a synthetic corpus of 20 tickets against 15 controls. The numbers
+        below describe the method, not a production deployment — and the section on what this
+        tool is <em>not</em> is as detailed as the rest of the page.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-solid" href="#deploy">
+          Run it yourself
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M2 7h9M7.5 3.5L11 7l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </a>
+        <a class="btn btn-ghost" href="#evidence">Read the evaluation</a>
+        <span class="cta-note">docker compose up &nbsp;·&nbsp; no data leaves your network</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= headline figures ================= -->
+  <section class="figs" aria-label="Headline measurements">
+    <div class="wrap">
+      <div class="figs-grid">
+        <div>
+          <span class="fig-n">1.00</span>
+          <span class="fig-l">Gap recall</span>
+          <span class="fig-s">0.944 in one run of nine · see below</span>
+        </div>
+        <div>
+          <span class="fig-n">0.941</span>
+          <span class="fig-l">Agreement with the answer key</span>
+          <span class="fig-s">68 labelled pairs</span>
+        </div>
+        <div>
+          <span class="fig-n">0.043</span>
+          <span class="fig-l">False-positive rate</span>
+          <span class="fig-s">a deficiency claimed on a satisfied pair</span>
+        </div>
+        <div>
+          <span class="fig-n">10.3<span style="font-size:.62em">%</span></span>
+          <span class="fig-l">Sent to a human</span>
+          <span class="fig-s">of the labelled pairs · 25.6% on a full sweep</span>
+        </div>
+      </div>
+      <p class="figs-foot">
+        Synthetic corpus · gpt-4o-mini at temperature 0 · committed run 2026-09-11, one of nine ·
+        answer quality graded by a different model family (google/gemini-2.5-flash) · results
+        committed to the repository as <code>results.json</code>, which stamps the model that
+        produced them · speed and cost measured separately on 2026-09-16, <a href="#cost">below</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= problem ================= -->
+  <section class="sec">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">01</span>
+        <span class="rail-l">The problem</span>
+      </div>
+      <div class="prose">
+        <h2>Audit prep is a filing exercise dressed up as a judgement call.</h2>
+        <p>
+          Before a certification audit, somebody has to walk every applicable clause and answer
+          one question repeatedly: <em>can we show this?</em> The evidence already exists — it's
+          scattered across a ticket system, a change log, and eighteen months of email. The work
+          is finding it, deciding whether it actually satisfies the clause, and being able to
+          point at it when an auditor asks.
+        </p>
+        <p>
+          The obvious move is to point a language model at the records and ask for a summary.
+          That fails an audit for a specific reason: <strong>a summary is not evidence.</strong>
+          An auditor doesn't want a paragraph saying change control looks fine. They want the
+          change record, its approver, and the date — and if the model invented any of those,
+          the finding is worse than useless, because someone acted on it.
+        </p>
+        <p>
+          So the constraint came first, before any of the architecture:
+          <strong>no citation, no verdict.</strong> A verdict that can't resolve to a real record
+          in the corpus is discarded by the pipeline, not shown with a caveat.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= how it works ================= -->
+  <section class="sec" id="how">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">02</span>
+        <span class="rail-l">How it works</span>
+      </div>
+      <div>
+        <figure class="clip" id="watch">
+          <video controls playsinline preload="metadata"
+                 poster="assets/how-auditready-works-poster.jpg"
+                 aria-label="How AuditReady automates ISO audits without hallucinations">
+            <source src="assets/how-auditready-works.mp4" type="video/mp4">
+            Your browser can't play this video. <a href="assets/how-auditready-works.mp4">Download the MP4</a>.
+          </video>
+          <figcaption>
+            <p class="clip-eyebrow">One-minute walkthrough</p>
+            <h3>How AuditReady automates ISO audits without hallucinations</h3>
+            <p>
+              The pipeline in sixty seconds: records go in, a judge returns a verdict with citations,
+              a verifier re-reads the rubric without seeing that verdict, and anything the two
+              disagree on is parked for a human. The text below is the same story with the numbers.
+            </p>
+            <div class="clip-meta">
+              <span><b>1:05</b> runtime</span>
+              <span><b>ISO 9001</b> · <b>ISO 27001</b></span>
+              <span>synthetic corpus</span>
+            </div>
+          </figcaption>
+        </figure>
+
+        <div class="prose">
+          <h2>Retrieve, judge, then check the judge.</h2>
+          <p>
+            Each control is assessed by a small state machine, one control at a time. Retrieval is
+            scoped to the ticket under review and joins linked change and email records
+            <em>by their identifiers</em> rather than hoping semantic search finds them. The judge
+            returns a verdict with citations. A separate verifier then re-reads the rubric
+            condition by condition and states its own conclusion — it is never shown the judge's
+            verdict first, because a verifier that sees the answer agrees with it.
+          </p>
+        </div>
+
+        <div class="diagram">
+          <svg viewBox="0 0 780 168" role="img" aria-label="Pipeline: records are retrieved, judged, and verified; a verdict that survives verification is finalized, one that flips under review is sent to a human reviewer.">
+            <!-- records -->
+            <rect class="d-box" x="2" y="64" width="92" height="46" rx="4"/>
+            <text class="d-t" x="48" y="84" text-anchor="middle">records</text>
+            <text class="d-s" x="48" y="99" text-anchor="middle">+ rubric</text>
+            <path class="d-arrow" d="M96 87h26"/>
+            <path class="d-arrow" d="M116 83l6 4-6 4"/>
+
+            <!-- retrieve -->
+            <rect class="d-box" x="126" y="64" width="92" height="46" rx="4"/>
+            <text class="d-t" x="172" y="84" text-anchor="middle">retrieve</text>
+            <text class="d-s" x="172" y="99" text-anchor="middle">id-joined</text>
+            <path class="d-arrow" d="M220 87h26"/>
+            <path class="d-arrow" d="M240 83l6 4-6 4"/>
+
+            <!-- judge -->
+            <rect class="d-box-j" x="250" y="64" width="92" height="46" rx="4"/>
+            <text class="d-tj" x="296" y="84" text-anchor="middle">judge</text>
+            <text class="d-s" x="296" y="99" text-anchor="middle">+ citations</text>
+            <path class="d-arrow" d="M344 87h26"/>
+            <path class="d-arrow" d="M364 83l6 4-6 4"/>
+
+            <!-- verify -->
+            <rect class="d-box-v" x="374" y="64" width="92" height="46" rx="4"/>
+            <text class="d-tv" x="420" y="84" text-anchor="middle">verify</text>
+            <text class="d-s" x="420" y="99" text-anchor="middle">per condition</text>
+
+            <!-- one re-judge loop, back to the judge -->
+            <path class="d-arrow-loop" d="M420 64V36H296v24"/>
+            <path class="d-arrow-loop" d="M292 54l4 6 4-6"/>
+            <text class="d-s" x="358" y="24" text-anchor="middle">one re-judge, with the objection</text>
+
+            <!-- finalize -->
+            <path class="d-arrow" d="M468 78h52V44h34"/>
+            <path class="d-arrow" d="M548 40l6 4-6 4"/>
+            <rect class="d-box-ok" x="560" y="22" width="218" height="44" rx="4"/>
+            <text class="d-tj" x="574" y="41">finalized · 89.7%</text>
+            <text class="d-s" x="574" y="56">satisfied / partial / gap</text>
+
+            <!-- park -->
+            <path class="d-arrow" d="M468 96h52v38h34"/>
+            <path class="d-arrow" d="M548 130l6 4-6 4"/>
+            <rect class="d-box-park" x="560" y="112" width="218" height="44" rx="4"/>
+            <text class="d-tp" x="574" y="131">human review · 10.3%</text>
+            <text class="d-s" x="574" y="146">flipped under review</text>
+          </svg>
+        </div>
+
+        <div class="rows">
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Citations are resolved, not trusted</h3>
+              <p>Every citation is checked against the corpus. One that points at a record or timestamp that doesn't exist invalidates the verdict rather than appearing as a footnote.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Standards are data, not code</h3>
+              <p>A standard is a YAML file of controls and own-worded rubric conditions. Adding ISO 27001 alongside ISO 9001 took zero Python changes — the report picker found it by path.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Evidence arrives through one interface</h3>
+              <p>Three live connectors behind one record shape: GitHub Issues over MCP, Jira over its REST API, Linear over GraphQL. Exported mail (<code>.eml</code> / <code>.mbox</code>) imports and links to tickets; CSV and JSON import work offline. Every connector's output is sanitised before a prompt sees it.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Evidence is snapshotted before it's judged</h3>
+              <p>A run is pinned to the evidence as it stood, with provenance recording where each record came from and what the source could not supply. A finding you can't reproduce isn't defensible.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= the park mechanism ================= -->
+  <section class="sec">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">03</span>
+        <span class="rail-l">Calibration</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>The useful behaviour isn't accuracy. It's declining to answer.</h2>
+          <p>
+            When the verifier objects, the judge gets one more attempt with the objection in hand.
+            If the verdict flips under review, it is <strong>never finalized</strong> — it goes to a
+            review queue with the disagreement attached. On the labelled set that happened to 7 of
+            68 pairs.
+          </p>
+          <p>
+            The trade is explicit: agreement across everything it was asked is <strong>0.941</strong>,
+            but agreement on <em>what it was willing to finalize</em> is <strong>0.984</strong>. It
+            buys that by sending a tenth of the work to a person.
+          </p>
+        </div>
+
+        <div class="bar-block">
+          <div class="bar" role="img" aria-label="Of 68 labelled pairs, 89.7 percent were finalized automatically and 10.3 percent were sent to a human reviewer.">
+            <div class="bar-fin">61 finalized &nbsp;·&nbsp; 89.7%</div>
+            <div class="bar-park">7 parked</div>
+          </div>
+          <div class="bar-key">
+            <span><b>0.984</b> agreement on finalized pairs</span>
+            <span><b>0.941</b> agreement across all 68</span>
+            <span><b>0</b> unhandled errors</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= evaluation ================= -->
+  <section class="sec" id="evidence">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">04</span>
+        <span class="rail-l">Evaluation</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>Measured against a frozen answer key, and the key doesn't move.</h2>
+          <p>
+            Every ticket-and-control pair was labelled by hand before the pipeline ran, and labels
+            are never edited toward the model. Continuous integration refuses a change that pushes
+            any figure below a floor, and refuses results that are older than the prompts, rubrics
+            or retrieval code that produced them.
+          </p>
+        </div>
+
+        <div class="t-scroll">
+          <table>
+            <caption>Per-control verdicts against the answer key — committed run, 2026-09-11</caption>
+            <thead>
+              <tr>
+                <th scope="col">Standard</th>
+                <th scope="col">Pairs</th>
+                <th scope="col">Agreement</th>
+                <th scope="col">Gap recall</th>
+                <th scope="col">False positives</th>
+                <th scope="col">Citations valid</th>
+                <th scope="col">Parked</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ISO 9001</td><td>46</td><td>0.935</td><td>1.000</td>
+                <td>0.032</td><td>0.935</td><td>10.9%</td>
+              </tr>
+              <tr>
+                <td>ISO 27001</td><td>22</td><td>0.955</td><td>1.000</td>
+                <td>0.067</td><td>0.909</td><td>9.1%</td>
+              </tr>
+              <tr class="row-pool">
+                <td>Pooled</td><td>68</td><td>0.941</td><td>1.000</td>
+                <td>0.043</td><td>0.926</td><td>10.3%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="t-foot">
+            Gap recall is the floor that matters: a missed deficiency is the failure that costs a
+            certification. It is pinned at 1.000 with no tolerance band, and it is 1.000 in the
+            committed run and in both runs since the rubric fixes below. It was <strong>0.944 in one
+            of nine runs</strong>, on a pair where the judge correctly saw an approval postdate its
+            deployment and then graded it partial rather than gap; the verifier disagreed and the
+            pair was parked, so the deficiency reached a person rather than a report. The floor
+            stays at 1.000 anyway. Temperature 0 is not determinism.
+          </p>
+        </div>
+
+        <div class="t-scroll">
+          <table>
+            <caption>Answer quality, graded by a different model family</caption>
+            <thead>
+              <tr>
+                <th scope="col">Measure</th>
+                <th scope="col">Score</th>
+                <th scope="col">What it means</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Faithfulness</td><td>0.977</td><td style="text-align:left;font-family:var(--sans)">Claims traceable to retrieved evidence</td></tr>
+              <tr><td>Source recall</td><td>0.945</td><td style="text-align:left;font-family:var(--sans)">Records the key expected that it actually found</td></tr>
+              <tr><td>Citation presence</td><td>1.000</td><td style="text-align:left;font-family:var(--sans)">Answers carrying at least one resolvable citation</td></tr>
+              <tr><td>Correctness</td><td>0.65</td><td style="text-align:left;font-family:var(--sans)">Agreement with the reference answer, judged strictly</td></tr>
+            </tbody>
+          </table>
+          <p class="t-foot">
+            Correctness was 0.792 when the system graded its own work. Handing the grading to a
+            different model family cost 0.11 on the same answers, and reads 0.65 today. That gap
+            was flattery, not capability.
+          </p>
+        </div>
+
+        <div class="quote">
+          <p>
+            I shipped a claim that the verify loop bought +0.021 in agreement. A clean re-run put
+            the plain judge ahead instead. One pair on 46 is noise, so I deleted my own headline
+            and built a floor-based gate rather than compare runs.
+          </p>
+          <cite>— from the build journal, step 24. The retraction is in the repository history.</cite>
+        </div>
+
+        <div class="prose" style="margin-top:30px">
+          <h3>Then it happened again, one level up</h3>
+          <p>
+            Re-running the same code eight days later returned 0.926 agreement instead of 0.956,
+            and false positives of 0.065 instead of 0.022. Nothing in the repository had changed
+            that could explain it: the inputs were committed before the original run, the retrieval
+            change since was a refactor on a branch that is not taken, and the vector store held
+            exactly the 89 chunks the corpus produces.
+          </p>
+          <p>
+            One pair settled it. A ticket judged satisfied on 3 September came back deficient in
+            all four runs on 11 September. The corpus, the rubrics and the answer key are frozen
+            and committed. <strong>The model is not, and cannot be — it is served, not
+            installed.</strong> Across nine runs the original result turned out to be the most
+            favourable of them, which is not something worth publishing as a single number. Every
+            results file now records which model produced it.
+          </p>
+          <p>
+            v1's single-call judge reproduced to three decimals over the same window while
+            this agent moved nine pairs. The difference is call count: three to five model calls
+            per pair against one. The verify loop does not buy accuracy. It buys the review queue,
+            and it buys variance.
+          </p>
+          <p>
+            The same exercise found two rubrics that let a planted deficiency be
+            <em>finalized</em> as compliant, with the verifier agreeing and nothing in the review
+            queue — the worst failure this system has, in three of nine runs. Both were rubrics
+            that said what counts without saying what does not: one accepted a fleet-wide patch
+            rollout as a preventive measure when the rollout is the remedy, the other accepted an
+            outbound "the work is done" email as client acknowledgement. Both are closed, in YAML
+            rather than Python, and both runs since show zero such misses.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= cost and speed ================= -->
+  <section class="sec" id="cost">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">05</span>
+        <span class="rail-l">Cost &amp; speed</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>Five and a half minutes, eleven cents, and one slow provider.</h2>
+          <p>
+            An audit-readiness pass over twenty service records against nine controls is 180
+            judgements. Measured end to end on a warm process with four workers, it takes
+            <strong>5 minutes 29 seconds</strong> and costs <strong>$0.118</strong> &mdash; about
+            two thirds of a cent for six judgements. The first pair of a cold process is slower
+            than the rest because the embedding model loads; every figure here is measured after
+            that, because quoting the cold pair as "per pair" would be dishonest.
+          </p>
+        </div>
+
+        <div class="t-scroll">
+          <table>
+            <caption>180 record-control pairs, 4 workers, one machine &mdash; measured 2026-09-16</caption>
+            <thead>
+              <tr>
+                <th scope="col">Measure</th>
+                <th scope="col">Value</th>
+                <th scope="col">What it is</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Whole run</td><td>5m 29s</td><td style="text-align:left;font-family:var(--sans)">20 records &times; 9 controls, start to written report</td></tr>
+              <tr><td>Throughput</td><td>32.8 / min</td><td style="text-align:left;font-family:var(--sans)">Pairs per minute at four workers</td></tr>
+              <tr><td>Per pair, median</td><td>5.0s</td><td style="text-align:left;font-family:var(--sans)">p90 10.8s, p95 12.1s</td></tr>
+              <tr><td>Model calls</td><td>2.78 / pair</td><td style="text-align:left;font-family:var(--sans)">501 in total; retrieve, judge, verify, sometimes re-judge</td></tr>
+              <tr><td>Call latency</td><td>1.9s</td><td style="text-align:left;font-family:var(--sans)">Median of 501 calls; p95 4.3s</td></tr>
+              <tr class="row-pool"><td>Cost per pair</td><td>$0.00066</td><td style="text-align:left;font-family:var(--sans)">3,157 prompt + 303 completion tokens, live rate</td></tr>
+            </tbody>
+          </table>
+          <p class="t-foot">
+            <strong>The slow tail is the provider, not the pipeline.</strong> Three of the 501
+            calls took 62.7s, 63.9s and 65.6s. All three were first attempts that returned
+            normally with short answers, and no retry was involved &mdash; the hosted endpoint
+            simply stalled. Excluding them, p95 per pair is 11.6s and the slowest pair is 16.3s.
+            Both numbers are printed here because quoting only the second one would describe a
+            system nobody ran. Nothing in this codebase takes a minute; a shared endpoint
+            occasionally does, which is one more argument for hosting the model yourself.
+          </p>
+        </div>
+
+        <div class="prose">
+          <h3>What it gets wrong, and in which direction</h3>
+          <p>
+            Every disagreement with the answer key is in the <em>strict</em> direction: two pairs
+            called a partial a gap, two called a satisfied a gap, and <strong>none</strong> called a
+            gap satisfied. An over-strict compliance tool wastes a reviewer's afternoon. An
+            over-generous one loses a certification. If this system has to be wrong, this is the
+            direction to be wrong in.
+          </p>
+          <p>
+            Of the 46 pairs it declined to finalise in that run, <strong>27 were parked because the
+            citation did not resolve</strong> while the second pass agreed with the verdict
+            entirely. Fifteen were a genuine disagreement between the two passes, and four were
+            verdicts that moved between attempts. So the review queue is mostly a
+            citation-discipline queue: the judge reaching the right answer and failing to point at
+            the record. That is also why fewer than half the parked pairs turn out to have been
+            wrong.
+          </p>
+          <p>
+            <strong>One number needs its context stated.</strong> The evaluation set is 68 pairs a
+            human labelled, and on it the system parks 10.3%. On the full unfiltered sweep above
+            &mdash; every record crossed with every control, including the many combinations nobody
+            would ever ask about &mdash; it parks <strong>25.6%</strong>. Both are true and they
+            answer different questions. A screenshot of a real run shows 46 parked pairs, so that is
+            the number quoted beside one.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= adversarial ================= -->
+  <section class="sec">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">06</span>
+        <span class="rail-l">Adversarial input</span>
+      </div>
+      <div class="prose">
+        <h2>The attack surface is the evidence, not the chat box.</h2>
+        <p>
+          Prompt-injection demos usually assume a hostile user typing into a prompt. In audit work
+          the realistic threat is different: a record written by someone else, months ago, that the
+          pipeline is obliged to read. A vendor changelog pasted into a ticket comment. A supplier's
+          email.
+        </p>
+        <p>
+          The test corpus contains exactly that — a comment carrying
+          <code>IGNORE ALL PREVIOUS INSTRUCTIONS</code> and an instruction to mark the control
+          satisfied. Records are walked field by field before they reach the model; the hostile span
+          is quarantined in place, the surrounding legitimate evidence is preserved, and the
+          quarantine is surfaced as a security finding on the report rather than swallowed. The
+          verdict on that control stayed <strong>gap</strong>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= deployment ================= -->
+  <section class="sec" id="deploy">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">07</span>
+        <span class="rail-l">Deployment</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>Your evidence stays inside your network.</h2>
+          <p>
+            Compliance records are the last thing an organisation wants to paste into a hosted tool.
+            AuditReady ships as a container with the embedding model baked in and offline, so
+            retrieval and indexing make no outbound calls at all. The only egress is the language
+            model endpoint — and that endpoint is a configuration value.
+          </p>
+          <p>
+            Point it at a model you host, and nothing leaves the boundary. There is one place in the
+            codebase that talks to a provider, which is what makes that swap a single environment
+            variable instead of a refactor.
+          </p>
+        </div>
+
+        <div class="term">
+          <div class="term-bar">Self-host with your own model endpoint</div>
+<pre><span class="c"># clone, configure, run</span>
+git clone https://github.com/&lt;your-org&gt;/audit-ready.git
+cp .env.example .env
+docker compose up
+
+<span class="c"># bring your own endpoint — nothing reaches a vendor API</span>
+AUDITREADY_LLM_BASE_URL=http://vllm:8000/v1
+AUDITREADY_MODEL=Qwen/Qwen2.5-7B-Instruct
+
+<span class="c"># or run a headless report straight to Markdown + JSON</span>
+uv run python audit/batch.py <span class="g">--pack</span> assistant/data/checklists/iso27001.yaml</pre>
+        </div>
+
+        <div class="rows">
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Air-gapped retrieval</h3>
+              <p>Sentence-transformer weights are built into the image and the hub client runs in offline mode. Indexing 20 tickets produced 89 chunks with the network unavailable.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>Runs unprivileged</h3>
+              <p>Non-root by default, a health check the orchestrator can read, and a named volume so the vector store survives a restart instead of re-indexing on every boot.</p>
+            </div>
+          </div>
+          <div class="row">
+            <span class="row-ic" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 18 18"><path d="M3 9.2l3.4 3.4L15 4" fill="none" stroke="currentColor" stroke-width="1.9"/></svg>
+            </span>
+            <div>
+              <h3>204 tests that need no API key</h3>
+              <p>The whole unit suite runs offline in about five seconds and gates every push, alongside a check that the engine core stays free of framework imports.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= limits ================= -->
+  <section class="sec limits" id="limits">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">08</span>
+        <span class="rail-l">What this is not</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>Read this before you consider it for real evidence.</h2>
+          <p>
+            A compliance tool that oversells itself is a liability for whoever adopted it. Every
+            limit below is a real constraint on today's build, not a modesty note — and each one is
+            the honest answer to a question a procurement review would ask.
+          </p>
+        </div>
+        <div class="lim-grid">
+          <div class="lim">
+            <span class="lim-tag">Not validated on real data</span>
+            <p>Every figure on this page comes from a synthetic corpus written for the project — 20 tickets, 7 change records, 10 email threads. No client or employer material is involved, and no result here predicts performance on your records.</p>
+          </div>
+          <div class="lim">
+            <span class="lim-tag">Not a certification</span>
+            <p>The tool prepares and cites evidence for a human auditor. It does not certify anything, it does not replace an audit, and nothing it outputs should reach a certifying body without a person having reviewed it.</p>
+          </div>
+          <div class="lim">
+            <span class="lim-tag">Not the standard's text</span>
+            <p>Controls are own-worded paraphrases of clause intent, written for this project. They are not the text of ISO 9001 or ISO 27001 and are not a substitute for the standards, which are copyrighted.</p>
+          </div>
+          <div class="lim">
+            <span class="lim-tag">Fifteen controls, not a full clause set</span>
+            <p>Nine ISO 9001 controls and six ISO 27001 controls. Enough to prove that a standard is configuration rather than code; nowhere near a complete audit scope for either standard.</p>
+          </div>
+          <div class="lim">
+            <span class="lim-tag">One live connector</span>
+            <p>GitHub Issues over MCP, Jira REST, Linear GraphQL, exported mail, plus offline CSV and JSON import. Live Gmail or Outlook mailbox access is deferred deliberately: it needs a consent and privacy design, not just an API token, so the human exports the threads that are evidence.</p>
+          </div>
+          <div class="lim">
+            <span class="lim-tag">No support contract</span>
+            <p>This is a portfolio-grade project by one engineer, not a vendor relationship. There is no SLA, no data-processing agreement and no professional indemnity behind it. Treat it as software you evaluate, not software you buy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= verification ================= -->
+  <section class="close">
+    <div class="wrap sec-grid">
+      <div class="rail">
+        <span class="rail-n">09</span>
+        <span class="rail-l">Verification</span>
+      </div>
+      <div>
+        <div class="prose">
+          <h2>The code is the argument.</h2>
+          <p>
+            A compliance tool asks for an unusual amount of trust: it reads your internal records and
+            tells you what an auditor will find. "Trust our accuracy claims" is not a reasonable thing
+            to ask, so none of it is asked here. The evaluation harness, the answer keys, the rubrics
+            and the failures all live in the repository, and every number on this page is reproduced
+            by one command against a frozen key. Ask for access and you can watch it run, change a
+            prompt, and see the gate reject the regression.
+          </p>
+          <p>
+            The corrections on this page are not editorial hindsight. Each one has a commit behind
+            it: the prompt fix, the grader swap, the headline number deleted from the README. They
+            were written down while the work happened — in a dated journal kept from the first
+            commit — and the repository history carries the same trail.
+          </p>
+        </div>
+        <div class="lic-grid">
+          <div>
+            <span class="lic-k">Source available for review</span>
+            <p class="lic-v">The engine, the agent, the connector layer, the eval harness and the gate — plus the Docker setup used for the numbers on this page. Read it under review access, not from a public mirror.</p>
+          </div>
+          <div>
+            <span class="lic-k">Reproduce the numbers</span>
+            <p class="lic-v">The corpus, the frozen answer keys and the committed <code>results.json</code> sit together in the repository. One command re-runs the whole evaluation, and CI refuses results older than the code that produced them.</p>
+          </div>
+          <div>
+            <span class="lic-k">Add your standard</span>
+            <p class="lic-v">A new standard is a YAML file of controls and rubric conditions. Writing one for ISO 20000 or CMMI needs no code change, and your criteria text stays yours.</p>
+          </div>
+          <div>
+            <span class="lic-k">All rights reserved</span>
+            <p class="lic-v">Proprietary. Access is granted for evaluation, and a deployment runs inside your own network. <code>NOTICE</code> states what the copyright does not cover: the rubrics paraphrase clause intent and are not ISO's text.</p>
+          </div>
+        </div>
+        <div class="cta-row" style="margin-top:32px">
+          <a class="btn btn-solid" href="mailto:gauravjobs25@gmail.com?subject=AuditReady%20%E2%80%94%20access%20request">
+            Request access
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M2 7h9M7.5 3.5L11 7l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            </svg>
+          </a>
+          <span class="cta-note">
+            <a href="mailto:gauravjobs25@gmail.com?subject=AuditReady%20%E2%80%94%20access%20request">gauravjobs25@gmail.com</a>
+            &nbsp;·&nbsp; the repository is private; access is granted for evaluation
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-in">
+    <span class="foot-mark"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="5.5" fill="#0F6E56"/><path d="M7 12.4l3.3 3.3L17.4 8.6" fill="none" stroke="#FFFFFF" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 18.6h9" fill="none" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="1.7" stroke-linecap="round"/></svg>AuditReady — a grounded, cited assistant for compliance audit-readiness.</span>
+    <span>Built by Gaurav Thorat · evaluated 2026-09-11 · synthetic data only</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  if (!root.classList.contains('js')) return;   // reduced motion, or no JS: page is already static
+
+  // ---- masthead depth + active section --------------------------------
+  var top = document.querySelector('.top');
+  var onScroll = function () { top.classList.toggle('scrolled', window.scrollY > 8); };
+  onScroll(); addEventListener('scroll', onScroll, { passive: true });
+
+  var links = [].slice.call(document.querySelectorAll('.top-nav a[href^="#"]'));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window && targets.length) {
+    var navIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id); });
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    targets.forEach(function (t) { navIO.observe(t); });
+  }
+
+  // ---- reveal on scroll -------------------------------------------------
+  var groups = ['.figs-grid > div', '.rows .row', '.lim-grid .lim', '.lic-grid > div'];
+  var singles = ['.figs', '.rail', '.prose', '.diagram', '.bar-block', '.t-scroll', '.quote', '.term', '.clip', '.figs-foot', '.sec .cta-row', '.close .cta-row'];
+  var items = [];
+  groups.forEach(function (sel) {
+    var els = document.querySelectorAll(sel), lastParent = null, k = 0;
+    [].forEach.call(els, function (el) {
+      if (el.parentNode !== lastParent) { lastParent = el.parentNode; k = 0; }
+      el.style.transitionDelay = Math.min(k++ * 70, 420) + 'ms';
+      items.push(el);
+    });
+  });
+  singles.forEach(function (sel) { [].forEach.call(document.querySelectorAll(sel), function (el) { items.push(el); }); });
+  items.forEach(function (el) { if (!el.classList.contains('rail') && !el.classList.contains('figs')) el.classList.add('rv'); });
+
+  // spotlight follows the cursor across the hero
+  var hero = document.querySelector('.hero'), spot = hero && hero.querySelector('.spot');
+  if (spot) hero.addEventListener('pointermove', function (ev) {
+    var r = hero.getBoundingClientRect();
+    spot.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+    spot.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+  }, { passive: true });
+
+  // pipeline: number every drawable child so CSS can stagger them left-to-right
+  var svg = document.querySelector('.diagram svg');
+  if (svg) {
+    var i = 0;
+    [].forEach.call(svg.children, function (el) {
+      if (el.tagName === 'rect') i++;
+      el.style.setProperty('--i', i);
+      if (el.classList.contains('d-arrow')) el.setAttribute('pathLength', '1');
+    });
+  }
+
+  var reveal = function (el) { el.classList.add('in'); };
+  if (!('IntersectionObserver' in window)) { items.forEach(reveal); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      reveal(e.target); io.unobserve(e.target);
+      if (e.target.classList.contains('figs-foot')) return;
+      if (e.target.matches('.figs-grid > div')) countUp(e.target.querySelector('.fig-n'));
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  items.forEach(function (el) { io.observe(el); });
+
+  // safety net: anything still hidden after 2.5s is shown (odd layouts, print, tiny viewports)
+  setTimeout(function () { items.forEach(function (el) { if (!el.classList.contains('in')) reveal(el); }); }, 2500);
+
+  // ---- headline figures count up to their measured value ----------------
+  function countUp(node) {
+    if (!node) return;
+    var tn = null;
+    for (var c = node.firstChild; c; c = c.nextSibling) { if (c.nodeType === 3 && c.nodeValue.trim()) { tn = c; break; } }
+    if (!tn) return;
+    var raw = tn.nodeValue.trim(), target = parseFloat(raw);
+    if (isNaN(target)) return;
+    var decimals = (raw.split('.')[1] || '').length, start = null, dur = 1300;
+    var step = function (ts) {
+      if (start === null) start = ts;
+      var t = Math.min(1, (ts - start) / dur), eased = 1 - Math.pow(1 - t, 3);
+      tn.nodeValue = (target * eased).toFixed(decimals);
+      if (t < 1) requestAnimationFrame(step); else tn.nodeValue = raw;
+    };
+    requestAnimationFrame(step);
+  }
+})();
+</script>
