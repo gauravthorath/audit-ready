@@ -1,10 +1,10 @@
-"""AuditReady as an MCP server — the engine, reachable from someone else's client (Step 42, CR-3).
+"""AuditReady as an MCP server - the engine, reachable from someone else's client (Step 42, CR-3).
 
 Until now the Model Context Protocol appeared in this project in one
 direction: `audit/mcp_evidence.py` *consumes* GitHub's MCP server to read
 issues as evidence. That is a real use of the protocol and it is live-tested,
-but it is half of it. The reviewer's note — *if MCP is not used, remove it;
-otherwise use it fully* — has an answer better than either: publish the engine
+but it is half of it. The reviewer's note - *if MCP is not used, remove it;
+otherwise use it fully* - has an answer better than either: publish the engine
 as a server, so a compliance question can be asked from wherever the person
 asking it already works.
 
@@ -12,18 +12,18 @@ Concretely, that is Microsoft Teams. Approvals and "yes, go ahead" happen in a
 channel, and Microsoft 365 Copilot agents built in Copilot Studio consume MCP
 servers. Pointing one at this server gives a compliance officer "is TCK-1007
 compliant with 8.5.6?" in the place the conversation is already happening,
-with the citation attached — and it costs us one module rather than a bot
+with the citation attached - and it costs us one module rather than a bot
 framework, a messaging endpoint and a second deployment to keep alive.
 
 What is exposed, and what is deliberately not
 ---------------------------------------------
 Four tools, all read-only, all already the engine's public surface:
 
-* `list_packs` — which standards this deployment can judge against.
-* `find_evidence` — semantic search over the corpus. The cheap one.
-* `check_ticket` — the judgement: one record against one control, verdict plus
+* `list_packs` - which standards this deployment can judge against.
+* `find_evidence` - semantic search over the corpus. The cheap one.
+* `check_ticket` - the judgement: one record against one control, verdict plus
   the citations it rests on. This is the tool worth having in Teams.
-* `audit_readiness` — the rollup, with a hard cap on how much it may spend.
+* `audit_readiness` - the rollup, with a hard cap on how much it may spend.
 
 `coverage_report` over the whole corpus is 180 model calls, so the MCP tool
 that wraps it refuses an unscoped sweep rather than quietly spending five
@@ -37,9 +37,9 @@ blast radius of a writable one is a forged audit record.
 
 Two transports, one server
 --------------------------
-* **stdio** — `uv run python -m api.mcp_server`. What Claude Desktop, Cursor
+* **stdio** - `uv run python -m api.mcp_server`. What Claude Desktop, Cursor
   and the other local clients speak.
-* **streamable HTTP** — mounted on the FastAPI app at `/mcp` when
+* **streamable HTTP** - mounted on the FastAPI app at `/mcp` when
   `AUDITREADY_MCP_HTTP=1`. What a remote client (Copilot Studio) needs. It is
   off by default because an unauthenticated MCP endpoint on a port someone
   forgot about is exactly the hole this project spent Step 40 closing; turning
@@ -71,14 +71,14 @@ records) against compliance checklist packs and returns a verdict with the
 citations it rests on.
 
 Use `list_packs` first to see which standards and controls exist. Use
-`check_ticket` to judge one record against one control — that is the tool that
+`check_ticket` to judge one record against one control - that is the tool that
 answers "is this compliant?". Use `find_evidence` to look for supporting
 artifacts. Use `audit_readiness` only for a scoped set of records and controls.
 
 Every verdict is a draft for a human auditor. The tool prepares and cites
 evidence; it does not certify, and its output should not reach a certifying
 body without a person having reviewed it. A verdict of `needs_review` means
-the engine declined to stand behind an answer — report that rather than
+the engine declined to stand behind an answer - report that rather than
 guessing on its behalf."""
 
 
@@ -189,7 +189,7 @@ def check_http_is_safe(auth_mode: str) -> None:
 
 
 def main() -> int:
-    """Run over stdio — the transport local MCP clients speak.
+    """Run over stdio - the transport local MCP clients speak.
 
     Logs go to stderr because stdout *is* the protocol channel: a stray print
     on stdout corrupts the message stream, which is the classic way an MCP

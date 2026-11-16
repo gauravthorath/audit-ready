@@ -7,7 +7,7 @@
 
 Two parts:
 
-PART A — compliance metrics over ground_truth.yaml (46 labelled pairs):
+PART A - compliance metrics over ground_truth.yaml (46 labelled pairs):
   the system's real job is verdicts, so the headline numbers are
     - gap recall            of GT gaps, % predicted gap  (missed gap = the
                             costly error: a deficiency survives to audit day)
@@ -17,10 +17,10 @@ PART A — compliance metrics over ground_truth.yaml (46 labelled pairs):
     - exact agreement       all pairs, plus the full confusion matrix
     - citation validity     % of verdicts whose citations resolve (FR-14)
 
-PART B — RAG answer quality over questions.yaml (12 labelled questions),
+PART B - RAG answer quality over questions.yaml (12 labelled questions),
   RAGAs-EQUIVALENT, implemented directly. Why not the ragas library: ragas
   0.4.3 imports langchain_community.chat_models.vertexai, which no longer
-  exists in the langchain 1.x line our agent uses — irreconcilable without
+  exists in the langchain 1.x line our agent uses - irreconcilable without
   downgrading the agent stack. FR-18 says "RAGAs or equivalent"; the metrics
   below are the same ideas, and implementing them teaches what they mean:
     - faithfulness        LLM-as-judge: what fraction of the answer's claims
@@ -33,7 +33,7 @@ PART B — RAG answer quality over questions.yaml (12 labelled questions),
     - citation_presence   deterministic: does the answer cite artifacts?
 
 The Part B grader is pluggable: --judge-model, else AUDITREADY_JUDGE_MODEL,
-else core.llm.DEFAULT_JUDGE_MODEL (a different family from the system model —
+else core.llm.DEFAULT_JUDGE_MODEL (a different family from the system model -
 v1 graded itself with its own model, which flatters the numbers). The
 grader model that produced a run is stamped into results.json next to the
 metrics, because a faithfulness score is only readable if you know who graded.
@@ -65,7 +65,7 @@ VERDICTS = ["satisfied", "partial", "gap", "not_applicable"]
 
 
 # ===========================================================================
-# Part A — compliance metrics (deterministic scoring over labelled verdicts)
+# Part A - compliance metrics (deterministic scoring over labelled verdicts)
 # ===========================================================================
 
 
@@ -135,7 +135,7 @@ def run_compliance_eval() -> dict:
     print(f"  exact agreement     : {metrics['exact_agreement']}")
     print(f"  gap recall          : {metrics['gap_recall']}   (missed gaps are the costly error)")
     print(f"  flagged recall      : {metrics['flagged_recall']}")
-    print(f"  false-positive rate : {metrics['false_positive_rate']}   (trust metric — lower is better)")
+    print(f"  false-positive rate : {metrics['false_positive_rate']}   (trust metric - lower is better)")
     print(f"  citation validity   : {metrics['citation_validity']}")
     print("  confusion (expected->predicted):")
     for key, n in metrics["confusion"].items():
@@ -151,7 +151,7 @@ def run_compliance_eval() -> dict:
 
 
 # ===========================================================================
-# Part B — RAG answer quality (RAGAs-equivalent)
+# Part B - RAG answer quality (RAGAs-equivalent)
 # ===========================================================================
 
 _JUDGE_FAITHFULNESS = """\
@@ -277,7 +277,7 @@ def run_rag_eval(max_questions: int | None, judge_model: str) -> dict:
     if metrics["faithfulness"] is None and metrics["answer_correctness"] is None:
         errors = {e.split(":")[1].strip() for r in rows for e in r["judge_errors"]}
         print(f"  WARNING: every judge call failed ({', '.join(errors) or 'unknown'}) "
-              f"— is {judge_model} a valid model for this key?")
+              f"- is {judge_model} a valid model for this key?")
     return {"metrics": metrics, "rows": rows}
 
 

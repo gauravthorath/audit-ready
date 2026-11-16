@@ -23,12 +23,12 @@ features should be discussed in an issue first.
 | `core/` | Engine: retrieval, RAG, judge, tools, guardrails, LLM client |
 | `assistant/` | LangChain chat agent + Streamlit |
 | `audit/` | LangGraph per-control agent, batch report, evidence connectors |
-| `api/` | FastAPI wire shape only — no verdict logic |
+| `api/` | FastAPI wire shape only - no verdict logic |
 | `web/` | Next.js front end; talks only to `api/` |
 | `tests/` | Offline pytest (no API key) |
 
 Prompts live in `core/prompts.py`, `assistant/prompts.py`, or `audit/prompts.py`
-— not inline in logic modules. LLM calls go through `core/llm.chat()`.
+- not inline in logic modules. LLM calls go through `core/llm.chat()`.
 
 ## Setup
 
@@ -44,7 +44,7 @@ Front end (optional):
 cd web && cp .env.local.example .env.local && pnpm install && pnpm dev
 ```
 
-Live smokes that hit a real LLM cost money — use `uv run python scripts/smoke_<name>.py`
+Live smokes that hit a real LLM cost money - use `uv run python scripts/smoke_<name>.py`
 only when you mean to. Changing a rubric, judge prompt, model, or retrieval path
 means re-running the eval and updating committed results (see `assistant/README.md`).
 

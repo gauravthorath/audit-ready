@@ -4,7 +4,7 @@ What is pinned: the Part B grader model reaches `chat()` unchanged, a grader
 is never chosen implicitly (that is how self-grading bias returns unnoticed),
 the CLI flag beats the configured default, the run stamps who graded it, and
 re-running one part carries the other part's evidence forward instead of
-overwriting the file with half a run. No API key, no network — `chat` is
+overwriting the file with half a run. No API key, no network - `chat` is
 faked at the seam the harness imports it by.
 """
 

@@ -1,11 +1,11 @@
-"""Unit tests for core/checklists.py — config loading + validation (NFR-4).
+"""Unit tests for core/checklists.py - config loading + validation (NFR-4).
 
 The loader's job is "validation at the boundary": a malformed pack must fail
 loudly at load time with a message naming the file, never surface later as a
 confusing error mid-audit. So most tests here are about REJECTION quality.
 
 Testing concepts used:
-- tmp_path: a pytest built-in fixture — a fresh temporary directory per
+- tmp_path: a pytest built-in fixture - a fresh temporary directory per
   test, cleaned up automatically. We write throwaway YAML files there
   instead of polluting the repo with fixture files.
 - Testing against the real shipped config (iso9001.yaml) at the end: cheap
@@ -24,7 +24,7 @@ REAL_PACK = REPO_ROOT / "assistant" / "data" / "checklists" / "iso9001.yaml"
 
 
 def minimal_pack_dict() -> dict:
-    """The smallest valid pack — each test mutates a copy to break ONE thing,
+    """The smallest valid pack - each test mutates a copy to break ONE thing,
     so a failure points at exactly the rule under test."""
     return {
         "pack": {
@@ -81,7 +81,7 @@ def test_get_control_unknown_id_raises_with_valid_ids_listed(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Rejection paths — each breaks exactly one rule
+# Rejection paths - each breaks exactly one rule
 # ---------------------------------------------------------------------------
 
 
@@ -91,7 +91,7 @@ def test_missing_file_raises_file_not_found(tmp_path):
 
 
 def test_non_mapping_yaml_rejected_with_file_in_message(tmp_path):
-    # A YAML file containing a bare list parses fine — but it isn't a pack.
+    # A YAML file containing a bare list parses fine - but it isn't a pack.
     path = write_pack(tmp_path, ["just", "a", "list"])
     with pytest.raises(ValueError) as exc_info:
         load_pack(path)
@@ -106,7 +106,7 @@ def test_duplicate_control_ids_rejected(tmp_path):
 
 
 def test_invalid_severity_rejected(tmp_path):
-    # Literal["major","minor"] — a typo must fail at load, not skew the
+    # Literal["major","minor"] - a typo must fail at load, not skew the
     # coverage report's severity weighting silently.
     data = minimal_pack_dict()
     data["controls"][0]["severity"] = "critical"

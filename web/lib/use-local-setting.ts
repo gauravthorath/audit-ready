@@ -44,7 +44,7 @@ export function useLocalSetting<T extends string>(
       try {
         localStorage.setItem(storageKey, v);
       } catch {
-        /* storage unavailable — the event still re-renders this tab */
+        /* storage unavailable - the event still re-renders this tab */
       }
       window.dispatchEvent(new Event(CHANGE_EVENT));
     },

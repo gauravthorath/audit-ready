@@ -1,4 +1,4 @@
-"""Hermetic tests for audit/graph.py — routing and the verify loop.
+"""Hermetic tests for audit/graph.py - routing and the verify loop.
 
 No network: judge_ticket, retrieve_evidence and the verifier's chat() are
 monkeypatched. What is under test is the CONTROL FLOW the graph adds around
@@ -183,7 +183,7 @@ def test_verifier_checks_are_parsed_and_kept():
            ' "verdict": "satisfied", "issues": []}')
     v = graph._parse_verification(raw, "satisfied")
     assert v.agrees is True and len(v.checks) == 2 and v.checks[1].met is True
-    # old-shape replies (no checks) still parse — the field defaults to empty
+    # old-shape replies (no checks) still parse - the field defaults to empty
     assert graph._parse_verification('{"verdict": "gap", "issues": []}', "gap").checks == []
 
 

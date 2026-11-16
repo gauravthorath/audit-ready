@@ -1,4 +1,4 @@
-"""Who may call, and what they may do (Step 40). Offline — the OIDC key is made here.
+"""Who may call, and what they may do (Step 40). Offline - the OIDC key is made here.
 
 What is pinned: `none` keeps the old behaviour; `token` refuses a missing or
 wrong credential with a challenge and admits a right one; a role a token does
@@ -52,7 +52,7 @@ def rsa_key():
 
 @pytest.fixture()
 def oidc(rsa_key):
-    """An OIDC authenticator whose key set is the test's own key — no network."""
+    """An OIDC authenticator whose key set is the test's own key - no network."""
     client = SimpleNamespace(
         get_signing_key_from_jwt=lambda token: SimpleNamespace(key=rsa_key.public_key())
     )

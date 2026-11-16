@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Standalone output: `next build` emits .next/standalone with a server.js and
-  // only the node_modules it traced. That is what web/Dockerfile ships — the
+  // only the node_modules it traced. That is what web/Dockerfile ships - the
   // app, not the toolchain.
   output: "standalone",
   // The dev-only route indicator defaults to bottom-left, exactly where the

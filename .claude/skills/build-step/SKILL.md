@@ -47,8 +47,8 @@ step is done when every completion criterion below is met, not when the code run
 9. **Journal.** Invoke the `learning-journal` skill for Step N+1.
 
 10. **Commit.** One conventional commit with scope and requirement id, e.g.
-    `feat(v2): langgraph per-control graph — retrieve→judge→verify (cr-1)`.
-    Body: 2–4 lines on the design decision. Commit only when Gaurav asks.
+    `feat(v2): langgraph per-control graph - retrieve→judge→verify (cr-1)`.
+    Body: 2-4 lines on the design decision. Commit only when Gaurav asks.
 
 ## V2-specific notes
 

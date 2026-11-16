@@ -31,7 +31,7 @@ def _logging():
 
     `configure_logging` is a process-wide change: it replaces the root
     handlers and lowers the level to INFO. Left in place it makes every later
-    test in the session log at INFO — which cost 36 seconds in the Streamlit
+    test in the session log at INFO - which cost 36 seconds in the Streamlit
     mount test, whose libraries are extremely chatty below WARNING. A test
     that reconfigures a global restores it.
     """
@@ -143,7 +143,7 @@ def test_span_logs_elapsed_on_success_and_on_failure(caplog):
 
 
 def test_configure_logging_installs_exactly_one_handler():
-    """It replaces handlers rather than stacking them — every call, one handler."""
+    """It replaces handlers rather than stacking them - every call, one handler."""
     configure_logging(fmt="text")
     configure_logging(fmt="json")
     root = logging.getLogger()

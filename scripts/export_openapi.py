@@ -1,7 +1,7 @@
 """Write the API's OpenAPI document to api/openapi.json (CR-8).
 
 The committed file is what `web/` generates its TypeScript types from, and
-`tests/test_openapi_contract.py` fails when it is stale — so a change to a
+`tests/test_openapi_contract.py` fails when it is stale - so a change to a
 response model is a three-step edit (model, this script, `pnpm gen:types`) and
 a forgotten step is a red test, not a runtime surprise in a browser.
 
@@ -31,7 +31,7 @@ def main(argv: list[str] | None = None) -> int:
         current = OUT.read_text(encoding="utf-8") if OUT.exists() else ""
         if current != text:
             print(f"STALE: {OUT.relative_to(Path.cwd()) if OUT.is_relative_to(Path.cwd()) else OUT} "
-                  "does not match the running app — run: uv run python scripts/export_openapi.py")
+                  "does not match the running app - run: uv run python scripts/export_openapi.py")
             return 1
         print("openapi.json is current")
         return 0

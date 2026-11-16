@@ -15,12 +15,12 @@ v1 scores `check_ticket`: one judge call, one verdict, no notion of
 end in `needs_review`, and that outcome is the whole point of CR-1. Scoring it
 needs metrics v1 has no column for:
 
-* **review rate** — how much of the pack a human still has to look at;
-* **review precision** — of the pairs parked for a human, how many the judge
+* **review rate** - how much of the pack a human still has to look at;
+* **review precision** - of the pairs parked for a human, how many the judge
   actually got wrong (the verifier's false alarms are the cost of the loop);
-* **error catch rate** — of the judge's wrong verdicts, how many the verifier
+* **error catch rate** - of the judge's wrong verdicts, how many the verifier
   stopped from being finalized (the verifier's recall);
-* **finalized agreement / false-positive rate** — the accuracy of the verdicts
+* **finalized agreement / false-positive rate** - the accuracy of the verdicts
   the readiness score is actually built on.
 
 The v1 metric *definitions* (gap recall, flagged recall, false-positive
@@ -28,12 +28,12 @@ rate, exact agreement, citation validity, confusion) are reproduced here
 verbatim over the judge's final verdict regardless of status, so the ISO 9001
 numbers are directly comparable with the committed v1 baseline; the
 harness prints that delta. Same corpus, same 46 labelled pairs, different
-runner — the delta isolates what the graph adds.
+runner - the delta isolates what the graph adds.
 
 Two packs, one harness: the ISO 9001 answer key stays frozen in assistant/eval/;
 the ISO 27001 key lives beside this file. Per-pack and pooled numbers are
 both reported because 22 pairs is small enough that one flipped verdict moves
-a rate by 4–5 points.
+a rate by 4-5 points.
 
 Design choices
 --------------
@@ -159,7 +159,7 @@ def run_pairs(
             i, t, c, e = futures[fut]
             try:
                 results[i] = _row(t, c, e, fut.result())
-            except Exception as exc:  # noqa: BLE001 — isolate, record, continue
+            except Exception as exc:  # noqa: BLE001 - isolate, record, continue
                 results[i] = _error_row(t, c, e, exc)
             done += 1
             if progress:
@@ -255,7 +255,7 @@ def _print_metrics(name: str, m: dict) -> None:
     print(f"  exact agreement        : {m['exact_agreement']}")
     print(f"  gap recall             : {m['gap_recall']}   (missed gaps are the costly error)")
     print(f"  flagged recall         : {m['flagged_recall']}")
-    print(f"  false-positive rate    : {m['false_positive_rate']}   (trust metric — lower is better)")
+    print(f"  false-positive rate    : {m['false_positive_rate']}   (trust metric - lower is better)")
     print(f"  citation validity      : {m['citation_validity']}")
     print(f"  review rate            : {m['review_rate']}   (share parked for a human)")
     print(f"  review precision       : {m['review_precision']}   (parked pairs the judge got wrong)")
@@ -298,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
     tickets = load_tickets()
     # Who produced these numbers. assistant/eval stamps its models for the same
     # reason: a metric read without knowing which model answered is unreadable,
-    # and a hosted model is the one eval input that cannot be frozen — it moved
+    # and a hosted model is the one eval input that cannot be frozen - it moved
     # under us between 2026-09-03 and 2026-09-11 with no code change.
     results: dict[str, Any] = {
         "ran_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),

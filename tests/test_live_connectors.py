@@ -7,7 +7,7 @@ failure messages are all exercised against recorded payloads rather than a
 live site. A connector whose paging only works against one real project is a
 connector nobody can change safely.
 
-Fixtures are trimmed real response shapes — Jira's ADF description and
+Fixtures are trimmed real response shapes - Jira's ADF description and
 `nextPageToken` paging, Linear's Relay connection and 0-4 priority integer.
 """
 

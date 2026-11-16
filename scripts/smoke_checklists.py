@@ -1,4 +1,4 @@
-"""Smoke test for core/checklists.py — run after filling in the TODOs.
+"""Smoke test for core/checklists.py - run after filling in the TODOs.
 
     uv run python scripts/smoke_checklists.py
 

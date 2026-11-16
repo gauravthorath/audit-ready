@@ -18,7 +18,7 @@ export interface paths {
          * Start Audit
          * @description Start a batch audit and return immediately with a run id.
          *
-         *     Unknown ids fail HERE, synchronously, before a thread or a token is spent —
+         *     Unknown ids fail HERE, synchronously, before a thread or a token is spent -
          *     `run_batch` already checks them, and doing it up front turns a 500 five
          *     seconds later into a 404 now. The same rule covers the limits: too many
          *     runs, too many pairs, or a run the day's budget cannot pay for are all
@@ -110,7 +110,7 @@ export interface paths {
          *     safe to show verbatim (400); the model being down is a 503 with a plain
          *     sentence; anything else is a 500 with no detail, because a stack trace in a
          *     browser is a leak, not a diagnostic. Over the rate limit or the daily
-         *     budget is a 429 that says so — refused before a token is spent.
+         *     budget is a 429 that says so - refused before a token is spent.
          */
         post: operations["chat_chat_post"];
         delete?: never;
@@ -362,7 +362,7 @@ export interface components {
         };
         /**
          * PackOut
-         * @description A checklist pack. Invalid packs are listed too — with `error` set and no id.
+         * @description A checklist pack. Invalid packs are listed too - with `error` set and no id.
          */
         PackOut: {
             /** Controls */
@@ -507,7 +507,7 @@ export interface components {
         };
         /**
          * ReportOut
-         * @description `audit.batch.BatchReport.to_dict()` — dataclass fields plus the derived lists.
+         * @description `audit.batch.BatchReport.to_dict()` - dataclass fields plus the derived lists.
          */
         ReportOut: {
             /** Completion Tokens */
@@ -682,7 +682,7 @@ export interface components {
         };
         /**
          * ToolCallOut
-         * @description One tool invocation. `result` is whatever the tool returned — JSON if it was JSON.
+         * @description One tool invocation. `result` is whatever the tool returned - JSON if it was JSON.
          */
         ToolCallOut: {
             /** Args */

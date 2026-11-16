@@ -81,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.out:
         provenance = snapshot(records, args.out)
-        print(f"wrote {args.out}/ — provenance: {json.dumps(provenance['counts'])}")
+        print(f"wrote {args.out}/ - provenance: {json.dumps(provenance['counts'])}")
         print(f"  next: AUDITREADY_CORPUS_DIR={args.out} uv run python audit/batch.py "
               f"--corpus {args.out} --pack <pack>")
 

@@ -7,11 +7,11 @@ file decides layout, not verdicts.
 
 What the page is for, in the order a compliance manager reads it:
   1. pick a checklist pack (the "new standard = new YAML file" demo moment);
-  2. choose scope and run — with a progress bar, because a full pack is
+  2. choose scope and run - with a progress bar, because a full pack is
      hundreds of LLM calls and a silent spinner reads as "hung" (FR-16);
   3. the score, with its denominator right beside it;
   4. the per-control table, then the work lists: open gaps, review queue;
-  5. the agent trace for any pair — judge, verifier, re-judge, flag — so
+  5. the agent trace for any pair - judge, verifier, re-judge, flag - so
      "human in the loop" is something you can click, not a README claim;
   6. download the Markdown/JSON the batch runner already wrote.
 
@@ -96,13 +96,13 @@ def _render_pair(r: dict[str, Any]) -> None:
         st.markdown("**Citations:** " + ", ".join(f"`{c}`" for c in r["citations"]))
     check = r.get("citation_check") or {}
     if check.get("status") and check["status"] != "ok":
-        st.warning(f"Citation check: {check['status']} — {check.get('note', '')}")
+        st.warning(f"Citation check: {check['status']} - {check.get('note', '')}")
     ver = r.get("verification") or {}
     if ver.get("agrees") is False:
         st.warning(f"**Verifier would say `{ver.get('verdict')}`:** "
                    + (" · ".join(ver.get("issues")) or "no further detail"))
     elif ver.get("agrees") is None:
-        st.warning("Verifier reply could not be parsed — parked for a human.")
+        st.warning("Verifier reply could not be parsed - parked for a human.")
     else:
         st.caption(f"Verifier agrees ({ver.get('model', '?')})")
     if r.get("security_flags"):
@@ -114,7 +114,7 @@ def _render_pair(r: dict[str, Any]) -> None:
     with st.expander("RAG trail", expanded=False):
         for q in r.get("evidence_queries") or []:
             st.markdown(f"- {q}")
-        st.markdown("**Chunks:** " + ", ".join(f"`{c}`" for c in r.get("evidence_chunks") or []) or "—")
+        st.markdown("**Chunks:** " + ", ".join(f"`{c}`" for c in r.get("evidence_chunks") or []) or "-")
 
 
 def _pair_list(rows: list[dict[str, Any]], empty: str) -> None:
@@ -122,7 +122,7 @@ def _pair_list(rows: list[dict[str, Any]], empty: str) -> None:
         st.info(empty)
         return
     for r in rows:
-        title = (f"{r['ticket_id']} × {r['control_id']} — "
+        title = (f"{r['ticket_id']} × {r['control_id']} - "
                  f"{VERDICT_BADGES.get(r.get('verdict'))} · {STATUS_BADGES[r['status']]}")
         with st.expander(title, expanded=False):
             _render_pair(r)
@@ -132,7 +132,7 @@ def _run(pack: ChecklistPack, tickets: dict, ticket_ids: list[str],
          control_ids: list[str]) -> BatchReport | None:
     """Run the batch under st.status with a progress bar; None on failure."""
     total = len(ticket_ids) * len(control_ids)
-    status = st.status(f"Auditing {total} record–control pairs…", expanded=True)
+    status = st.status(f"Auditing {total} record-control pairs…", expanded=True)
     bar = status.progress(0.0)
 
     def on_progress(done: int, total_: int, label: str) -> None:
@@ -179,7 +179,7 @@ def report_page() -> None:
         ticket_ids = st.multiselect("Records", list(tickets), default=list(tickets))
         n = len(control_ids) * len(ticket_ids)
         lo, hi = estimate_calls(n)
-        st.caption(f"{n} pairs → about {lo}–{hi} model calls (judge + verify, maybe one re-judge).")
+        st.caption(f"{n} pairs → about {lo}-{hi} model calls (judge + verify, maybe one re-judge).")
         run_clicked = st.button("Run audit", type="primary", disabled=n == 0,
                                 use_container_width=True)
         st.divider()
@@ -212,7 +212,7 @@ def report_page() -> None:
     pricing = _model_pricing(DEFAULT_MODEL)
     cost, note = estimate_cost_usd(report.prompt_tokens, report.completion_tokens, pricing)
     c1, c2, c3, c4, c5 = st.columns(5)
-    c1.metric("Readiness", "—" if report.readiness_score is None else f"{report.readiness_score:.0%}",
+    c1.metric("Readiness", "-" if report.readiness_score is None else f"{report.readiness_score:.0%}",
               help="Severity-weighted (major ×3, minor ×1); partial counts half; N/A excluded. "
                    "Verified verdicts only.")
     c2.metric("Verified pairs", f"{report.verified_pairs} / {report.total_pairs}")
@@ -236,9 +236,9 @@ def report_page() -> None:
                     f"All pairs ({report.total_pairs})",
                     f"Errors ({len(report.errors)})"])
     with tabs[0]:
-        _pair_list(report.open_gaps, "No open gaps — every verified pair is satisfied or not applicable.")
+        _pair_list(report.open_gaps, "No open gaps - every verified pair is satisfied or not applicable.")
     with tabs[1]:
-        _pair_list(report.review_queue, "Nothing parked — the verifier agreed with every verdict.")
+        _pair_list(report.review_queue, "Nothing parked - the verifier agreed with every verdict.")
     with tabs[2]:
         st.dataframe(pair_rows(report.rows), use_container_width=True, hide_index=True)
         _pair_list(report.rows, "No pairs.")

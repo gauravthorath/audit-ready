@@ -15,14 +15,14 @@ Two decisions worth stating, because both were judgement calls:
 
 *Why write a snapshot to disk instead of streaming live records into the run.*
 An audit finding has to stay reproducible against the evidence as it stood when
-the finding was made. Live tickets mutate — someone edits a comment, closes an
+the finding was made. Live tickets mutate - someone edits a comment, closes an
 issue, adds an approval. A snapshot freezes what was audited, and
 `provenance.json` records where it came from and when. It also means the live
 path and the synthetic path are the same code path from `ingest` onward, so the
 connector cannot break the eval.
 
 *Why the shape gate is here and not in each source.* `validate_ticket` is the
-contract. Every source — live MCP, file import, a future Jira connector — is
+contract. Every source - live MCP, file import, a future Jira connector - is
 checked against the identical field set, so "the data format did not change" is
 a test, not a claim (`tests/test_connectors.py`).
 
@@ -85,7 +85,7 @@ class EvidenceRecords:
     `changes` and `emails` are frequently empty: a ticket system knows about
     tickets. Change-approval records and client correspondence live in other
     systems, which are separate connectors (see `--artifacts-from` on the CLI).
-    An empty list is an honest answer, not a failure — the audit report will
+    An empty list is an honest answer, not a failure - the audit report will
     show the resulting evidence gaps, which is the correct finding.
     """
 
@@ -105,7 +105,7 @@ class EvidenceRecords:
 class TicketSource(Protocol):
     """What a connector has to be. Deliberately one method.
 
-    Everything harder — pagination, auth, an MCP session, a CSV dialect — is the
+    Everything harder - pagination, auth, an MCP session, a CSV dialect - is the
     source's own problem and stays behind `fetch`.
     """
 
@@ -353,17 +353,17 @@ class StubSource:
 
 # Every source named in CR-3 is built (GitHub over MCP, Jira over REST, Linear
 # over GraphQL, CSV/JSON, .eml/.mbox). What remains stubbed is stubbed for a
-# reason that is about access, not about effort — each message names the thing
+# reason that is about access, not about effort - each message names the thing
 # that has to exist before code would mean anything.
 STUBS: dict[str, StubSource] = {
     "teams": StubSource(
         "Microsoft Teams",
-        "Approvals in regulated delivery are often *said in a channel* — 'yes, go ahead, "
-        "approved' — and never written into the ticket, so a Teams channel is real audit "
+        "Approvals in regulated delivery are often *said in a channel* - 'yes, go ahead, "
+        "approved' - and never written into the ticket, so a Teams channel is real audit "
         "evidence and is the source most likely to close the sign-off gap that GitHub, base "
         "Jira and Linear all leave open. Reading it needs an Entra ID app registration with "
         "ChannelMessage.Read.All (admin consent, not a user token), a tenant to test against, "
-        "and a retention policy decision, because a channel export is mostly *not* evidence — "
+        "and a retention policy decision, because a channel export is mostly *not* evidence - "
         "it is a workplace conversation. The mapping itself is the easy part: a message with "
         "an author, a timestamp and a body is already a comment; a reply chain referencing a "
         "ticket id is already a linked_email edge. Written down rather than built because "
@@ -425,7 +425,7 @@ def snapshot(
     `emails_from` is a fetch from `audit.email_evidence.EmlFileSource`:
     correspondence a human exported. Those emails are added to whatever the
     snapshot already has (live or borrowed), duplicates by id dropped, and each
-    ticket an email names gets the reverse `linked_emails` edge — because the
+    ticket an email names gets the reverse `linked_emails` edge - because the
     judge is handed linked records by id from the ticket side, and an email that
     is only indexed is evidence the judge may never see.
     """
@@ -544,7 +544,7 @@ def build_source(kind: str, **kwargs: Any) -> TicketSource:
 def main(argv: list[str] | None = None) -> int:
     """CLI: pull evidence from a source, freeze it, optionally index it.
 
-    Kept separate from `audit/batch.py` on purpose — fetching evidence and
+    Kept separate from `audit/batch.py` on purpose - fetching evidence and
     judging it are different operations with different failure modes, and you
     want to be able to inspect a snapshot before spending LLM calls on it.
     """

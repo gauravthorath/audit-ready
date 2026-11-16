@@ -1,4 +1,4 @@
-"""Unit tests for core/rag.py — the query-decomposition output contract.
+"""Unit tests for core/rag.py - the query-decomposition output contract.
 
 decompose_control and multi_query_search need an LLM and a vector store
 (covered by scripts/smoke_rag.py). The unit-testable seam is _parse_queries:
@@ -25,7 +25,7 @@ def test_prose_around_the_json_is_tolerated():
 
 
 def test_single_query_rejected():
-    # min_length=2: one query means decomposition didn't decompose —
+    # min_length=2: one query means decomposition didn't decompose -
     # accepting it would silently degrade advanced RAG to naive RAG.
     with pytest.raises(ValueError):
         _parse_queries('{"queries": ["only one"]}')

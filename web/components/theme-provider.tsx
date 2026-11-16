@@ -7,7 +7,7 @@
  * inline <script> that sets `.dark` on <html> before the first paint, so a
  * dark-mode reader never sees a white flash (see Next's "preventing flash
  * before hydration" guide). `<html suppressHydrationWarning>` in layout.tsx is
- * the matching half — the class the script added is not in React's output.
+ * the matching half - the class the script added is not in React's output.
  */
 
 import { ThemeProvider as NextThemesProvider } from "next-themes";

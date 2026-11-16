@@ -1,7 +1,7 @@
 """Unit tests for core/llm.py's pure seam: pricing-payload parsing.
 
 chat() needs a live provider (scripts/smoke_llm.py); _pricing_from_payload
-is the unit-testable part — it parses an UNTRUSTED external API response,
+is the unit-testable part - it parses an UNTRUSTED external API response,
 so the tests are mostly about malformed shapes returning None instead of
 raising. Pricing is a display nicety: it must never be the reason the app
 crashes.
@@ -32,11 +32,11 @@ def test_unknown_model_returns_none():
 
 
 def test_malformed_payloads_return_none_never_raise():
-    # External API responses are untrusted input — every broken shape must
+    # External API responses are untrusted input - every broken shape must
     # degrade to None (caller falls back to its price sheet), not crash.
     cases = [
         {},  # no data key
-        {"data": "not a list"},  # wrong type — .get on a str would raise if unguarded
+        {"data": "not a list"},  # wrong type - .get on a str would raise if unguarded
         {"data": [{"id": "openai/gpt-4o-mini"}]},  # pricing key missing
         {"data": [{"id": "openai/gpt-4o-mini", "pricing": "free!"}]},  # pricing not a dict
         {"data": [{"id": "openai/gpt-4o-mini", "pricing": {"prompt": "abc", "completion": "1"}}]},

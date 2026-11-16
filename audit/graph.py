@@ -20,7 +20,7 @@ Why a graph at all, when check_ticket is a straight line (why this, CR-1):
 * **Flagging is a first-class outcome.** A verdict the verifier still
   contests after the retry is not silently returned as if it were clean; it
   leaves through the `flag` node with status "needs_review". The batch
-  report (CR-2) surfaces those separately — the human-in-the-loop story.
+  report (CR-2) surfaces those separately - the human-in-the-loop story.
 * **The trace is a product feature.** Each node appends one line to
   `trace`; the Streamlit agent-trace panel (plan item 5) shows it. "Judge
   said satisfied, verifier objected: cited EML-2099 does not exist,
@@ -65,7 +65,7 @@ Design notes / trade-offs (for the reviewer and the demo):
 Rejected: LangGraph's prebuilt ReAct agent (it lets the model choose the
 next tool; our control flow is fixed by design and must be explainable to
 an auditor); a checkpointer/persistence layer (no human resumes a graph
-mid-run yet — CR-6 territory); asyncio (the stack is sync; the batch runner
+mid-run yet - CR-6 territory); asyncio (the stack is sync; the batch runner
 will parallelise with a thread pool exactly as coverage_report does).
 """
 
@@ -108,7 +108,7 @@ class GraphError(Exception):
 
 
 # ---------------------------------------------------------------------------
-# The verifier's output contract — parse, don't validate, same as Verdict.
+# The verifier's output contract - parse, don't validate, same as Verdict.
 # ---------------------------------------------------------------------------
 
 
@@ -130,7 +130,7 @@ class Verification(BaseModel):
     """What the verifier returns: its checks, its OWN verdict level, issues.
 
     `agrees` is derived in code from level equality (see _parse_verification)
-    and is never asked of the model — a yes/no question over a negated rubric
+    and is never asked of the model - a yes/no question over a negated rubric
     clause is exactly what a small model gets wrong (audit/prompts.py).
     """
 
@@ -165,7 +165,7 @@ def verify_verdict(
     """Ask the verifier model to review one verdict.
 
     Returns (Verification, usage). Verification is None when the reply was
-    malformed — the caller routes that to `flag`, never to `finalize`.
+    malformed - the caller routes that to `flag`, never to `finalize`.
     """
     messages = [
         {"role": "system", "content": VERIFY_SYSTEM},
@@ -184,7 +184,7 @@ def verify_verdict(
 # TypedDict with total=False: nodes return only the keys they change and
 # LangGraph merges them. The Annotated reducers make `trace` and the token
 # counters ACCUMULATE across nodes (and across the re-judge loop) instead of
-# being overwritten — that is the whole reason they are declared this way.
+# being overwritten - that is the whole reason they are declared this way.
 # ---------------------------------------------------------------------------
 
 
@@ -214,7 +214,7 @@ class ControlState(TypedDict, total=False):
 
 
 # ---------------------------------------------------------------------------
-# Nodes — each wraps a core/ call and returns the keys it changed
+# Nodes - each wraps a core/ call and returns the keys it changed
 # ---------------------------------------------------------------------------
 
 
@@ -232,7 +232,7 @@ def retrieve(state: ControlState) -> ControlState:
     """Scoped multi-query retrieval + quarantine, identical to check_ticket."""
     ticket, control = state["ticket"], state["control"]
     bundle = retrieve_evidence(control, ticket_id=ticket["ticket_id"])
-    # Supporting evidence only — chunks that ARE the ticket would duplicate
+    # Supporting evidence only - chunks that ARE the ticket would duplicate
     # the full ticket JSON and pay tokens twice for the same facts.
     supporting = [
         {"chunk_id": h.chunk_id, "text": h.text}
@@ -329,7 +329,7 @@ def verify(state: ControlState) -> ControlState:
         "completion_tokens": usage.completion_tokens,
         "trace": [
             f"verify: citations {citation_check['status']}; {summary}"
-            + (f" — {len(issues)} issue(s)" if issues else "")
+            + (f" - {len(issues)} issue(s)" if issues else "")
         ],
     }
 
@@ -348,11 +348,11 @@ def flag(state: ControlState) -> ControlState:
         )
     else:
         reason = f"still contested after {state['attempts']} judge pass(es)"
-    return {"status": "needs_review", "trace": [f"flag: needs human review — {reason}"]}
+    return {"status": "needs_review", "trace": [f"flag: needs human review - {reason}"]}
 
 
 # ---------------------------------------------------------------------------
-# Routing — the only "intelligence" the graph adds, and it is a pure function
+# Routing - the only "intelligence" the graph adds, and it is a pure function
 # ---------------------------------------------------------------------------
 
 
@@ -377,7 +377,7 @@ def route_after_verify(state: ControlState) -> Literal["finalize", "judge", "fla
     eval showed the judge folding to wrong claims while its own rationale
     contradicted them ("approval precedes deployment ... however, approval
     was recorded only afterwards"). Two noisy models agreeing AFTER one
-    talked to the other is the least trustworthy agreement there is — so a
+    talked to the other is the least trustworthy agreement there is - so a
     flip goes to the human with both opinions attached. Holding firm through
     a review, or a verifier that comes around, still finalizes.
     """

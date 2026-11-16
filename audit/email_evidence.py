@@ -2,8 +2,8 @@
 
 Every mail system exports one of two things: `.eml` files (Outlook, Apple Mail,
 Thunderbird, "download original" in Gmail) or an `.mbox` (Gmail Takeout,
-Thunderbird). This module reads both into the corpus's email shape — the one
-`core/retrieval` indexes and `audit/graph.retrieve` joins to tickets by id —
+Thunderbird). This module reads both into the corpus's email shape - the one
+`core/retrieval` indexes and `audit/graph.retrieve` joins to tickets by id -
 so client correspondence exported from *any* provider becomes evidence.
 
 *Why files and not the Gmail API or Microsoft Graph.* A mailbox OAuth scope
@@ -13,7 +13,7 @@ mailbox connector needs a data-protection review and a scope-minimising design
 first, and that is still true. A file export is the consent-shaped version of
 the same idea: a human chooses exactly which threads constitute evidence, and
 nothing else ever enters the system. Live connectors, when they come, produce
-the same records through the same `fetch` — this module is the contract they
+the same records through the same `fetch` - this module is the contract they
 will meet.
 
 *Three mapping decisions.*
@@ -22,14 +22,14 @@ will meet.
    `EML-` plus six digits derived from its Message-ID, so the id is stable
    across re-imports and matches the pattern the rest of the engine expects.
 2. **Linking.** An email is joined to a ticket when the ticket's id appears in
-   its subject or body — "re: TCK-1001", "see KAN-7". When the caller knows
+   its subject or body - "re: TCK-1001", "see KAN-7". When the caller knows
    which tickets exist, only those count, so a stray product code cannot become
    a phantom link. `link_emails_to_tickets` then writes the reverse edge onto
    the ticket, because `graph.retrieve` walks `ticket.linked_emails`, not
    `email.related_tickets`.
 3. **Bodies.** text/plain when present, else text/html with the tags stripped.
    Formatting is lost on purpose; the sentence that records an approval is not.
-   Attachments are counted and ignored — an attachment is a document, not
+   Attachments are counted and ignored - an attachment is a document, not
    correspondence, and it would need its own connector.
 
 Email bodies are attacker-controlled input like every other record: they pass
@@ -57,8 +57,8 @@ from audit.connectors import ConnectorError, EvidenceRecords
 
 # A ticket key looks like TCK-1001, KAN-7, MER-12. Change and email ids share the
 # shape, so they are excluded by prefix rather than matched and filtered later.
-# The trailing lookahead rejects codes that keep going — INV-2026-0001 is an
-# invoice, not ticket INV-2026 — which real mailboxes are full of.
+# The trailing lookahead rejects codes that keep going - INV-2026-0001 is an
+# invoice, not ticket INV-2026 - which real mailboxes are full of.
 TICKET_REF_RE = re.compile(r"\b(?!CHG-|EML-)[A-Z][A-Z0-9]{1,9}-\d{1,6}\b(?!-\d)")
 
 EMAIL_FIELDS = ("email_id", "from", "to", "date", "subject", "body", "related_tickets")
@@ -100,7 +100,7 @@ def iter_messages(path: str | Path) -> Iterator[tuple[EmailMessage, str]]:
     try:
         with p.open("rb") as fh:
             msg = BytesParser(policy=policy.default).parse(fh)
-    except Exception as exc:  # noqa: BLE001 — name the file, whatever went wrong
+    except Exception as exc:  # noqa: BLE001 - name the file, whatever went wrong
         raise ConnectorError(f"eml: cannot parse {p}: {exc}") from exc
     yield msg, str(p)
 
@@ -154,7 +154,7 @@ def _tidy(text: str) -> str:
 
 
 def body_text(msg: EmailMessage) -> tuple[str, str, int]:
-    """(body, kind, attachments) — kind is 'plain', 'html' or 'empty'."""
+    """(body, kind, attachments) - kind is 'plain', 'html' or 'empty'."""
     attachments = 0
     plain: str | None = None
     html: str | None = None
@@ -168,10 +168,10 @@ def body_text(msg: EmailMessage) -> tuple[str, str, int]:
             continue
         try:
             content = part.get_content()
-        except Exception:  # noqa: BLE001 — undecodable part: skip it, count nothing
+        except Exception:  # noqa: BLE001 - undecodable part: skip it, count nothing
             continue
         if not isinstance(content, str):
-            attachments += 1  # binary inline part — an image, a signature blob
+            attachments += 1  # binary inline part - an image, a signature blob
             continue
         if ctype == "text/plain" and plain is None:
             plain = content
@@ -312,7 +312,7 @@ def link_emails_to_tickets(tickets: list[dict[str, Any]], emails: list[dict[str,
 
 
 class EmlFileSource:
-    """Exported mail — .eml files, a directory of them, or an .mbox — as evidence records.
+    """Exported mail - .eml files, a directory of them, or an .mbox - as evidence records.
 
     Produces emails only; tickets come from a ticket connector and the two are
     merged by `connectors.snapshot`. `known_tickets` restricts linking to ids

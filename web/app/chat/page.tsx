@@ -1,11 +1,11 @@
 "use client";
 
 /**
- * Compliance chat — the v1 chatbot as one panel (CR-8).
+ * Compliance chat - the v1 chatbot as one panel (CR-8).
  *
  * Same contract as assistant/app.py: the page renders what AuditAgent returns
  * and never re-runs anything. The sources panel is fed by the tool calls the
- * agent already made, which is what keeps the citations honest — nothing here
+ * agent already made, which is what keeps the citations honest - nothing here
  * can cite a thing the agent did not retrieve.
  */
 
@@ -38,7 +38,7 @@ type Turn = {
 // The conversation id survives a reload, and only a reload: sessionStorage is
 // per tab and is cleared when the tab closes. The messages themselves live on
 // the server (api/sessions.py), so what is kept here is a pointer, never
-// evidence — if the tab forgets it, the conversation is still listed under
+// evidence - if the tab forgets it, the conversation is still listed under
 // "Earlier conversations".
 const SESSION_KEY = "auditready.session";
 
@@ -55,7 +55,7 @@ function rememberSession(id: string | undefined) {
 }
 
 /**
- * The stored id, read through `useSyncExternalStore` — the same pattern
+ * The stored id, read through `useSyncExternalStore` - the same pattern
  * `lib/use-local-setting.ts` uses. Storage is the single source of truth
  * rather than a copy in state, which is what makes it hydration-safe: the
  * server snapshot is `null`, so the first client render agrees with the HTML
@@ -149,7 +149,7 @@ export default function ChatPage() {
   };
 
   // A turn is flagged when any tool result carries a non-empty security_flags
-  // list (check_ticket, find_evidence hits) — the engine's own signal, not a
+  // list (check_ticket, find_evidence hits) - the engine's own signal, not a
   // string match on the answer text.
   const flagged = (v: unknown): boolean => {
     if (Array.isArray(v)) return v.some(flagged);
@@ -244,14 +244,14 @@ export default function ChatPage() {
       <aside className="flex flex-col gap-4 self-start">
         <div className="card p-4 text-[13px]">
           <div className="eyebrow mb-2">Session</div>
-          <div><span className="text-dim">Model:</span> <Code>{session?.model ?? "—"}</Code></div>
+          <div><span className="text-dim">Model:</span> <Code>{session?.model ?? "-"}</Code></div>
           <div className="mt-2"><span className="text-dim">Tokens:</span> <span className="mono">{(session?.prompt_tokens ?? 0) + (session?.completion_tokens ?? 0)}</span></div>
           <div className="text-[12px] text-dim">prompt {session?.prompt_tokens ?? 0} / completion {session?.completion_tokens ?? 0}</div>
           <div className="mt-2"><span className="text-dim">Est. cost:</span> <span className="mono">${(session?.cost_usd ?? 0).toFixed(4)}</span></div>
           {session?.cost_basis && <div className="text-[12px] text-dim">({session.cost_basis})</div>}
           {answered.length >= 2 && (
             <div className="mt-4 border-t border-line pt-3">
-              <div className="mb-1.5 text-[12px] text-dim">Tokens per turn — the context growing</div>
+              <div className="mb-1.5 text-[12px] text-dim">Tokens per turn - the context growing</div>
               <Columns
                 points={answered.map((t, i) => ({
                   key: String(i),
@@ -297,7 +297,7 @@ export default function ChatPage() {
           </div>
         )}
         <div className="text-[12px] leading-relaxed text-dim">
-          Ticket comments are written by people outside the company. A record is data — it is never an
+          Ticket comments are written by people outside the company. A record is data - it is never an
           instruction. Anything that looks like one is quarantined and shown here.
         </div>
       </aside>
@@ -365,7 +365,7 @@ function ToolCallView({ call }: { call: ToolCall }) {
           <summary className="cursor-pointer">Counts as returned</summary>
           <ul className="mt-1 text-[12.5px] text-body">
             {rows.map((row) => (
-              <li key={row.id}><span className="font-semibold">{row.id}</span> — <span className="mono text-[12px]">{JSON.stringify(row.counts)}</span></li>
+              <li key={row.id}><span className="font-semibold">{row.id}</span> - <span className="mono text-[12px]">{JSON.stringify(row.counts)}</span></li>
             ))}
           </ul>
         </details>

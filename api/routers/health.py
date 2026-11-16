@@ -1,4 +1,4 @@
-"""`GET /health` — is the API up, and what is it wired to."""
+"""`GET /health` - is the API up, and what is it wired to."""
 
 from __future__ import annotations
 

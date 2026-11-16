@@ -3,7 +3,7 @@
 A token bucket per caller: `limit` calls per `period_s`, refilled continuously,
 so a burst up to the limit is fine and a sustained loop is not. In-process and
 lock-guarded, which is exactly right for one API process and exactly wrong for
-several — when there is a second worker, the bucket moves to the same store
+several - when there is a second worker, the bucket moves to the same store
 the sessions do (docs/PRODUCTION_PLAN.md, Step 41). The interface stays.
 
 Why here and not at a gateway. Nginx or a cloud WAF can count requests; they

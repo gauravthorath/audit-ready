@@ -38,7 +38,7 @@ function writeCollapsed(value: boolean): void {
   try {
     localStorage.setItem(STORAGE_KEY, value ? "1" : "0");
   } catch {
-    /* storage unavailable — the toggle still works for this render via the event */
+    /* storage unavailable - the toggle still works for this render via the event */
   }
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }

@@ -3,7 +3,7 @@
 Speaks the protocol properly rather than calling the functions: it launches
 `python -m api.mcp_server` as a subprocess over stdio, the way Claude Desktop,
 Cursor or a Copilot Studio connector would, completes the MCP handshake, lists
-the tools, and calls `check_ticket` for real — a live model call whose verdict
+the tools, and calls `check_ticket` for real - a live model call whose verdict
 comes back with the record fields it rests on.
 
     uv run python scripts/smoke_mcp_server.py
@@ -59,7 +59,7 @@ async def run() -> int:
     if verdict.get("verdict") not in ("satisfied", "partial", "gap", "not_applicable"):
         problems.append(f"no verdict: {json.dumps(verdict)[:200]}")
     if not verdict.get("citations"):
-        problems.append("a verdict came back with no citation — the one thing this must never do")
+        problems.append("a verdict came back with no citation - the one thing this must never do")
     if not refused.isError:
         problems.append("an unscoped rollup was not refused")
 

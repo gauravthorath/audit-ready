@@ -8,13 +8,13 @@ LangGraph agent and batch report engine (CR-1, CR-2) call the very same
 functions. The framework is a delivery detail; the capability lives here.
 
 Why dicts (not Pydantic models) as RETURN types: these returns cross the
-tool boundary — LangChain serializes tool output into the model's context,
+tool boundary - LangChain serializes tool output into the model's context,
 the Streamlit UI renders it, the eval harness records it. A plain dict is
-already all three. (Inputs still get validated — by the functions they
+already all three. (Inputs still get validated - by the functions they
 delegate to; outputs were validated at birth in judge/rag.)
 
 The audit philosophy encoded in check_ticket:
-  the TICKET is the record under audit (given, not searched for) —
+  the TICKET is the record under audit (given, not searched for) -
   RETRIEVAL finds the *supporting* artifacts (emails, change records) the
   rubric needs but the ticket only references. That mirrors how a human
   auditor works: record open on the desk, chasing its references.
@@ -36,7 +36,7 @@ from core.rag import retrieve_evidence
 from core.retrieval import search
 
 DEFAULT_PACK_PATH = Path("assistant/data/checklists/iso9001.yaml")
-# Overridable so the whole app — chat tools included — can be pointed at a
+# Overridable so the whole app - chat tools included - can be pointed at a
 # connector snapshot (CR-3) instead of the synthetic corpus.
 DEFAULT_CORPUS_DIR = Path(os.getenv("AUDITREADY_CORPUS_DIR", "assistant/data/corpus"))
 
@@ -44,19 +44,19 @@ DEFAULT_CORPUS_DIR = Path(os.getenv("AUDITREADY_CORPUS_DIR", "assistant/data/cor
 # partial half, gap none; not_applicable is EXCLUDED from the denominator
 # (an inapplicable control can neither help nor hurt readiness).
 # Public so v2 batch runner scores with the SAME policy as
-# coverage_report — one scoring rule, stated once (CR-2 reuses, not redefines).
+# coverage_report - one scoring rule, stated once (CR-2 reuses, not redefines).
 VERDICT_CREDIT = {"satisfied": 1.0, "partial": 0.5, "gap": 0.0}
 _VERDICT_CREDIT = VERDICT_CREDIT
 
 # A major control failing should dent the score three times harder than a
-# minor one — the 3:1 ratio is a policy choice, stated here so it's visible
+# minor one - the 3:1 ratio is a policy choice, stated here so it's visible
 # and arguable, not buried in arithmetic.
 SEVERITY_WEIGHT = {"major": 3.0, "minor": 1.0}
 _SEVERITY_WEIGHT = SEVERITY_WEIGHT
 
 
 # ---------------------------------------------------------------------------
-# Lazy, cached data access — same pattern as the LLM client and the
+# Lazy, cached data access - same pattern as the LLM client and the
 # embedding model: pay for loading once, on first use, never at import.
 # ---------------------------------------------------------------------------
 
@@ -103,7 +103,7 @@ def _tickets() -> dict[str, dict]:
 
 
 # ---------------------------------------------------------------------------
-# Tool 1 — find_evidence (FR-5): semantic search, agent-friendly shape
+# Tool 1 - find_evidence (FR-5): semantic search, agent-friendly shape
 # ---------------------------------------------------------------------------
 
 
@@ -121,7 +121,7 @@ def find_evidence(
 
     Returns are deliberately flat and small: chunk id (= citation handle),
     text, similarity, and the provenance fields the UI shows. The agent
-    will paste these straight into its context — everything here is
+    will paste these straight into its context - everything here is
     something we're happy to spend tokens on.
     """
     filters = []
@@ -137,7 +137,7 @@ def find_evidence(
     for hit in search(query, k=k, where=where):
         # Guardrail (FR-13): search results go straight into the agent's
         # context, so they get the same scan-and-quarantine treatment as
-        # judge input. The metadata stays intact — the hit remains findable
+        # judge input. The metadata stays intact - the hit remains findable
         # and citable, only the payload text is withheld.
         clean_text, flags = sanitize_record(hit.text, _path=hit.chunk_id)
         results.append(
@@ -154,12 +154,12 @@ def find_evidence(
 
 
 # ---------------------------------------------------------------------------
-# Tool 2 — check_ticket (FR-6): the heart. Steps 4+5+6 composed.
+# Tool 2 - check_ticket (FR-6): the heart. Steps 4+5+6 composed.
 # ---------------------------------------------------------------------------
 
 
 def check_ticket(ticket_id: str, control_id: str | None = None) -> dict[str, Any]:
-    """Judge one ticket against one control — or against every control in
+    """Judge one ticket against one control - or against every control in
     the pack when control_id is omitted.
 
     Per (ticket, control) pair:
@@ -174,7 +174,7 @@ def check_ticket(ticket_id: str, control_id: str | None = None) -> dict[str, Any
          cite retrieval results precisely.
 
     Returns a dict with the verdict, rationale, citations, the evidence
-    trail (sub-queries + chunk ids — the UI's RAG-visualisation feed), and
+    trail (sub-queries + chunk ids - the UI's RAG-visualisation feed), and
     token counts (FR-17).
     """
     ticket = _tickets().get(ticket_id)
@@ -201,14 +201,14 @@ def check_ticket(ticket_id: str, control_id: str | None = None) -> dict[str, Any
             "retrieved_supporting_evidence": supporting or "none found",
         }
         # Guardrail layer 2 (FR-13): the ONE choke point every string passes
-        # through before reaching the judging prompt — the poisoned comment
+        # through before reaching the judging prompt - the poisoned comment
         # in the ticket JSON and any payload in retrieved chunks both get
         # quarantined here. The corpus file itself stays untouched; we
         # sanitize the copy that enters the prompt.
         record, security_flags = sanitize_record(record)
         judged = judge_ticket(record, control)
         # Guardrail layer 3 (FR-14): a verdict that cites nothing (or cites
-        # phantoms) gets flagged — the backstop that catches a hijacked
+        # phantoms) gets flagged - the backstop that catches a hijacked
         # "everything satisfied, cite nothing" response even if the scan
         # above missed the payload.
         citation_check = check_citations(
@@ -239,7 +239,7 @@ def check_ticket(ticket_id: str, control_id: str | None = None) -> dict[str, Any
 
 
 # ---------------------------------------------------------------------------
-# Tool 3 — coverage_report (FR-6): the aggregate view
+# Tool 3 - coverage_report (FR-6): the aggregate view
 # ---------------------------------------------------------------------------
 
 
@@ -252,7 +252,7 @@ def coverage_report(
     """Audit-readiness rollup: every requested ticket judged against every
     requested control, aggregated per control and overall.
 
-    Defaults to the WHOLE corpus x pack — that's 20 x 9 = 180 LLM calls, so
+    Defaults to the WHOLE corpus x pack - that's 20 x 9 = 180 LLM calls, so
     callers (and the agent's tool description in Step 9) should scope it.
     The readiness score is a severity-weighted average of verdict credit
     (satisfied 1.0 / partial 0.5 / gap 0.0); not_applicable pairs drop out
@@ -260,12 +260,12 @@ def coverage_report(
 
     Each (ticket, control) judgment is independent, so they run on a small
     thread pool: the work is ~all network wait on the LLM, which threads
-    overlap fine despite the GIL. max_workers=4 is deliberately modest —
+    overlap fine despite the GIL. max_workers=4 is deliberately modest -
     enough to cut an unscoped sweep from ~12 min to ~3 without tripping
     provider rate limits (the batch engine proper is CR-2).
 
     progress, if given, is called from the CALLER'S thread after each
-    completed judgment as progress(done, total, "TCK-1007 × <control>") —
+    completed judgment as progress(done, total, "TCK-1007 × <control>") -
     a plain callable, so core/ stays framework-free (FR-7); the Streamlit
     layer turns it into a progress bar (FR-16).
     """
@@ -273,7 +273,7 @@ def coverage_report(
     control_ids = control_ids or [c.control_id for c in _pack().controls]
 
     # Resolve all controls up front: an unknown id fails HERE with the
-    # valid-ids KeyError before any tokens are spent — and touching the
+    # valid-ids KeyError before any tokens are spent - and touching the
     # lazy pack/ticket caches now means worker threads only ever read them.
     controls = {cid: _pack().get_control(cid) for cid in control_ids}
     _tickets()

@@ -11,7 +11,7 @@ whatever is in flight.
 *Why a class and not two module globals.* The first version kept `_runs` and
 `REPORTS_DIR` at module level, and the tests reached in to clear one and
 patch the other. A `RunRegistry` owns both, so a test builds one on a temp
-directory and hangs it on `app.state.runs` — replaced, not patched. The same
+directory and hangs it on `app.state.runs` - replaced, not patched. The same
 object is where a per-user view of runs will attach when the API knows who is
 calling (docs/PRODUCTION_PLAN.md, Step 41).
 
@@ -197,7 +197,7 @@ class RunRegistry:
         The caller has already validated the ids (unknown ones must fail with a
         404 before a thread or a token is spent), so this method only owns the
         bookkeeping: the record, the thread, and the terminal status. `finished`
-        is called once with the run when it ends, done or error — the router
+        is called once with the run when it ends, done or error - the router
         uses it to charge the spend ledger.
         """
         run = Run(
@@ -243,7 +243,7 @@ class RunRegistry:
                           readiness=report.readiness_score, verified=report.verified_pairs,
                           pairs=report.total_pairs, prompt_tokens=report.prompt_tokens,
                           completion_tokens=report.completion_tokens)
-            except Exception as exc:  # noqa: BLE001 — surfaced to the client as a status, not a trace
+            except Exception as exc:  # noqa: BLE001 - surfaced to the client as a status, not a trace
                 with run.lock:
                     run.status, run.error = "error", f"{type(exc).__name__}: {exc}"
                 log_event(log, "run.end", logging.ERROR, status="error",
@@ -251,6 +251,6 @@ class RunRegistry:
             if finished is not None:
                 try:
                     finished(run)
-                except Exception as exc:  # noqa: BLE001 — accounting must never fail the audit
+                except Exception as exc:  # noqa: BLE001 - accounting must never fail the audit
                     log_event(log, "run.finished_hook", logging.ERROR,
                               error=f"{type(exc).__name__}: {exc}")

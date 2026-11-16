@@ -1,12 +1,12 @@
 # The React front end, self-hosted (CR-4, CR-8).
 #
 # Three stages: install, build, run. The runtime carries only Next's
-# standalone output — the server, its traced node_modules, and the static
-# assets — so the image is the app and not the toolchain.
+# standalone output - the server, its traced node_modules, and the static
+# assets - so the image is the app and not the toolchain.
 #
 # One thing to know about this image: NEXT_PUBLIC_API_URL is inlined into the
 # browser bundle at BUILD time. It is where the user's *browser* reaches the
-# API, not where this container does — so the default is the API's published
+# API, not where this container does - so the default is the API's published
 # host port, and a deployment on another host rebuilds with its own value:
 #
 #   docker compose build --build-arg NEXT_PUBLIC_API_URL=https://audit.example/api web

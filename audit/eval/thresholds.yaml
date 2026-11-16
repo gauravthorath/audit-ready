@@ -2,7 +2,7 @@
 #
 # Two ideas are encoded here, and they are not the same idea:
 #
-#   `min` / `max`  — a floor or ceiling on a metric. Set with a band below the
+#   `min` / `max`  - a floor or ceiling on a metric. Set with a band below the
 #                    number on record, not at it, because temperature 0 is not
 #                    determinism: a single labelled pair moving between runs is
 #                    provider noise (LEARNING.md Step 20).
@@ -18,12 +18,12 @@
 #
 #                    Eyeballing it got several of these wrong. The iso27001
 #                    false-positive ceiling was 0.12 over a record of 0.067, a
-#                    band of 0.053 — narrower than the smallest change that can
+#                    band of 0.053 - narrower than the smallest change that can
 #                    occur. It could not absorb one pair, and on 2026-09-11 it
 #                    broke in four consecutive runs. The iso9001 exact-agreement
 #                    floor had a margin of 0.005, a fifth of a pair.
 #
-#   the exception  — `gap_recall` is floored at 1.0 with no band at all. Every
+#   the exception  - `gap_recall` is floored at 1.0 with no band at all. Every
 #                    other metric trades off against something; this one is the
 #                    product. A planted deficiency that survives to audit day is
 #                    the failure the whole system exists to prevent, so one lost
@@ -49,7 +49,7 @@
   compliance.metrics.false_positive_rate:   {max: 0.07}
   compliance.metrics.citation_validity:     {min: 0.89}
   # Part B is graded by a different model than the one under test (Step 21), so
-  # it is a real signal now rather than self-marking — but it is a 12-question
+  # it is a real signal now rather than self-marking - but it is a 12-question
   # sample, so the bands are wider.
   rag.metrics.faithfulness:                 {min: 0.90}
   rag.metrics.citation_presence_rate:       {min: 1.0}

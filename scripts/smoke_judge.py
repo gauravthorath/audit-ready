@@ -1,4 +1,4 @@
-"""Smoke test for core/judge.py — the walking skeleton, end to end.
+"""Smoke test for core/judge.py - the walking skeleton, end to end.
 
     uv run python scripts/smoke_judge.py
 
@@ -9,7 +9,7 @@ covering all three verdict values:
     TCK-1002 vs release-signoff  -> gap        (planted: no sign-off)
     TCK-1002 vs client-comm      -> partial    (informed, never acknowledged)
 
-Costs three or four LLM calls. Exits 1 on any mismatch — though note the
+Costs three or four LLM calls. Exits 1 on any mismatch - though note the
 'partial' boundary is the genuinely hard case; if it ever flakes, that is
 signal about the rubric or the model, not noise.
 """

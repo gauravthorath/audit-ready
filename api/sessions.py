@@ -1,6 +1,6 @@
 """Chat sessions: whose conversation it is, and where it lives between turns (FR-8, NFR-2).
 
-`AuditAgent` holds a conversation — the sliding-window memory is its message
+`AuditAgent` holds a conversation - the sliding-window memory is its message
 list. The API has to find the same conversation on the next turn, and *where*
 that lives is the question this module isolates.
 
@@ -15,15 +15,15 @@ being acceptable the moment a second person can sign in:
   people cannot reach each other's, and "your conversations" is a query rather
   than a hope.
 * **It died with the process.** A deploy, a crash or an idle restart silently
-  emptied every conversation. A session is now a *record* — the serialised
-  message list plus the token counters — so the agent is rebuilt from it per
+  emptied every conversation. A session is now a *record* - the serialised
+  message list plus the token counters - so the agent is rebuilt from it per
   turn and the API keeps no conversation in memory between requests.
 * **It was one worker's private truth.** Two uvicorn workers meant a coin flip
   over whether your last turn existed. A serialised record in Postgres is the
   same record for every worker.
 
 Rebuilding the agent per turn costs a dictionary round-trip on a few messages,
-which is nothing next to a model call, and it buys statelessness — the property
+which is nothing next to a model call, and it buys statelessness - the property
 that makes the API safe to run more than one of.
 
 **The system prompt is deliberately not stored.** It is regenerated from
@@ -78,7 +78,7 @@ class SessionRecord:
 
     @property
     def turns(self) -> int:
-        """Human turns so far — what a conversation list shows beside the title."""
+        """Human turns so far - what a conversation list shows beside the title."""
         return sum(1 for m in self.state.get("messages", []) if m.get("type") == "human")
 
     @property
@@ -111,7 +111,7 @@ class MemorySessionStore:
     """Conversations in a process-local dict. Lock-guarded: sync routes run on a thread pool.
 
     Right for one process. It does not survive a restart and it is not shared
-    between workers — both are written down in `GET /health` via the store's
+    between workers - both are written down in `GET /health` via the store's
     `kind`, so nobody has to guess which posture a deployment is in.
     """
 

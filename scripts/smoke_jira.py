@@ -66,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"FAIL: no project with key {args.project!r} on {site}. "
                   f"Visible projects: {', '.join(keys) or 'none'}")
         else:
-            print("FAIL: the query returned no issues — the project exists but is empty. "
+            print("FAIL: the query returned no issues - the project exists but is empty. "
                   f"Seed it: uv run python scripts/seed_demo_evidence.py --jira {args.project or '<KEY>'}")
         return 1
 
@@ -91,11 +91,11 @@ def main(argv: list[str] | None = None) -> int:
     for ticket_id, why in list(notes.items())[:2]:
         print(f"    {ticket_id}: {'; '.join(why)}")
     for field, why in records.detail.get("not_supplied", {}).items():
-        print(f"  not supplied: {field} — {why}")
+        print(f"  not supplied: {field} - {why}")
 
     if args.out:
         provenance = snapshot(records, args.out)
-        print(f"wrote {args.out}/ — provenance: {json.dumps(provenance['counts'])}")
+        print(f"wrote {args.out}/ - provenance: {json.dumps(provenance['counts'])}")
         print(f"  next: uv run python audit/batch.py --corpus {args.out} --pack <pack>")
 
     return 0

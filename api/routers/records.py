@@ -1,4 +1,4 @@
-"""`GET /records` and `GET /records/{ticket_id}` — the evidence, as the judge reads it."""
+"""`GET /records` and `GET /records/{ticket_id}` - the evidence, as the judge reads it."""
 
 from __future__ import annotations
 

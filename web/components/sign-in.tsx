@@ -37,7 +37,7 @@ export function SignIn() {
   useEffect(() => {
     if (!needed) return;
     // `/health` is public in every mode, so it can always say which credential
-    // this deployment wants — that is the difference between "sign in" and
+    // this deployment wants - that is the difference between "sign in" and
     // "paste the token your administrator gave you".
     let cancelled = false;
     api

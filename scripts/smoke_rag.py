@@ -1,15 +1,15 @@
-"""Smoke test for core/rag.py — decomposition + multi-query retrieval.
+"""Smoke test for core/rag.py - decomposition + multi-query retrieval.
 
     uv run python scripts/smoke_rag.py
 
 Costs 1-2 LLM calls (the decomposition; searches are local).
 
 The assertion: for TCK-1001 vs the client-comm control, the merged evidence
-must contain all three evidence moments the rubric demands —
+must contain all three evidence moments the rubric demands -
     TCK-1001#header  (resolution + signoff summary)
     EML-2001 or TCK-1001#c0  (logged client communication)
     TCK-1001#c2      (explicit client acknowledgement/approval)
-— and for comparison we print what NAIVE RAG (whole rubric as one query,
+- and for comparison we print what NAIVE RAG (whole rubric as one query,
 k=3, same scope) retrieves, so the difference is visible, not theoretical.
 """
 
@@ -58,7 +58,7 @@ def main() -> int:
     }
     print(
         f"naive missed: {sorted(missed)}" if missed else
-        "naive covered everything too (small scope — the gap grows with corpus size)"
+        "naive covered everything too (small scope - the gap grows with corpus size)"
     )
 
     print(f"\nsmoke_rag: {'ALL GOOD' if failures == 0 else f'{failures} FAILURE(S)'}")

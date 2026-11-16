@@ -1,4 +1,4 @@
-"""Smoke test for core/tools.py — the three domain tools end to end.
+"""Smoke test for core/tools.py - the three domain tools end to end.
 
     uv run python scripts/smoke_tools.py
 
@@ -8,8 +8,8 @@ The check_ticket cases are chosen to prove RETRIEVAL is now load-bearing:
 - TCK-1001 vs client-comm: the acknowledgement lives in the ticket, but the
   scope-confirmation email EML-2001 arrives via retrieval.
 - TCK-1014 vs traceability: the planted dangling references (CHG-3099,
-  EML-2099 don't exist) — retrieval finds nothing for them, judge must gap.
-- TCK-1003 vs client-comm: internal ticket, no customer — must come back
+  EML-2099 don't exist) - retrieval finds nothing for them, judge must gap.
+- TCK-1003 vs client-comm: internal ticket, no customer - must come back
   not_applicable, NOT gap (the new fourth verdict earns its keep here).
 """
 

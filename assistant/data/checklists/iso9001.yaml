@@ -1,4 +1,4 @@
-# AuditReady checklist pack — ISO 9001:2015 (synthetic, own-worded criteria)
+# AuditReady checklist pack - ISO 9001:2015 (synthetic, own-worded criteria)
 #
 # IMPORTANT: These criteria are original paraphrases written for this project.
 # No ISO standard text is reproduced. Users of the engine bring their own
@@ -10,14 +10,14 @@
 #   title                 short human name
 #   description           what the control asks for, in our own words
 #   expected_evidence     artifact types that can satisfy it
-#   sufficiency_rubric    what "good enough" means — SPECIFIC, machine-judgeable
+#   sufficiency_rubric    what "good enough" means - SPECIFIC, machine-judgeable
 #   citation_required     verdict must cite specific artifact(s)
-#   severity              major | minor — weighting for the coverage report
+#   severity              major | minor - weighting for the coverage report
 
 pack:
   id: iso9001-sample
   standard: "ISO 9001:2015"
-  version: "0.1.1"   # 0.1.1 — 8.2.1 (c) must originate with the client; an outbound
+  version: "0.1.1"   # 0.1.1 - 8.2.1 (c) must originate with the client; an outbound
                      #         "we are done" email is (b), not (c). The model read
                      #         EML-2009 as client acknowledgement and finalized a
                      #         planted partial as satisfied (TCK-1015, 2026-09-11).
@@ -43,8 +43,8 @@ controls:
       client; tickets raised internally (e.g. by internal monitoring or
       staff) with no client-facing commitment = NOT APPLICABLE.
       Satisfied only if: (a) a resolution comment exists AND (b) at least one
-      logged client communication precedes closure — a client email, or a
-      ticket comment recording that the client was contacted, both count —
+      logged client communication precedes closure - a client email, or a
+      ticket comment recording that the client was contacted, both count -
       AND (c) explicit client acknowledgement or sign-off is recorded.
       Condition (c) must ORIGINATE WITH THE CLIENT: a reply, an approval, or
       a comment recording that the client confirmed. A message from the
@@ -122,7 +122,7 @@ controls:
     title: "Nonconformity and corrective action"
     description: >
       For incidents/problems, the record shows a root-cause analysis and a
-      corrective action to prevent recurrence — not just a fix.
+      corrective action to prevent recurrence - not just a fix.
     expected_evidence:
       - root_cause_analysis_comment
       - corrective_action_record
@@ -184,7 +184,7 @@ controls:
       - cab_review_comment
       - approval_or_signoff_record
     sufficiency_rubric: >
-      The approval assessed here is the CHANGE approval — a change-record
+      The approval assessed here is the CHANGE approval - a change-record
       approver, a CAB review comment, or an explicit authorisation to
       deploy. A ticket closure sign-off is NOT a change approval and its
       timing is irrelevant to this control. Satisfied only if a named

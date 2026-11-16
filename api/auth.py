@@ -4,8 +4,8 @@ Until this module existed the API had no authentication, and its own CORS
 comment said so: *"this API has no auth, and a wildcard would let any website a
 user visits call their local engine."* That was true and fine for one reviewer
 on one laptop. It stops being fine the moment a second person can reach the
-port, because everything the rest of the hardening keys on — the rate limit,
-the spend ledger, and soon the owner of a chat session — keys on a *caller*,
+port, because everything the rest of the hardening keys on - the rate limit,
+the spend ledger, and soon the owner of a chat session - keys on a *caller*,
 and "the client address" is not a caller when there is a proxy in front.
 
 Three modes, one seam
@@ -13,15 +13,15 @@ Three modes, one seam
 `AUDITREADY_AUTH` picks an authenticator; every route reaches it through the
 same dependency, so a route never knows which one is installed.
 
-* `none` (default) — the actor is the client address, everyone is an auditor.
+* `none` (default) - the actor is the client address, everyone is an auditor.
   This is today's behaviour, kept as the default on purpose: `uv run pytest`,
   the demo and a developer laptop must not need a credential to work.
-* `token` — bearer tokens from `AUDITREADY_API_TOKENS`
+* `token` - bearer tokens from `AUDITREADY_API_TOKENS`
   (`name:token` or `name:token:role1|role2`, comma-separated). Enough for a
   team sharing one deployment, for CI, and for an MCP client. Tokens are held
   as SHA-256 digests and compared in constant time, so a timing difference
   does not leak a prefix and a heap dump does not hand over a working key.
-* `oidc` — the customer's identity provider. The bearer token is a JWT
+* `oidc` - the customer's identity provider. The bearer token is a JWT
   validated against the issuer's JWKS (`AUDITREADY_OIDC_ISSUER`,
   `AUDITREADY_OIDC_AUDIENCE`). This is the mode a compliance department
   actually wants: their directory, their MFA policy, their offboarding. We
@@ -33,7 +33,7 @@ sign-in must reach contradicts it, and puts a vendor between an auditor and
 their own records. `oidc` delegates the hard parts (passwords, MFA, recovery,
 offboarding) to the directory the customer already runs.
 
-Why roles are two words. `auditor` may spend money — run an audit, hold a
+Why roles are two words. `auditor` may spend money - run an audit, hold a
 conversation. `viewer` may read what exists. Anything finer is a policy
 engine, and a policy engine before a second real deployment is speculation.
 
@@ -160,7 +160,7 @@ class TokenAuth:
         self._records = self._parse(spec)
         if not self._records:
             raise ValueError(
-                "AUDITREADY_AUTH=token but AUDITREADY_API_TOKENS is empty — set "
+                "AUDITREADY_AUTH=token but AUDITREADY_API_TOKENS is empty - set "
                 "name:token[:roles] entries, comma-separated, or use AUDITREADY_AUTH=none"
             )
 
@@ -174,7 +174,7 @@ class TokenAuth:
             parts = entry.split(":")
             if len(parts) < 2 or not parts[0].strip() or not parts[1].strip():
                 raise ValueError(
-                    f"AUDITREADY_API_TOKENS entry {entry.split(':')[0]!r} is malformed — "
+                    f"AUDITREADY_API_TOKENS entry {entry.split(':')[0]!r} is malformed - "
                     "expected name:token or name:token:roles"
                 )
             name, token = parts[0].strip(), parts[1].strip()
@@ -227,13 +227,13 @@ class OidcAuth:
     """Validate a JWT the customer's identity provider issued. We verify; we never issue.
 
     The signature is checked against the issuer's published keys, and so are
-    `iss`, `aud` and `exp` — all three, because a token that is merely
+    `iss`, `aud` and `exp` - all three, because a token that is merely
     *well-formed* proves nothing, and a token minted for a different audience
     is someone else's credential being replayed at us.
 
     The key set is discovered once from `<issuer>/.well-known/openid-configuration`
     and cached by PyJWT's JWKS client, which refetches when it meets a `kid` it
-    does not know — that is what makes an ordinary key rotation a non-event.
+    does not know - that is what makes an ordinary key rotation a non-event.
     """
 
     mode = "oidc"
@@ -254,7 +254,7 @@ class OidcAuth:
             response = httpx.get(url, timeout=self.settings.discovery_timeout_s)
             response.raise_for_status()
             uri = response.json()["jwks_uri"]
-        except Exception as exc:  # noqa: BLE001 — surfaced as a 503, never as a trace
+        except Exception as exc:  # noqa: BLE001 - surfaced as a 503, never as a trace
             raise HTTPException(
                 status_code=503,
                 detail="The identity provider could not be reached to check your sign-in.",

@@ -1,4 +1,4 @@
-"""Offline tests for audit/eval/run_eval.py — scoring is pure, running is faked.
+"""Offline tests for audit/eval/run_eval.py - scoring is pure, running is faked.
 
 What is pinned: the v1 metric definitions are reproduced exactly (so the
 ISO 9001 delta means something), the four agent metrics do what their names

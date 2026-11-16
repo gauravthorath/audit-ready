@@ -1,7 +1,7 @@
 """The request-id middleware: where the trace begins on the server (NFR-5, NFR-6).
 
-Every request gets an id — the one the browser sent in `X-Request-ID`, if it
-looks like an id, or a fresh one — bound into the trace context for the whole
+Every request gets an id - the one the browser sent in `X-Request-ID`, if it
+looks like an id, or a fresh one - bound into the trace context for the whole
 request, echoed back in the response header, and logged once with method,
 path, status and elapsed milliseconds.
 
@@ -11,7 +11,7 @@ the response through a queue. That is fine for a JSON route and awkward for
 the SSE progress stream, and it has a history of losing context set inside the
 endpoint. A plain ASGI callable wraps `send`, sets the context before calling
 the app in the *same* task, and gets out of the way. Sync routes run on
-anyio's worker threads, which copy the context in — the tests prove it by
+anyio's worker threads, which copy the context in - the tests prove it by
 finding the request id on a line logged from inside a route.
 
 *Why the access log is replaced rather than added to.* Uvicorn's line has no

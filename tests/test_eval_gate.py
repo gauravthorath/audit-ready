@@ -5,7 +5,7 @@ is mostly the ways it could pass when it shouldn't: a metric that quietly
 vanished from the results, an eval that was never committed, an input edited
 after the numbers were recorded. The floors themselves live in
 `thresholds.yaml` and are checked against the committed results by CI, not
-here — a test that re-asserts the numbers in the file it reads proves nothing.
+here - a test that re-asserts the numbers in the file it reads proves nothing.
 """
 
 from __future__ import annotations

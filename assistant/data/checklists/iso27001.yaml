@@ -1,4 +1,4 @@
-# ISO/IEC 27001:2022 Annex A — SAMPLE subset for AuditReady (CR-5, NFR-4).
+# ISO/IEC 27001:2022 Annex A - SAMPLE subset for AuditReady (CR-5, NFR-4).
 #
 # Second checklist pack. Its job is to prove that a standard is DATA, not
 # code: the engine (core/, audit/) loads this file through the same
@@ -16,10 +16,10 @@
 pack:
   id: iso27001-sample
   standard: "ISO/IEC 27001:2022"
-  version: 0.1.2   # 0.1.2 — A.5.27 rubric says the corrective fix is the remedy, not the
+  version: 0.1.2   # 0.1.2 - A.5.27 rubric says the corrective fix is the remedy, not the
                    #         preventive measure (the model read a fleet-wide patch rollout as
                    #         prevention and finalized a partial as satisfied in 2 of 4 runs)
-                   # 0.1.1 — A.5.17 rubric names what counts as a stated channel / direct enrolment (Step 20 eval)
+                   # 0.1.1 - A.5.17 rubric names what counts as a stated channel / direct enrolment (Step 20 eval)
   description: >
     Six own-worded controls from Annex A (2022 numbering) that a managed
     IT-services provider can evidence from tickets, emails and change

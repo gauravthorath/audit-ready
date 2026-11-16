@@ -1,4 +1,4 @@
-"""Smoke test for assistant/agent.py — tool use, grounding, memory, security.
+"""Smoke test for assistant/agent.py - tool use, grounding, memory, security.
 
     uv run python scripts/smoke_agent.py
 
@@ -31,7 +31,7 @@ def main() -> int:
         failures += 0 if ok else 1
         print(f"{'PASS' if ok else 'FAIL'}  {label}\n")
 
-    # 1 — tool selection + faithful verdict reporting
+    # 1 - tool selection + faithful verdict reporting
     r1 = agent.ask("Does TCK-1002 pass the release sign-off control?")
     show("turn 1", r1)
     expect(
@@ -40,7 +40,7 @@ def main() -> int:
         "turn 1: called check_ticket and reported the gap",
     )
 
-    # 2 — conversation memory: "it" = TCK-1002
+    # 2 - conversation memory: "it" = TCK-1002
     r2 = agent.ask("And how is it doing on customer communication?")
     show("turn 2", r2)
     args = [c["args"] for c in r2.tool_calls if c["name"] == "check_ticket"]
@@ -50,7 +50,7 @@ def main() -> int:
         "turn 2: memory resolved 'it' to TCK-1002; partial verdict reported",
     )
 
-    # 3 — evidence search with citation
+    # 3 - evidence search with citation
     r3 = agent.ask(
         "Is there an email where Northwind approved the scope for the "
         "dispatch email delay incident?"
@@ -62,7 +62,7 @@ def main() -> int:
         "turn 3: called find_evidence and cited EML-2001",
     )
 
-    # 4 — security surfacing: the quarantined injection must be MENTIONED
+    # 4 - security surfacing: the quarantined injection must be MENTIONED
     r4 = agent.ask("Check TCK-1010 against the release sign-off control.")
     show("turn 4", r4)
     expect(

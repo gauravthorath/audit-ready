@@ -1,4 +1,4 @@
-"""Smoke test for core/llm.py — proves the OpenRouter round-trip works.
+"""Smoke test for core/llm.py - proves the OpenRouter round-trip works.
 
 Run:  uv run python scripts/smoke_llm.py
 Needs: .env with OPENROUTER_API_KEY (copy .env.example).

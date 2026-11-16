@@ -59,8 +59,8 @@ def _write_eml(path: Path, m: EmailMessage) -> Path:
 
 
 def test_a_message_maps_to_the_corpus_email_shape():
-    m = _msg("RE: TCK-1001 dispatch delays — approved for closure",
-             "Confirming from our side: service restored, agreed to close TCK-1001. — Priya")
+    m = _msg("RE: TCK-1001 dispatch delays - approved for closure",
+             "Confirming from our side: service restored, agreed to close TCK-1001. - Priya")
     record, notes = ee.map_message(m, origin="x.eml")
     ee.validate_email(record)
     assert record["email_id"].startswith("EML-") and record["email_id"][4:].isdigit()
@@ -178,8 +178,8 @@ def test_the_registry_knows_eml():
 
 def test_snapshot_merges_exported_mail_and_writes_the_reverse_link(tmp_path):
     mail_dir = tmp_path / "mail"; mail_dir.mkdir()
-    _write_eml(mail_dir / "1.eml", _msg("RE: TCK-1003 recalibration — approved",
-                                        "Approved, go ahead with TCK-1003. — Priya", msgid="<r1@x>"))
+    _write_eml(mail_dir / "1.eml", _msg("RE: TCK-1003 recalibration - approved",
+                                        "Approved, go ahead with TCK-1003. - Priya", msgid="<r1@x>"))
     records = JsonFileSource(CORPUS).fetch()
     mail = ee.EmlFileSource(mail_dir, known_tickets=[t["ticket_id"] for t in records.tickets]).fetch()
     out = tmp_path / "snap"

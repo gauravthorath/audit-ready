@@ -1,4 +1,4 @@
-"""`GET /packs` and `GET /pricing` — the catalogue and the price list, both read-only."""
+"""`GET /packs` and `GET /pricing` - the catalogue and the price list, both read-only."""
 
 from __future__ import annotations
 

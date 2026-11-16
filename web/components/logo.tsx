@@ -1,6 +1,6 @@
 /**
  * The AuditReady mark, inline so it is one HTTP request fewer and can sit in
- * flex layouts at any size. Source of truth is docs/brand/auditready-mark.svg —
+ * flex layouts at any size. Source of truth is docs/brand/auditready-mark.svg -
  * keep the two in step.
  *
  * The green is fixed, not a theme token: the mark is the one thing that should

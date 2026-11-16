@@ -1,8 +1,8 @@
 """Checklist pack loader (NFR-4).
 
 Loads a YAML checklist pack (e.g. assistant/data/checklists/iso9001.yaml) into
-validated Pydantic models. Everything downstream — retrieval, the check_ticket
-tool, the coverage report — consumes these models, never raw YAML dicts.
+validated Pydantic models. Everything downstream - retrieval, the check_ticket
+tool, the coverage report - consumes these models, never raw YAML dicts.
 
 Why this module exists:
 - Packs are config-as-data: a new standard (ISO 27001, CMMI) is a new YAML
@@ -20,12 +20,12 @@ import yaml
 from pydantic import BaseModel, Field, ValidationError, model_validator
 
 # ---------------------------------------------------------------------------
-# Models — mirror the schema documented at the top of iso9001.yaml
+# Models - mirror the schema documented at the top of iso9001.yaml
 #
 # A Pydantic BaseModel turns type annotations into a validating constructor:
 # you declare WHAT a valid object looks like, and Pydantic generates the
 # __init__, the type checks, and precise error messages. Note there is no
-# hand-written parsing code anywhere in this file — the annotations ARE the
+# hand-written parsing code anywhere in this file - the annotations ARE the
 # schema.
 # ---------------------------------------------------------------------------
 
@@ -49,14 +49,14 @@ class Control(BaseModel):
     citation_required: bool
 
     # Literal restricts the value to an exact set. A typo like "critical"
-    # or "Major" fails validation with a message naming the legal values —
+    # or "Major" fails validation with a message naming the legal values -
     # instead of silently flowing into the coverage report's severity
     # weighting and skewing the numbers.
     severity: Literal["major", "minor"]
 
 
 class PackMeta(BaseModel):
-    """The `pack:` header block of the YAML file — identity metadata."""
+    """The `pack:` header block of the YAML file - identity metadata."""
 
     id: str
     standard: str
@@ -75,7 +75,7 @@ class ChecklistPack(BaseModel):
     pack: PackMeta
     controls: list[Control] = Field(min_length=1)
 
-    # Field-level types can't express rules that span MULTIPLE items —
+    # Field-level types can't express rules that span MULTIPLE items -
     # "no two controls share an id" needs to see the whole list at once.
     # That's what a model_validator is for. mode="after" runs once the
     # individual fields have already been validated, so here `self` is a
@@ -90,10 +90,10 @@ class ChecklistPack(BaseModel):
             seen.add(control.control_id)
         if duplicates:
             # Raising ValueError inside a validator is the Pydantic
-            # convention — it gets wrapped into a ValidationError that
+            # convention - it gets wrapped into a ValidationError that
             # points at this model, keeping all failures in one error type.
             raise ValueError(
-                f"duplicate control_id(s): {sorted(duplicates)} — "
+                f"duplicate control_id(s): {sorted(duplicates)} - "
                 "every control needs a unique, stable id"
             )
         return self
@@ -101,7 +101,7 @@ class ChecklistPack(BaseModel):
     def get_control(self, control_id: str) -> Control:
         """Return the control with this id.
 
-        Raises KeyError listing the valid ids — an unknown id is almost
+        Raises KeyError listing the valid ids - an unknown id is almost
         always a typo, and showing the legal options turns a dead-end
         error into a self-correcting one.
         """
@@ -127,7 +127,7 @@ def load_pack(path: str | Path) -> ChecklistPack:
     """
     path = Path(path)
     if not path.is_file():
-        # resolve() shows the absolute path we actually looked at —
+        # resolve() shows the absolute path we actually looked at -
         # relative paths in error messages hide cwd mistakes.
         raise FileNotFoundError(f"checklist pack not found: {path.resolve()}")
 
@@ -151,6 +151,6 @@ def load_pack(path: str | Path) -> ChecklistPack:
     except ValidationError as e:
         # Re-raise as plain ValueError so callers don't need to import
         # pydantic to catch it, prefixed with the file path. `from e`
-        # chains the tracebacks — the original pydantic report (which
+        # chains the tracebacks - the original pydantic report (which
         # pinpoints the exact field) stays visible below ours.
         raise ValueError(f"{path}: invalid checklist pack\n{e}") from e

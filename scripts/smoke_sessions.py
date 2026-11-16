@@ -5,8 +5,8 @@ property the in-memory store cannot have:
 
   1. `/health` reports the postgres session store.
   2. A chat turn is answered by the real model and the conversation is stored.
-  3. **The store is thrown away and rebuilt from the DSN** — the same thing a
-     restart, a deploy or a second uvicorn worker does — and the next turn in
+  3. **The store is thrown away and rebuilt from the DSN** - the same thing a
+     restart, a deploy or a second uvicorn worker does - and the next turn in
      that conversation still has the first one in its memory.
   4. The conversation is listed under its owner and not under anyone else.
   5. Ending it deletes the row.
@@ -60,7 +60,7 @@ def main() -> int:
 
         # The restart: nothing of this conversation is left in the process.
         app.state.sessions = PostgresSessionStore(dsn)
-        print(f"  session {session_id} — store rebuilt from the DSN (the 'restart')")
+        print(f"  session {session_id} - store rebuilt from the DSN (the 'restart')")
 
         second = client.post(
             "/chat",

@@ -1,4 +1,4 @@
-"""The spend ledger — every dollar the model cost, added up and capped (FR-17).
+"""The spend ledger - every dollar the model cost, added up and capped (FR-17).
 
 The UI has shown cost per turn and per run since v1 (FR-17). What nothing
 did was *add it up* across runs, or *refuse* anything. A 20 × 9 audit is about
@@ -13,9 +13,9 @@ rebuilt from the file at start, so `today()` is a dict lookup, not a scan. The
 Postgres-backed ledger (docs/PRODUCTION_PLAN.md, Step 41) implements the same
 three methods; the API talks to the protocol, not the file.
 
-Why two budgets. `AUDITREADY_DAILY_BUDGET_USD` caps the deployment — the number
+Why two budgets. `AUDITREADY_DAILY_BUDGET_USD` caps the deployment - the number
 the person who pays for the key cares about. `AUDITREADY_ACTOR_DAILY_BUDGET_USD`
-caps each caller — the number that stops one user from spending everyone
+caps each caller - the number that stops one user from spending everyone
 else's day. Either may be unset, which means unlimited; both default to unset
 so a developer laptop and the test suite are never refused.
 
@@ -143,7 +143,7 @@ class SpendLedger:
 
 
 # ---------------------------------------------------------------------------
-# Budget arithmetic — pure, so the API's refusals are unit-testable
+# Budget arithmetic - pure, so the API's refusals are unit-testable
 # ---------------------------------------------------------------------------
 
 

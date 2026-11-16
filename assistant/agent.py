@@ -1,6 +1,6 @@
 """LangChain tool-calling agent over the core tools (FR-8, NFR-2).
 
-What the framework actually adds — and what it doesn't:
+What the framework actually adds - and what it doesn't:
 - core/tools.py already contains ALL the capability. LangChain contributes
   three things here: (1) `@tool` turns a Python function's signature +
   docstring into the JSON schema the model sees, (2) `bind_tools` attaches
@@ -11,12 +11,12 @@ What the framework actually adds — and what it doesn't:
   using a prebuilt agent wrapper, deliberately: this is the thing worth
   understanding, and prebuilt wrappers (AgentExecutor, create_agent) are
   just this loop with more configuration surface. V2's LangGraph
-  agent (CR-1) replaces the loop with an explicit graph — same idea, more
+  agent (CR-1) replaces the loop with an explicit graph - same idea, more
   control.
 
 The loop demystified:
     1. send messages (with tool schemas attached)
-    2. model replies EITHER with text (done) OR tool_calls — a structured
+    2. model replies EITHER with text (done) OR tool_calls - a structured
        "please run find_evidence(query=...)" request; the model cannot run
        anything itself
     3. we execute the named core function, append the result as a
@@ -60,7 +60,7 @@ from assistant.prompts import AGENT_SYSTEM_PROMPT
 load_dotenv()
 
 # The chat agent talks to the model through LangChain, not core.llm.chat(), so
-# it logs its own `llm.call` lines — same event name, same fields, plus
+# it logs its own `llm.call` lines - same event name, same fields, plus
 # `transport=langchain` so the two paths can be told apart in one grep.
 log = logging.getLogger("auditready.agent")
 
@@ -71,9 +71,9 @@ MEMORY_WINDOW = 40  # keep system prompt + the most recent N messages
 
 
 # ---------------------------------------------------------------------------
-# Tool wrappers — thin adapters, zero logic (FR-7 kept intact)
+# Tool wrappers - thin adapters, zero logic (FR-7 kept intact)
 #
-# The docstrings below are NOT documentation for humans — they are the tool
+# The docstrings below are NOT documentation for humans - they are the tool
 # descriptions the MODEL reads when deciding which tool to call. Treat them
 # as UI copy for an audience of one LLM: say when to use the tool, what the
 # arguments mean, and what comes back. The `@tool` decorator lifts the
@@ -91,8 +91,8 @@ def find_evidence(
 
     Args:
         query: natural-language description of the evidence sought.
-        ticket_id: optional — restrict to one ticket's cluster, e.g. "TCK-1002".
-        doc_type: optional — one of "ticket", "ticket_comment", "email", "change".
+        ticket_id: optional - restrict to one ticket's cluster, e.g. "TCK-1002".
+        doc_type: optional - one of "ticket", "ticket_comment", "email", "change".
         k: number of results (default 5).
 
     Returns JSON list of {chunk_id, text, similarity, doc_type, doc_id};
@@ -104,7 +104,7 @@ def find_evidence(
 @tool
 def check_ticket(ticket_id: str, control_id: str | None = None) -> str:
     """Judge one ticket against a compliance control (or ALL controls if
-    control_id is omitted — slower, several LLM calls). Use whenever asked
+    control_id is omitted - slower, several LLM calls). Use whenever asked
     whether a ticket is compliant / audit-ready / passing a control.
 
     Args:
@@ -122,7 +122,7 @@ def check_ticket(ticket_id: str, control_id: str | None = None) -> str:
 # LangChain tool schema must NOT know about progress callbacks (the model
 # would try to fill the argument). So the callback travels out-of-band: ask()
 # parks it in this module global for the duration of one turn, and the tool
-# wrapper picks it up. Safe because an AuditAgent turn is single-threaded —
+# wrapper picks it up. Safe because an AuditAgent turn is single-threaded -
 # only coverage_report's INTERNALS fan out, and it calls back on our thread.
 _progress_callback: Callable[[int, int, str], None] | None = None
 
@@ -133,7 +133,7 @@ def coverage_report(
 ) -> str:
     """Aggregate audit-readiness report: verdicts for every (ticket, control)
     pair, per-control satisfaction rates, failing tickets, and a weighted
-    readiness score. EXPENSIVE — one LLM judgment per pair; unscoped it
+    readiness score. EXPENSIVE - one LLM judgment per pair; unscoped it
     checks the whole corpus (~180 calls). Prefer passing explicit
     ticket_ids and/or control_ids whenever the question allows it.
 
@@ -151,7 +151,7 @@ _TOOLS_BY_NAME = {t.name: t for t in _TOOLS}
 
 
 # ---------------------------------------------------------------------------
-# System prompt — hardened per Step 8's threat model. The wording lives in
+# System prompt - hardened per Step 8's threat model. The wording lives in
 # assistant/prompts.py (companion to core/prompts.py) so prompt changes diff
 # as prompt changes; this module fills in the {control_catalog} placeholder.
 # ---------------------------------------------------------------------------
@@ -160,7 +160,7 @@ _TOOLS_BY_NAME = {t.name: t for t in _TOOLS}
 def _control_catalog() -> str:
     """One line per control from the loaded pack. Injected into the system
     prompt so the agent maps user phrasing ("sign-off", "customer comms")
-    to exact control_ids by TITLE instead of guessing ids from vibes —
+    to exact control_ids by TITLE instead of guessing ids from vibes -
     the smoke test caught it inventing a mapping to the wrong control.
     ~9 lines ≈ trivial tokens, paid once per conversation."""
     return "\n".join(
@@ -186,7 +186,7 @@ def _count(value: Any) -> int:
 class AgentReply:
     """One turn's outcome, with the accounting the UI shows (FR-17).
 
-    tool_calls entries are {"name", "args", "result"} in execution order —
+    tool_calls entries are {"name", "args", "result"} in execution order -
     result is the parsed JSON (dict/list) when the tool returned JSON, else
     the raw string. Carrying results here is what feeds the UI's sources /
     RAG-visualisation panel without the UI re-running anything.
@@ -203,7 +203,7 @@ class AuditAgent:
     and the hand-rolled tool-calling loop."""
 
     def __init__(self, model: str | None = None):
-        # LangChain gets its own client handle (as designed in Step 2 —
+        # LangChain gets its own client handle (as designed in Step 2 -
         # core/llm.py serves the plain tools; the framework layer lives out
         # here in assistant/, never inside core/). What it must NOT get is its
         # own idea of where the endpoint is: a self-hosted deployment (CR-4)
@@ -231,7 +231,7 @@ class AuditAgent:
         """Sliding window (NFR-2): keep the system prompt + the most recent
         MEMORY_WINDOW messages. Care at the seam: history must never START
         with a ToolMessage whose AIMessage (the tool_calls request) was
-        trimmed away — providers reject orphaned tool results."""
+        trimmed away - providers reject orphaned tool results."""
         if len(self._messages) <= 1 + MEMORY_WINDOW:
             return
         tail = self._messages[-MEMORY_WINDOW:]
@@ -267,7 +267,7 @@ class AuditAgent:
         """
         try:
             restored = messages_from_dict(list(state.get("messages") or []))
-        except Exception:  # noqa: BLE001 — an unreadable record must not sink the turn
+        except Exception:  # noqa: BLE001 - an unreadable record must not sink the turn
             restored = []
         self._messages = [self._messages[0], *restored]
         # The counters are read the same defensive way, and for the same reason:
@@ -343,7 +343,7 @@ class AuditAgent:
                     else:
                         result = requested.invoke(call["args"])
                 except Exception as exc:  # tool failure -> the model decides
-                    # what to do next (retry, different tool, apologise) —
+                    # what to do next (retry, different tool, apologise) -
                     # crashing the turn would waste everything done so far
                     result = f"error: {type(exc).__name__}: {exc}"
                 log_event(log, "agent.tool", tool=call["name"],

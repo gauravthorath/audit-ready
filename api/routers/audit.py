@@ -1,10 +1,10 @@
-"""`/audit` — start a batch run, list runs, read one, export it, stream its progress (CR-2, FR-16).
+"""`/audit` - start a batch run, list runs, read one, export it, stream its progress (CR-2, FR-16).
 
 *Why audit is asynchronous.* A batch audit is hundreds of model calls over
 minutes, and a request that long is a request that times out somewhere
 between here and the browser. So `POST /audit` returns a run id immediately,
 the work runs on a thread (`api.runs.RunRegistry.start`), and progress streams
-over SSE — the same "never show a silent spinner" rule the Streamlit page
+over SSE - the same "never show a silent spinner" rule the Streamlit page
 follows (FR-16), carried across a transport that would otherwise lose it.
 
 *Where validation happens.* Unknown ids fail HERE, synchronously, before a
@@ -49,7 +49,7 @@ class AuditRequest(BaseModel):
 def visible_to(run: Run, actor: Actor) -> bool:
     """Whose runs you can see (Step 41).
 
-    With `AUDITREADY_AUTH=none` the deployment is single-user by definition —
+    With `AUDITREADY_AUTH=none` the deployment is single-user by definition -
     everyone sees everything, which is today's behaviour and the demo's. With
     authentication on you see your own runs, plus runs with no owner: those
     were loaded from the reports directory, written by the CLI, and that
@@ -93,7 +93,7 @@ def start_audit(
 ) -> dict[str, Any]:
     """Start a batch audit and return immediately with a run id.
 
-    Unknown ids fail HERE, synchronously, before a thread or a token is spent —
+    Unknown ids fail HERE, synchronously, before a thread or a token is spent -
     `run_batch` already checks them, and doing it up front turns a 500 five
     seconds later into a 404 now. The same rule covers the limits: too many
     runs, too many pairs, or a run the day's budget cannot pay for are all
@@ -122,7 +122,7 @@ def start_audit(
     if limits.max_pairs_per_run and total > limits.max_pairs_per_run:
         raise HTTPException(
             status_code=400,
-            detail=f"{total} record–control pairs is over the limit of {limits.max_pairs_per_run} "
+            detail=f"{total} record-control pairs is over the limit of {limits.max_pairs_per_run} "
                    "per run. Narrow the selection or run it in parts.",
         )
     rate = pricing(DEFAULT_MODEL)

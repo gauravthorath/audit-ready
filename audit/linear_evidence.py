@@ -14,13 +14,13 @@ unattended.
 connection, so a page of issues and their comments is one round trip. That is
 the opposite of the Jira connector, which pages comments per issue because
 Jira's search truncates them without saying so. The difference is the source's,
-not ours — which is the whole point of putting the transport behind `fetch`.
+not ours - which is the whole point of putting the transport behind `fetch`.
 
 *What Linear cannot supply.* No approval record and no resolution field. An
 issue is done when its workflow state has type `completed`, and the narrative
 of *why* lives in comments. `signoff` is None and `resolution` states what the
 source actually holds, with the mapping notes saying so. Priority is a 0-4
-integer where 0 means "no priority set" — that is a real absence, recorded as a
+integer where 0 means "no priority set" - that is a real absence, recorded as a
 guess rather than silently read as medium.
 
 Env:
@@ -252,7 +252,7 @@ def map_issue(issue: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
         label = issue.get("priorityLabel") or issue.get("priority")
         notes.append(
             f"priority defaulted to {DEFAULT_PRIORITY} (Linear priority: {label!r} "
-            "— 0 means no priority set)"
+            "- 0 means no priority set)"
         )
 
     ticket = fill_ticket(
@@ -326,7 +326,7 @@ class LinearIssuesSource:
         """One GraphQL round trip, with GraphQL errors raised as connector errors.
 
         GraphQL answers 200 with an `errors` array, so a status check alone
-        would let a failed query through as an empty fetch — which in an audit
+        would let a failed query through as an empty fetch - which in an audit
         tool reads as "no evidence found" rather than "the query broke".
         """
         try:
@@ -338,7 +338,7 @@ class LinearIssuesSource:
 
         if response.status_code in (400, 401, 403):
             raise ConnectorError(
-                f"linear: {response.status_code} — check AUDITREADY_LINEAR_TOKEN is a "
+                f"linear: {response.status_code} - check AUDITREADY_LINEAR_TOKEN is a "
                 f"personal API key sent without a 'Bearer' prefix: {response.text[:200]}"
             )
         if response.status_code >= 400:

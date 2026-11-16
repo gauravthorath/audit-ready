@@ -1,11 +1,11 @@
-"""Unit tests for core/pgvector_store.py — the pure seams.
+"""Unit tests for core/pgvector_store.py - the pure seams.
 
 The database itself is exercised by scripts/smoke_pgvector.py (needs a
 Postgres with the vector extension; `docker compose up -d db`). What can be
 pinned offline is the contract the callers rely on:
 
 1. Chroma's `where` dialect translates to SQL with every key and value as a
-   bound parameter — a filter can never become a string spliced into SQL.
+   bound parameter - a filter can never become a string spliced into SQL.
 2. The store switch in core/retrieval.py rejects unknown backends loudly and
    keeps the namespace convention (`AUDITREADY_PERSIST_DIR` name) intact.
 """

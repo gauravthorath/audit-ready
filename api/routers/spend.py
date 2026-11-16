@@ -1,4 +1,4 @@
-"""`GET /spend` — what today has cost, what it may cost, and the limits in force (FR-17).
+"""`GET /spend` - what today has cost, what it may cost, and the limits in force (FR-17).
 
 The number a person paying for the key wants on the screen, next to the model
 name: spent today, the budget, what remains. `remaining_usd` is the tighter of

@@ -1,4 +1,4 @@
-"""FastAPI over core/ + audit/ — the wire shape, never the verdicts (CR-8).
+"""FastAPI over core/ + audit/ - the wire shape, never the verdicts (CR-8).
 
 The rule this package lives under is the one that made v2 cheap:
 **no business logic here.** Every number a browser sees is computed by
@@ -9,7 +9,7 @@ is ever computed under `api/`, the refactor has gone wrong.
 Where things are:
 
     settings.py   every AUDITREADY_* the API reads, parsed once
-    schemas.py    the response models — the contract web/ generates its types from
+    schemas.py    the response models - the contract web/ generates its types from
     middleware.py the request id: minted or accepted, bound, echoed, logged once
     ratelimit.py  token buckets per caller for the two routes that spend money
     auth.py       who is calling: none | bearer token | the customer's OIDC issuer
@@ -20,8 +20,8 @@ Where things are:
     routers/      one module per concern: health, packs, records, chat, audit
 
 This module only assembles them. Everything a deployment or a test might want
-to swap hangs on `app.state` — the runner, the agent factory, the pricing
-fetch, the session store, the run registry, the settings — so swapping is an
+to swap hangs on `app.state` - the runner, the agent factory, the pricing
+fetch, the session store, the run registry, the settings - so swapping is an
 assignment, not a patch of a private name.
 
 Req: CR-8; carries FR-15 (no stack traces to the client), FR-16, FR-17.
@@ -105,7 +105,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # The engine as an MCP server, for clients that are not this browser
     # (Claude Desktop, Cursor, a Microsoft 365 Copilot agent in Teams). Off
-    # unless asked for, and refused on an open deployment — see api/mcp_server.py.
+    # unless asked for, and refused on an open deployment - see api/mcp_server.py.
     if mcp_http_enabled():
         check_http_is_safe(settings.auth_mode)
         app.mount("/mcp", build_server().streamable_http_app())

@@ -1,8 +1,8 @@
-"""`POST /chat`, `DELETE /chat/{session_id}` — one conversational turn at a time (FR-8, FR-15).
+"""`POST /chat`, `DELETE /chat/{session_id}` - one conversational turn at a time (FR-8, FR-15).
 
 *Why chat is synchronous and audit is not.* A chat turn is one to three model
 calls and returns in seconds; a browser can wait on it. A batch audit is
-hundreds of calls over minutes — see `routers/audit.py` for the other half of
+hundreds of calls over minutes - see `routers/audit.py` for the other half of
 that decision.
 
 *The error mapping is the contract.* It follows the Streamlit page exactly
@@ -57,7 +57,7 @@ def chat(
     safe to show verbatim (400); the model being down is a 503 with a plain
     sentence; anything else is a 500 with no detail, because a stack trace in a
     browser is a leak, not a diagnostic. Over the rate limit or the daily
-    budget is a 429 that says so — refused before a token is spent.
+    budget is a 429 that says so - refused before a token is spent.
     """
     limits.chat.check(actor.id, "chat turns")  # the caller, not the session: a new
     # session id is free to mint, so a per-session limit would limit nothing.
@@ -72,7 +72,7 @@ def chat(
     record = sessions.get(actor.id, session_id)
     try:
         agent = new_agent()
-    except Exception as exc:  # missing key etc. — say so, don't crash
+    except Exception as exc:  # missing key etc. - say so, don't crash
         raise HTTPException(status_code=503, detail=f"agent unavailable: {exc}") from exc
     if record is not None:
         agent.restore(record.state)  # the memory, rebuilt; the API holds none between turns

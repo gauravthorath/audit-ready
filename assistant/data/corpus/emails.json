@@ -4,8 +4,8 @@
     "from": "priya.nair@northwind-logistics.example",
     "to": ["daniel.okafor@meridian-it.example"],
     "date": "2026-03-02T11:30:00Z",
-    "subject": "RE: Dispatch email delays — scope and target",
-    "body": "Daniel, confirming our call: target is restoring delivery under 5 minutes and a short note on the cause. I'll confirm from our side once warehouse staff see normal timing. — Priya",
+    "subject": "RE: Dispatch email delays - scope and target",
+    "body": "Daniel, confirming our call: target is restoring delivery under 5 minutes and a short note on the cause. I'll confirm from our side once warehouse staff see normal timing. - Priya",
     "related_tickets": ["TCK-1001"]
   },
   {
@@ -13,8 +13,8 @@
     "from": "tomas.silva@northwind-logistics.example",
     "to": ["servicedesk@meridian-it.example"],
     "date": "2026-03-05T08:05:00Z",
-    "subject": "VPN access — manager approval for three new planners",
-    "body": "Hi team, requesting VPN profiles for A. Bergmann, J. Kowalski, and L. Fontaine, all starting 09 March. Approved by their manager H. Visser (in CC). — Tomas",
+    "subject": "VPN access - manager approval for three new planners",
+    "body": "Hi team, requesting VPN profiles for A. Bergmann, J. Kowalski, and L. Fontaine, all starting 09 March. Approved by their manager H. Visser (in CC). - Tomas",
     "related_tickets": ["TCK-1002"]
   },
   {
@@ -22,8 +22,8 @@
     "from": "priya.nair@northwind-logistics.example",
     "to": ["sofia.marchetti@meridian-it.example"],
     "date": "2026-03-10T08:20:00Z",
-    "subject": "RE: Stale order statuses — agreed scope",
-    "body": "Sofia, agreed: priority is restoring near-real-time statuses, then an RCA within 48 hours. This is customer-facing so please treat as P1. — Priya",
+    "subject": "RE: Stale order statuses - agreed scope",
+    "body": "Sofia, agreed: priority is restoring near-real-time statuses, then an RCA within 48 hours. This is customer-facing so please treat as P1. - Priya",
     "related_tickets": ["TCK-1004"]
   },
   {
@@ -32,7 +32,7 @@
     "to": ["priya.nair@northwind-logistics.example"],
     "date": "2026-03-12T10:05:00Z",
     "subject": "RCA: order-tracking status staleness (TCK-1004)",
-    "body": "Priya, attached is the RCA. Summary: portal v2.4.1 broke the cache-invalidation webhook; the retry queue had no alerting so the failure was silent. Fixed under CHG-3002; alerting and a release smoke test added under CHG-3003. — Sofia",
+    "body": "Priya, attached is the RCA. Summary: portal v2.4.1 broke the cache-invalidation webhook; the retry queue had no alerting so the failure was silent. Fixed under CHG-3002; alerting and a release smoke test added under CHG-3003. - Sofia",
     "related_tickets": ["TCK-1004"]
   },
   {
@@ -40,8 +40,8 @@
     "from": "daniel.okafor@meridian-it.example",
     "to": ["priya.nair@northwind-logistics.example", "warehouse-ops@northwind-logistics.example"],
     "date": "2026-03-14T06:45:00Z",
-    "subject": "Carrier manifests restored — morning shift unblocked",
-    "body": "Morning all, last night's EDI import failed; I re-ran it manually and all manifests were loaded by 06:35. Morning shift can proceed normally. Apologies for the disruption. — Daniel",
+    "subject": "Carrier manifests restored - morning shift unblocked",
+    "body": "Morning all, last night's EDI import failed; I re-ran it manually and all manifests were loaded by 06:35. Morning shift can proceed normally. Apologies for the disruption. - Daniel",
     "related_tickets": ["TCK-1005"]
   },
   {
@@ -49,8 +49,8 @@
     "from": "tomas.silva@northwind-logistics.example",
     "to": ["mei-ling.chen@meridian-it.example"],
     "date": "2026-03-16T13:40:00Z",
-    "subject": "RE: Printer firmware upgrade — window confirmed",
-    "body": "Mei-Ling, Saturday 06:00–10:00 works for both sites. Rollback to 4.1 as discussed if test prints fail. — Tomas",
+    "subject": "RE: Printer firmware upgrade - window confirmed",
+    "body": "Mei-Ling, Saturday 06:00-10:00 works for both sites. Rollback to 4.1 as discussed if test prints fail. - Tomas",
     "related_tickets": ["TCK-1006"]
   },
   {
@@ -58,8 +58,8 @@
     "from": "tomas.silva@northwind-logistics.example",
     "to": ["mei-ling.chen@meridian-it.example"],
     "date": "2026-03-23T09:50:00Z",
-    "subject": "RE: Q1 review dashboard — requirements",
-    "body": "Confirming requirements: SLA attainment vs target, ticket volume by priority, MTTR trend over the quarter, and PDF export for the meeting pack. Needed by 30 March. — Tomas",
+    "subject": "RE: Q1 review dashboard - requirements",
+    "body": "Confirming requirements: SLA attainment vs target, ticket volume by priority, MTTR trend over the quarter, and PDF export for the meeting pack. Needed by 30 March. - Tomas",
     "related_tickets": ["TCK-1008"]
   },
   {
@@ -67,8 +67,8 @@
     "from": "tomas.silva@northwind-logistics.example",
     "to": ["daniel.okafor@meridian-it.example"],
     "date": "2026-04-18T09:05:00Z",
-    "subject": "RE: Password reset surge — plan agreed",
-    "body": "Daniel, plan agreed: quick-start guide, login-page banner, corrected comms, and monitor reset volume for three days before closing. — Tomas",
+    "subject": "RE: Password reset surge - plan agreed",
+    "body": "Daniel, plan agreed: quick-start guide, login-page banner, corrected comms, and monitor reset volume for three days before closing. - Tomas",
     "related_tickets": ["TCK-1013"]
   },
   {
@@ -77,7 +77,7 @@
     "to": ["priya.nair@northwind-logistics.example"],
     "date": "2026-04-26T16:25:00Z",
     "subject": "WMS peak-hour search resolved (TCK-1015)",
-    "body": "Priya, the slow search at site B is resolved — we moved the replication job off-peak and added an index; searches are now under 2 seconds at peak. We'll close the ticket end of day; let me know if you see anything further. — Sofia",
+    "body": "Priya, the slow search at site B is resolved - we moved the replication job off-peak and added an index; searches are now under 2 seconds at peak. We'll close the ticket end of day; let me know if you see anything further. - Sofia",
     "related_tickets": ["TCK-1015"]
   },
   {
@@ -85,8 +85,8 @@
     "from": "tomas.silva@northwind-logistics.example",
     "to": ["mei-ling.chen@meridian-it.example", "edi@transbaltic.example"],
     "date": "2026-04-28T10:10:00Z",
-    "subject": "RE: TransBaltic EDI onboarding — requirements confirmed",
-    "body": "All, confirming: DESADV and IFTSTA message types, daily 05:00 cut-off, and full UAT on sample manifests before go-live. TransBaltic team confirmed the spec on their side. — Tomas",
+    "subject": "RE: TransBaltic EDI onboarding - requirements confirmed",
+    "body": "All, confirming: DESADV and IFTSTA message types, daily 05:00 cut-off, and full UAT on sample manifests before go-live. TransBaltic team confirmed the spec on their side. - Tomas",
     "related_tickets": ["TCK-1016"]
   }
 ]

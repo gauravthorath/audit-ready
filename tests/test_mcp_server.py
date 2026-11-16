@@ -1,4 +1,4 @@
-"""The engine published as an MCP server (Step 42). Offline — the engine is faked.
+"""The engine published as an MCP server (Step 42). Offline - the engine is faked.
 
 What is pinned: the four tools exist with the argument names a client will
 send; every description says what the tool costs and what its result means,
@@ -27,7 +27,7 @@ def tools(server) -> dict:
 
 
 def described(server, name) -> str:
-    """A tool's description with the source wrapping flattened — clients see one string."""
+    """A tool's description with the source wrapping flattened - clients see one string."""
     return " ".join((tools(server)[name].description or "").split())
 
 

@@ -3,7 +3,7 @@
 **A grounded, cited AI assistant for compliance audit-readiness.**
 
 
-Point it at a project's records — tickets, change records, emails — and it checks
+Point it at a project's records - tickets, change records, emails - and it checks
 them against a compliance checklist (ISO 9001 and ISO 27001 ship with it), says
 which controls are **satisfied**, which have **gaps**, and drafts the missing
 evidence. Every claim carries a citation back to a real source artifact, and a
@@ -25,7 +25,7 @@ pressure by the person who can least afford the week.
 The temptation is to have an LLM summarise it all. That is the wrong shape: an
 audit finding that cannot be traced to a specific record is worth nothing to an
 auditor, and a confident wrong verdict is worse than no verdict. So the design
-constraint came first — **no citation, no verdict** — and the product was built
+constraint came first - **no citation, no verdict** - and the product was built
 behind it.
 
 ## How it works
@@ -37,22 +37,22 @@ records ──► retrieve ──► judge ──► verify ──► satisfied 
   emails)                                                artifact it rests on
 ```
 
-- **Retrieval** — the corpus is chunked and embedded (`all-MiniLM-L6-v2`, run
+- **Retrieval** - the corpus is chunked and embedded (`all-MiniLM-L6-v2`, run
   locally) into a vector store: **Chroma** (embedded, the default) or
   **Postgres + pgvector** (`AUDITREADY_VECTOR_STORE=pgvector`; one database to
   self-host, HNSW index, a hosted Postgres works with just its DSN). Same
-  chunks, same vectors, same similarity numbers — `scripts/smoke_pgvector.py`
+  chunks, same vectors, same similarity numbers - `scripts/smoke_pgvector.py`
   checks the two return identical rankings. A control is decomposed into several
   queries rather than one, and records the ticket *links* to (change records,
   emails) are joined **by id**, not left to similarity search.
-- **Judging** — one control at a time, against a rubric written as data
+- **Judging** - one control at a time, against a rubric written as data
   (`assistant/data/checklists/*.yaml`). Temperature 0.
-- **The agent** — `audit/graph.py` is a **LangGraph** state machine:
+- **The agent** - `audit/graph.py` is a **LangGraph** state machine:
   retrieve → judge → verify → finalize, with one re-judge if the verifier
   objects and a **park-for-human-review** exit if the verdict flips under
   review. v1's conversational agent (`assistant/agent.py`) is LangChain
   tool-calling over the same `core/` functions.
-- **Evidence connectors** — `audit/connectors.py` defines one interface
+- **Evidence connectors** - `audit/connectors.py` defines one interface
   (`TicketSource`) and one shape gate (`validate_ticket`); three live sources
   sit behind it over three different transports, which is what makes the
   abstraction claim checkable rather than asserted:
@@ -65,10 +65,10 @@ records ──► retrieve ──► judge ──► verify ──► satisfied 
   browser and a human and cannot be smoke-tested unattended. The MCP claim is
   carried by GitHub, where it is true. CSV/JSON import works offline, and
   **exported mail** (`.eml` / `.mbox`, `audit/email_evidence.py`) is imported
-  as correspondence and linked to the tickets it names — any provider, because
+  as correspondence and linked to the tickets it names - any provider, because
   every provider exports one of those two formats. Live mailbox connectors are
   deferred for the reason in the ethics section below.
-- **Deployment** — `docker compose up` self-hosts the whole thing. The
+- **Deployment** - `docker compose up` self-hosts the whole thing. The
   embedding model is baked into the image, so the vector store is built with no
   network at all. The LLM is a **BYO endpoint**: point `AUDITREADY_LLM_BASE_URL`
   at vLLM, Ollama, or an internal gateway and no record ever leaves the
@@ -82,7 +82,7 @@ uv sync
 uv run streamlit run assistant/app.py     # chat + batch report, two pages
 ```
 
-The same two surfaces as a React app (CR-8) — the engine unchanged, an HTTP
+The same two surfaces as a React app (CR-8) - the engine unchanged, an HTTP
 boundary in front of it:
 
 ```bash
@@ -100,7 +100,7 @@ docker compose -f compose.yaml -f compose.local-llm.yaml up     # + Ollama, ever
 
 One Python image serves both `api` and the Streamlit `auditready` service (the
 command differs); `web/` builds its own from `web/Dockerfile`. Finished audits
-are written to `./reports/` on the host, and the API lists them on startup — a
+are written to `./reports/` on the host, and the API lists them on startup - a
 run survives a container restart, and a report made from the CLI shows up in
 the browser.
 
@@ -133,12 +133,12 @@ uv run python audit/eval/gate.py           # the regression gate CI runs
 
 | Path | What lives there |
 |---|---|
-| `core/` | The engine: retrieval, RAG, the three domain tools, guardrails, checklist loading, the single LLM client. **Framework-agnostic** — no LangChain or LangGraph import anywhere in it. |
+| `core/` | The engine: retrieval, RAG, the three domain tools, guardrails, checklist loading, the single LLM client. **Framework-agnostic** - no LangChain or LangGraph import anywhere in it. |
 | `assistant/` | LangChain tool-calling agent + the Streamlit UI. The v1 deliverable. Also holds the synthetic corpus, the checklist packs, and the frozen answer key. |
 | `audit/` | LangGraph agent, batch report, evidence connectors, the eval harness and its regression gate, the report UI page. Reuses `core/` unchanged. |
-| `api/` | FastAPI over `core/` + `audit/`: packs, records, chat sessions, background audit runs with SSE progress, runs persisted to `reports/`. One router per concern, every seam on `app.state`. Authentication is `none`, a bearer token or the customer's OIDC issuer (`api/auth.py`); conversations are records owned by an actor, in memory or Postgres (`api/sessions.py`); the engine is also published as an MCP server (`api/mcp_server.py`). Every request carries a correlation id (`X-Request-ID`) from the browser to each model call; the two routes that spend money are rate-limited and budget-capped, with today's spend at `GET /spend`. Typed responses (`api/schemas.py`) → `api/openapi.json` → TypeScript types in `web/`; `tests/test_openapi_contract.py` fails when the committed document is stale. Holds no business logic — the same rule as `app.py`. |
+| `api/` | FastAPI over `core/` + `audit/`: packs, records, chat sessions, background audit runs with SSE progress, runs persisted to `reports/`. One router per concern, every seam on `app.state`. Authentication is `none`, a bearer token or the customer's OIDC issuer (`api/auth.py`); conversations are records owned by an actor, in memory or Postgres (`api/sessions.py`); the engine is also published as an MCP server (`api/mcp_server.py`). Every request carries a correlation id (`X-Request-ID`) from the browser to each model call; the two routes that spend money are rate-limited and budget-capped, with today's spend at `GET /spend`. Typed responses (`api/schemas.py`) → `api/openapi.json` → TypeScript types in `web/`; `tests/test_openapi_contract.py` fails when the committed document is stale. Holds no business logic - the same rule as `app.py`. |
 | `web/` | Next.js front end (report, chat, records). Talks only to `api/`. Design tokens match the deck. See `web/README.md`. |
-| `docs/` | `ARCHITECTURE.md` (concept and design), `REQUIREMENTS.md` (numbered FR/NFR/CR ids), `V2_PLAN.md` (scope cut and build order), `V2_PLAN.md` (the React front end: why, what's built, what's next), `PRODUCTION_PLAN.md` (the post-review hardening: tracing, limits, auth, sessions, MCP — decisions and order), `DEMO.md` (the demo script). |
+| `docs/` | `ARCHITECTURE.md` (concept and design), `REQUIREMENTS.md` (numbered FR/NFR/CR ids), `V2_PLAN.md` (scope cut and build order), `V2_PLAN.md` (the React front end: why, what's built, what's next), `PRODUCTION_PLAN.md` (the post-review hardening: tracing, limits, auth, sessions, MCP - decisions and order), `DEMO.md` (the demo script). |
 | `tests/`, `scripts/` | Offline unit tests; one live smoke script per module. |
 
 **The one rule that makes this work:** `core/` stays framework-agnostic, so
@@ -161,10 +161,10 @@ labelled ticket × control pairs):
 | exact agreement | 0.935 | 0.955 | 0.941 |
 | gap recall | 1.0 | 1.0 | 1.0 in both runs |
 | flagged recall (any deficiency noticed) | 1.0 | 1.0 | 1.0 in both runs |
-| false-positive rate | 0.032 | 0.067 | 0.043 (0.043–0.065) |
-| citation validity | 0.935 | 0.909 | 0.926 (0.926–0.941) |
-| parked for a human | — | — | 0.103 (0.088–0.103) |
-| agreement on what it finalized | — | — | 0.984 (0.952–0.984) |
+| false-positive rate | 0.032 | 0.067 | 0.043 (0.043-0.065) |
+| citation validity | 0.935 | 0.909 | 0.926 (0.926-0.941) |
+| parked for a human | - | - | 0.103 (0.088-0.103) |
+| agreement on what it finalized | - | - | 0.984 (0.952-0.984) |
 | deficiencies finalized as compliant | 0 | 0 | 0 in both runs |
 
 **Why these are lower than this file used to claim.** The previous numbers,
@@ -173,7 +173,7 @@ labelled ticket × control pairs):
 Seven runs across the two dates found the cause: one pair, TCK-1004 against
 A.8.32, was satisfied on 09-03 and deficient in all four runs on 09-11. The
 corpus, the rubrics and the answer key are frozen and committed. The model is
-not, and cannot be — it is served, not installed. The 09-03 run was the most
+not, and cannot be - it is served, not installed. The 09-03 run was the most
 favourable of the seven, which is not something to publish as a point estimate.
 
 **A deficiency reached a report.** In three of those seven runs a planted
@@ -236,7 +236,7 @@ The caveats, because they matter more than the numbers:
 
 **The corpus is synthetic.** Every ticket, change record and email in
 `assistant/data/corpus/` was written for this project. No client, employer or
-third-party record appears anywhere in the repository or its history — including
+third-party record appears anywhere in the repository or its history - including
 the deficiencies, which are planted deliberately so the evaluation has gaps to
 find. Checklist rubrics are own-worded paraphrases of what a control asks for,
 not copied standard text; ISO standards are copyrighted and are not redistributed
@@ -245,8 +245,8 @@ here.
 **A human decides.** The system produces a draft finding and never a signature.
 Verdicts that fail the verifier's second opinion are *parked* rather than
 finalized (8.8% of pairs in the last run), and the report UI has a review queue
-for exactly those. The agent's whole trace — what it retrieved, what it judged,
-what the verifier said — is exportable, so a reviewer can disagree with the
+for exactly those. The agent's whole trace - what it retrieved, what it judged,
+what the verifier said - is exportable, so a reviewer can disagree with the
 reasoning and not just the answer.
 
 **Records are treated as untrusted input.** A ticket comment is data, never an
@@ -261,7 +261,7 @@ the model.
 outbound call except to the configured LLM endpoint, and that endpoint is
 swappable to something inside the customer's own network. Live snapshots pulled
 from a connector are written to disk with a provenance stamp and are
-**gitignored** — third-party content is not committed to this repository.
+**gitignored** - third-party content is not committed to this repository.
 
 **Mailbox connectors are deliberately not built; mail import is.** Gmail and
 Outlook would be the richest evidence source. They are also a mailbox: unrelated
@@ -269,18 +269,18 @@ personal correspondence, other people's data, and an OAuth scope that grants far
 more than an audit needs. A live connector needs a data-protection review and a
 scope-minimising design, not an afternoon, so it sits in "What's next". What is
 built is the consent-shaped version of the same idea: `audit/email_evidence.py`
-imports exported mail — `.eml` files or an `.mbox`, which is what Gmail Takeout,
-Outlook, Apple Mail and Thunderbird all produce — so a human chooses exactly which
+imports exported mail - `.eml` files or an `.mbox`, which is what Gmail Takeout,
+Outlook, Apple Mail and Thunderbird all produce - so a human chooses exactly which
 threads constitute evidence and nothing else ever enters the system. Imported
 threads are joined to the tickets they name and handed to the judge as linked
 records, the same as any other correspondence in the corpus.
 
 ## Status
 
-- [x] `core/` — retrieval, RAG, tools, guardrails, checklists, LLM client
-- [x] `assistant/` — LangChain agent + Streamlit chat, evaluated (`assistant/README.md`)
-- [x] `audit/` — LangGraph agent, batch report, second standard, eval harness + CI gate, three evidence connectors (GitHub/MCP, Jira/REST, Linear/GraphQL), self-hosted Docker with BYO endpoint (`audit/README.md`)
-- [x] `api/` + `web/` — FastAPI boundary and a Next.js front end over the same core, types generated from the OpenAPI document (CR-8)
+- [x] `core/` - retrieval, RAG, tools, guardrails, checklists, LLM client
+- [x] `assistant/` - LangChain agent + Streamlit chat, evaluated (`assistant/README.md`)
+- [x] `audit/` - LangGraph agent, batch report, second standard, eval harness + CI gate, three evidence connectors (GitHub/MCP, Jira/REST, Linear/GraphQL), self-hosted Docker with BYO endpoint (`audit/README.md`)
+- [x] `api/` + `web/` - FastAPI boundary and a Next.js front end over the same core, types generated from the OpenAPI document (CR-8)
 - [x] Production hardening (`docs/PRODUCTION_PLAN.md`): correlation-id tracing end to end, per-caller rate limits and a spend ledger, authentication (none / token / OIDC), conversations owned by a user and stored in Postgres, the engine published as an MCP server
 
 ## What's next
@@ -310,4 +310,4 @@ Gaurav Thorat.
 [`NOTICE`](NOTICE) records what the copyright does *not* cover: the checklist
 packs are own-worded paraphrases of clause intent written for this project, not
 the text of ISO 9001 or ISO 27001, and the corpus is synthetic. AuditReady
-drafts findings for a human to verify and sign — it does not certify compliance.
+drafts findings for a human to verify and sign - it does not certify compliance.

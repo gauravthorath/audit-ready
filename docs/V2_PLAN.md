@@ -1,4 +1,4 @@
-# v2 — the Next.js front end
+# v2 - the Next.js front end
 
 **Status (2026-09-07): started.** `api/` and `web/` exist, build clean, and are
 tested offline. Decision taken the same day: build now, keep `assistant/app.py`
@@ -21,7 +21,7 @@ understood: CR-8 and `ARCHITECTURE.md` §14 always specified "FastAPI backend +
 a light React front end", a React UI had been promised, and UI quality is a
 scored rubric line. So the rule became narrower rather than gone:
 
-- **The engine is untouched.** `core/`, `audit/`, the eval, the connectors —
+- **The engine is untouched.** `core/`, `audit/`, the eval, the connectors -
   nothing under them changed for this. `api/` and `web/` are additions.
 - **`assistant/app.py` stays until `web/` is demo-ready**, and is the fallback on
   the day. Whichever is green at 09:00 Thursday is what gets presented.
@@ -34,7 +34,7 @@ The first sketch was "keep the Python work in a folder beside `audit/` and
 then change it into Next.js". That does not work, and it is worth saying why
 rather than discovering it later:
 
-- **Streamlit and Next.js share no code.** Streamlit *is* the Python — `st.`
+- **Streamlit and Next.js share no code.** Streamlit *is* the Python - `st.`
   calls interleaved with logic. There is nothing to port; a `.py` file does not
   become a `.tsx` file by moving directories.
 - **Copying `assistant/` sideways creates two truths.** Two copies of the UI, one
@@ -50,9 +50,9 @@ and keeps working. v2 *adds* two directories.
 ## The shape
 
 ```
-core/        unchanged — still framework-agnostic, still no LangChain
-audit/    unchanged — agent, batch, connectors, eval
-assistant/     unchanged — the Streamlit app keeps working, forever if it likes
+core/        unchanged - still framework-agnostic, still no LangChain
+audit/    unchanged - agent, batch, connectors, eval
+assistant/     unchanged - the Streamlit app keeps working, forever if it likes
 api/         NEW  FastAPI over core/ + audit/. The HTTP boundary.
 web/         NEW  Next.js app. Talks only to api/. No Python knowledge.
 ```
@@ -78,8 +78,8 @@ computed in `api/`, the refactor has gone wrong.
   `api/openapi.json` → `web/lib/schema.d.ts` via `openapi-typescript`.
   `tests/test_openapi_contract.py` fails when the JSON is stale; `tsc` fails
   when the front end disagrees with it.
-- **shadcn/ui (2026-09-08).** Adopted for primitives only — Select for the
-  pack picker, Tabs for the report, Button everywhere — with its semantic
+- **shadcn/ui (2026-09-08).** Adopted for primitives only - Select for the
+  pack picker, Tabs for the report, Button everywhere - with its semantic
   variables bound to the existing deck tokens. Done before the review, against
   the earlier "after Thursday" call, because Gaurav wanted the team's feedback
   on it; scoped to an hour. The reviewer surface (dialogs, command menu) will
@@ -90,32 +90,32 @@ computed in `api/`, the refactor has gone wrong.
   identical rankings to Chroma on the corpus. Chroma remains the default for
   the review because the eval was frozen on it.
 - **Not done, on purpose:** renaming `assistant/` and `audit/` to domain
-  names. Too much blast radius three days before the review — imports, tests,
+  names. Too much blast radius three days before the review - imports, tests,
   docs, the deck, CI, the Dockerfile. After Thursday, as one commit.
 
 ## Order of work
 
 Each step is independently useful, and each leaves the Streamlit app running.
 
-1. **`api/` — read-only endpoints first.** `GET /packs`, `GET /records`,
+1. **`api/` - read-only endpoints first.** `GET /packs`, `GET /records`,
    `GET /report/{run_id}`. No LLM calls, no writes. This is where the response
    schemas get pinned, and it is testable offline with the existing fixtures.
-2. **`api/` — the two expensive operations.** `POST /chat` and `POST /audit`.
+2. **`api/` - the two expensive operations.** `POST /chat` and `POST /audit`.
    Both are long-running: an audit is hundreds of model calls. They return a
    run id immediately and stream progress (SSE is enough; WebSockets are not
    needed for one-way progress). The Streamlit progress bar already proves the
-   UX — a silent spinner reads as hung.
+   UX - a silent spinner reads as hung.
 3. **Contract tests against `api/`.** The same discipline as
    `audit/connectors.py`: a response-shape gate, so a field rename fails in
    CI rather than in a browser.
-4. **`web/` — the report surface only.** The batch report is the strongest
+4. **`web/` - the report surface only.** The batch report is the strongest
    screen and the least interactive: score, per-control table, open gaps,
    review queue, agent trace. Ship this before touching chat.
-5. **`web/` — the reviewer surface.** This is the part that justifies the whole
+5. **`web/` - the reviewer surface.** This is the part that justifies the whole
    exercise, and it is the one thing Streamlit genuinely cannot do well: the
    parked queue with assignment, an audit trail of who accepted what, and a
    diff against the previous run. `08-Next` in the deck already promises it.
-6. **`web/` — chat.** Last, because it is the screen Streamlit does adequately.
+6. **`web/` - chat.** Last, because it is the screen Streamlit does adequately.
 7. **Retire the Streamlit app, or don't.** It is a fine internal tool. Keeping
    both is only a cost if they diverge, and they cannot diverge if neither holds
    logic.
@@ -139,7 +139,7 @@ not worth building.
   (`README.md`, "What's next").
 - **A marketing site.** Still out, for the reason already on the record: it
   sells something that is not meterable yet.
-- **Mailbox evidence.** Unchanged — it needs a privacy review, not a UI.
+- **Mailbox evidence.** Unchanged - it needs a privacy review, not a UI.
 
 ## Rough size
 
@@ -150,4 +150,4 @@ are where the actual product value is.
 
 No estimate is written here on purpose. The last time this project put a number
 next to a claim without measuring it, the number was wrong and had to be
-withdrawn in public — see the Challenges slide.
+withdrawn in public - see the Challenges slide.

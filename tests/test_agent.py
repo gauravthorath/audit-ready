@@ -1,4 +1,4 @@
-"""Hermetic tests for assistant/agent.py — the hand-rolled tool-calling loop.
+"""Hermetic tests for assistant/agent.py - the hand-rolled tool-calling loop.
 
 No network, no key. `ChatOpenAI` is replaced by a scripted fake, so what is
 under test is the ~40 lines the framework does NOT write for us (FR-8, NFR-2):
@@ -6,7 +6,7 @@ under test is the ~40 lines the framework does NOT write for us (FR-8, NFR-2):
 - a plain-text reply ends the turn; a tool_calls reply does not
 - the round cap actually caps, and says so instead of returning empty
 - a tool that raises, or a name the model invented, becomes text the model
-  can react to — never a crashed turn
+  can react to - never a crashed turn
 - token accounting survives multi-round turns and lands on the instance
 - the sliding window keeps the system prompt and never leaves a ToolMessage
   orphaned at the head of history (providers reject that)
@@ -110,7 +110,7 @@ def test_a_plain_text_reply_ends_the_turn_in_one_round(monkeypatch):
 def test_text_is_read_as_a_property_not_called(monkeypatch):
     # langchain 1.x returns a str subclass that stays callable and warns when
     # called. The str branch has to win, or every turn takes the deprecated
-    # path — the regression this file exists partly to hold.
+    # path - the regression this file exists partly to hold.
     a, _, _ = _install(monkeypatch, _says("plain"))
 
     with _no_deprecation():

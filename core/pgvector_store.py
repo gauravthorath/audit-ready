@@ -1,11 +1,11 @@
-"""pgvector backend for core/retrieval — the same two verbs, on Postgres.
+"""pgvector backend for core/retrieval - the same two verbs, on Postgres.
 
 v1 named pgvector as the audit engine's store; Chroma stayed because the
 corpus is ~90 chunks and the store was never the bottleneck. This module is
 the scale path made real without touching the callers: `core/retrieval.py`
 keeps its `ingest()` / `search()` signatures and dispatches here when
 `AUDITREADY_VECTOR_STORE=pgvector`. Nothing above retrieval knows which
-backend answered — that is the whole point of the seam.
+backend answered - that is the whole point of the seam.
 
 Why pgvector and not a second vector database: Postgres is already the
 system of record wherever this would be deployed (Jira, ServiceNow and the
@@ -79,7 +79,7 @@ def dsn() -> str:
 
 
 def describe(conninfo: str) -> str:
-    """`host:port/dbname` for logs and /health — never the password."""
+    """`host:port/dbname` for logs and /health - never the password."""
     d = conninfo_to_dict(conninfo)
     return f"{d.get('host', 'localhost')}:{d.get('port', 5432)}/{d.get('dbname', '')}"
 
@@ -121,7 +121,7 @@ def where_to_sql(where: dict | None) -> tuple[str, list[Any]]:
     """Translate a Chroma-style filter into `(predicate, params)`.
 
     Supported: {"k": v}, {"k": {"$eq"|"$ne"|"$in"|"$nin": ...}}, and
-    {"$and"|"$or": [filters]} nested to any depth — the subset core/tools.py
+    {"$and"|"$or": [filters]} nested to any depth - the subset core/tools.py
     and core/rag.py actually use, plus the two obvious neighbours. Anything
     else raises rather than silently matching everything.
     """

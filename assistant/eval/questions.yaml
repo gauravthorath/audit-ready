@@ -16,7 +16,7 @@ questions:
   - id: Q02
     question: "Does TCK-1005 satisfy the corrective action control?"
     ground_truth: >
-      No — gap. The EDI import failure was fixed by a manual re-run and the
+      No - gap. The EDI import failure was fixed by a manual re-run and the
       client confirmed closure, but no root cause was recorded and no
       corrective action to prevent recurrence exists for this high-priority
       incident.
@@ -25,7 +25,7 @@ questions:
   - id: Q03
     question: "Was the freight-cost hotfix in TCK-1007 deployed under an approved change?"
     ground_truth: >
-      No — gap against change control. The hotfix was deployed straight to
+      No - gap against change control. The hotfix was deployed straight to
       production on 21 March with no change approval record (no approver, no
       CAB reference), unlike compliant changes such as CHG-3004.
     expected_sources: ["TCK-1007", "ISO9001-8.5.6-change-control"]
@@ -39,9 +39,9 @@ questions:
     expected_sources: ["TCK-1009", "ISO9001-7.5-documented-info", "ISO9001-8.6-release-signoff"]
 
   - id: Q05
-    question: "Is TCK-1014 traceable — do the artifacts it references exist?"
+    question: "Is TCK-1014 traceable - do the artifacts it references exist?"
     ground_truth: >
-      No — gap. TCK-1014's resolution references change CHG-3099 and email
+      No - gap. TCK-1014's resolution references change CHG-3099 and email
       EML-2099, but neither artifact exists in the record set, so the
       traceability control fails.
     expected_sources: ["TCK-1014", "ISO9001-8.5.2-traceability"]
@@ -49,7 +49,7 @@ questions:
   - id: Q06
     question: "Was the requirement for the carrier-performance export in TCK-1012 reviewed before work started?"
     ground_truth: >
-      No — gap. Work began from a vague verbal mention ('some kind of carrier
+      No - gap. Work began from a vague verbal mention ('some kind of carrier
       performance export'); granularity was assumed weekly and never
       confirmed, and the client later noted they actually needed monthly.
     expected_sources: ["TCK-1012", "ISO9001-8.2.3-requirements-review"]
@@ -57,7 +57,7 @@ questions:
   - id: Q07
     question: "How was the complaint in TCK-1019 handled?"
     ground_truth: >
-      Inadequately — gap against customer-satisfaction monitoring. The formal
+      Inadequately - gap against customer-satisfaction monitoring. The formal
       complaint about SLA breaches was acknowledged and the ticket closed the
       same day with no recorded follow-up action or improvement plan.
     expected_sources: ["TCK-1019", "ISO9001-9.1.2-customer-satisfaction"]

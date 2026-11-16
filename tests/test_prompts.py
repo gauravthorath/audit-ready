@@ -1,7 +1,7 @@
 """Unit tests for core/prompts.py and assistant/prompts.py.
 
 Prompts are load-bearing spec (the project's recurring lesson: the words are
-the code), but unit tests can't judge wording quality — that's what the eval
+the code), but unit tests can't judge wording quality - that's what the eval
 harness measures. What unit tests CAN pin down is the prompts' *contracts*:
 the placeholders templates promise, the delimiters the guardrails scan for,
 and the output formats the parsers expect. If a prompt edit breaks one of
@@ -31,13 +31,13 @@ CONTROL = Control(
 
 
 # ---------------------------------------------------------------------------
-# Judge prompt — contract with judge._parse_verdict and the guardrails
+# Judge prompt - contract with judge._parse_verdict and the guardrails
 # ---------------------------------------------------------------------------
 
 
 def test_judge_system_demands_the_json_verdict_schema():
     # The parser accepts exactly these four verdicts; the prompt must ask
-    # for exactly these four — drift between the two is a retry storm.
+    # for exactly these four - drift between the two is a retry storm.
     for verdict in ["satisfied", "partial", "gap", "not_applicable"]:
         assert verdict in JUDGE_SYSTEM
     assert "rationale" in JUDGE_SYSTEM
@@ -63,7 +63,7 @@ def test_judge_user_prompt_carries_the_full_control():
 
 
 # ---------------------------------------------------------------------------
-# Decomposition prompt — contract with rag._parse_queries
+# Decomposition prompt - contract with rag._parse_queries
 # ---------------------------------------------------------------------------
 
 
@@ -81,13 +81,13 @@ def test_decompose_user_prompt_includes_rubric_and_evidence_types():
 
 
 # ---------------------------------------------------------------------------
-# Agent prompt — contract with assistant/agent.py
+# Agent prompt - contract with assistant/agent.py
 # ---------------------------------------------------------------------------
 
 
 def test_agent_prompt_has_the_control_catalog_placeholder():
     # agent.py fills this via .format(); a typo'd placeholder would raise
-    # KeyError at agent construction — catch it here instead.
+    # KeyError at agent construction - catch it here instead.
     assert "{control_catalog}" in AGENT_SYSTEM_PROMPT
     formatted = AGENT_SYSTEM_PROMPT.format(control_catalog="- T-1 (major): Test")
     assert "- T-1 (major): Test" in formatted

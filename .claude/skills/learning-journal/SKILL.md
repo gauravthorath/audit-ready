@@ -16,12 +16,12 @@ decision and the rejected alternatives, not just the code.
    of the file.
 
 2. Write the entry with every template field filled:
-   - **What we built** — files, functions, deps added.
-   - **Why (the design decision)** — bold lead per decision, the requirement id
+   - **What we built** - files, functions, deps added.
+   - **Why (the design decision)** - bold lead per decision, the requirement id
      it serves, the failure it prevents.
-   - **How it works** — the mechanism a reader could re-implement from.
-   - **Alternatives we didn't pick & why** — at least two, named.
-   - **Concepts to go deeper on** — 3–4 named ideas, essays, or library features.
+   - **How it works** - the mechanism a reader could re-implement from.
+   - **Alternatives we didn't pick & why** - at least two, named.
+   - **Concepts to go deeper on** - 3-4 named ideas, essays, or library features.
    - **My own notes/questions:** … (leave the ellipsis; that section is his).
 
 3. Bugs found during the step get their own paragraph with the lesson stated

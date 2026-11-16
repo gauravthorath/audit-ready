@@ -8,7 +8,7 @@ runner keeps that shape and changes three things that matter at report scale:
    every verdict arrives either *verified* or *flagged for human review*. A
    contested verdict never leaks into the score as if it were settled.
 2. **One failing pair does not kill the run.** `coverage_report` propagates the
-   first exception — fine for a 4-pair chat question, unacceptable for a
+   first exception - fine for a 4-pair chat question, unacceptable for a
    180-pair overnight sweep. Here a pair that raises becomes a row with
    status "error" and the reason; the report says how many, and which.
 3. **The output is an artifact, not a dict.** `render_markdown` writes the
@@ -18,7 +18,7 @@ runner keeps that shape and changes three things that matter at report scale:
 
 Scoring policy is *imported* from core.tools (VERDICT_CREDIT, SEVERITY_WEIGHT),
 not restated: one rule, one place. Pairs whose status is "needs_review" or
-"error" drop out of the score's denominator — the score is a statement about
+"error" drop out of the score's denominator - the score is a statement about
 verified verdicts only, and the report prints coverage ("N of M pairs
 verified") right next to it so the number can't be read out of context.
 
@@ -31,9 +31,9 @@ Why not just call coverage_report with the graph swapped in?
 Why thread pool, not asyncio (again)?
   Same reason as Step 15: the stack is synchronous end to end, and the work
   is network wait on the LLM. `max_workers=4` was measured to be the point
-  where OpenRouter stopped rate-limiting a full sweep. The graph does 2–3
+  where OpenRouter stopped rate-limiting a full sweep. The graph does 2-3
   LLM calls per pair (judge, verify, maybe re-judge), so a 20 × 9 pack is
-  roughly 400–500 calls; expect 6–10 minutes, ~$0.10 on gpt-4o-mini.
+  roughly 400-500 calls; expect 6-10 minutes, ~$0.10 on gpt-4o-mini.
 
 The batch runner takes a pack and a ticket map as ARGUMENTS. That is what
 makes "new standard = new YAML file" (plan item 3) and the Streamlit pack
@@ -209,7 +209,7 @@ def run_batch(
             t, c = futures[future]
             try:
                 results[(t, c)] = future.result()
-            except Exception as exc:  # noqa: BLE001 — one bad pair must not sink the run
+            except Exception as exc:  # noqa: BLE001 - one bad pair must not sink the run
                 results[(t, c)] = _error_row(t, controls[c], exc)
             if progress is not None:
                 progress(done, len(pairs), f"{t} × {c}")
@@ -288,7 +288,7 @@ def _aggregate(pack, ticket_ids, control_ids, controls, results, elapsed: int = 
 
 
 def _pct(x: float | None) -> str:
-    return "—" if x is None else f"{x:.0%}"
+    return "-" if x is None else f"{x:.0%}"
 
 
 def render_markdown(report: BatchReport) -> str:
@@ -300,7 +300,7 @@ def render_markdown(report: BatchReport) -> str:
     """
     r = report
     out: list[str] = []
-    out.append(f"# Audit-readiness report — {r.standard}")
+    out.append(f"# Audit-readiness report - {r.standard}")
     out.append("")
     out.append(f"Pack `{r.pack_id}` · generated {r.generated_at} · "
                f"{len(r.ticket_ids)} records × {len(r.control_ids)} controls")
@@ -308,11 +308,11 @@ def render_markdown(report: BatchReport) -> str:
     out.append(f"## Readiness score: {_pct(r.readiness_score)}")
     out.append("")
     out.append(
-        f"Based on **{r.verified_pairs} of {r.total_pairs}** record–control pairs "
+        f"Based on **{r.verified_pairs} of {r.total_pairs}** record-control pairs "
         f"that reached a verified verdict. Severity-weighted (major ×3, minor ×1); "
         f"partial counts half; not-applicable pairs are excluded. "
         f"{len(r.review_queue)} pair(s) await human review and {len(r.errors)} "
-        f"failed to run — neither is in the score."
+        f"failed to run - neither is in the score."
     )
     out.append("")
 
@@ -332,23 +332,23 @@ def render_markdown(report: BatchReport) -> str:
     out.append(f"## Open gaps ({len(r.open_gaps)})")
     out.append("")
     if not r.open_gaps:
-        out.append("None — every verified pair is satisfied or not applicable.")
+        out.append("None - every verified pair is satisfied or not applicable.")
     for g in r.open_gaps:
         cites = ", ".join(g["citations"]) or "no citation"
-        out.append(f"- **{g['ticket_id']} × {g['control_id']}** — {g['verdict'].upper()} "
+        out.append(f"- **{g['ticket_id']} × {g['control_id']}** - {g['verdict'].upper()} "
                    f"({g['severity']}). {g['rationale']} _[{cites}]_")
     out.append("")
 
     out.append(f"## Needs human review ({len(r.review_queue)})")
     out.append("")
     if not r.review_queue:
-        out.append("None — the verifier agreed with every verdict.")
+        out.append("None - the verifier agreed with every verdict.")
     for q in r.review_queue:
         ver = q.get("verification") or {}
         issues = f"second auditor says {ver.get('verdict')}"
         if ver.get("issues"):
             issues += ": " + "; ".join(ver["issues"])
-        out.append(f"- **{q['ticket_id']} × {q['control_id']}** — judge said "
+        out.append(f"- **{q['ticket_id']} × {q['control_id']}** - judge said "
                    f"{q['verdict']!s} after {q.get('attempts', '?')} attempt(s); "
                    f"{issues}")
     out.append("")
@@ -357,7 +357,7 @@ def render_markdown(report: BatchReport) -> str:
         out.append(f"## Errors ({len(r.errors)})")
         out.append("")
         for e in r.errors:
-            out.append(f"- **{e['ticket_id']} × {e['control_id']}** — {e['error']}")
+            out.append(f"- **{e['ticket_id']} × {e['control_id']}** - {e['error']}")
         out.append("")
 
     out.append("## Cost")
@@ -402,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
     split = lambda s: [x.strip() for x in s.split(",") if x.strip()] if s else None  # noqa: E731
 
     n = len(split(a.tickets) or tickets) * len(split(a.controls) or pack.controls)
-    print(f"{n} pairs → roughly {2 * n}–{3 * n} LLM calls (judge + verify, maybe re-judge)")
+    print(f"{n} pairs → roughly {2 * n}-{3 * n} LLM calls (judge + verify, maybe re-judge)")
 
     def show(done: int, total: int, label: str) -> None:
         print(f"\r  {done}/{total}  {label:<60}", end="", flush=True)

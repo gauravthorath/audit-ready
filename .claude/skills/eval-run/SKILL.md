@@ -22,12 +22,12 @@ so pick the smallest run that answers the question.
      run you intend to keep overwrites `assistant/eval/results.json`.
 
 3. **Read the numbers in this order.**
-   - **gap recall** — headline; a drop means a planted deficiency now survives to audit day.
-   - **false-positive rate** — the trust metric; a rise means clean tickets get flagged.
-   - **citation validity** — a drop usually means a prompt or record-fencing regression.
-   - confusion matrix — locate exactly which (ticket, control) pairs moved.
+   - **gap recall** - headline; a drop means a planted deficiency now survives to audit day.
+   - **false-positive rate** - the trust metric; a rise means clean tickets get flagged.
+   - **citation validity** - a drop usually means a prompt or record-fencing regression.
+   - confusion matrix - locate exactly which (ticket, control) pairs moved.
    - Part B (faithfulness, answer correctness, source recall, citation presence)
-     — trend signal only; judge model equals system model, self-grading bias.
+     - trend signal only; judge model equals system model, self-grading bias.
 
 4. **Classify each moved pair** before touching code: provider
    nondeterminism (re-run the single pair with `check_ticket`; TCK-1018 is the

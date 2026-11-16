@@ -1,14 +1,14 @@
 # AuditReady, self-hosted (CR-4).
 #
 # Two things shape this file. First, the image must run with no outbound
-# network except the one LLM endpoint the operator names — so the embedding
+# network except the one LLM endpoint the operator names - so the embedding
 # model's weights are baked in at build time rather than pulled on first
 # query. Second, the LLM endpoint is a variable, not a vendor: nothing here
 # mentions OpenRouter, and `AUDITREADY_LLM_BASE_URL` moves every call in the
 # app (see core/llm.py).
 
 # ---------------------------------------------------------------------------
-# Stage 1 — build the environment
+# Stage 1 - build the environment
 # ---------------------------------------------------------------------------
 FROM python:3.12-slim-bookworm AS builder
 
@@ -39,7 +39,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Bake the sentence-transformers weights (~90 MB) into the image. Without
 # this, the first question in an air-gapped deployment fails on a call to
-# huggingface.co — the exact call a customer running this on-premise is
+# huggingface.co - the exact call a customer running this on-premise is
 # most likely to have blocked.
 ENV HF_HOME=/opt/hf \
     HF_HUB_DOWNLOAD_TIMEOUT=60 \
@@ -62,7 +62,7 @@ SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')" \
     && find /opt/hf -name '*.h5' -delete
 
 # ---------------------------------------------------------------------------
-# Stage 2 — the runtime
+# Stage 2 - the runtime
 # ---------------------------------------------------------------------------
 FROM python:3.12-slim-bookworm
 
@@ -83,7 +83,7 @@ WORKDIR /app
 
 # Ownership is set by the COPY itself, never by a later `chown -R`. The
 # reason is layer mechanics: chown rewrites an inode, and on overlayfs that
-# means a full copy of every file it touches into a new layer — for a venv
+# means a full copy of every file it touches into a new layer - for a venv
 # carrying torch that is another ~3 GB of image, and a build that dies on a
 # host with less than that free.
 COPY --from=builder --chown=auditready:auditready /opt/hf /opt/hf

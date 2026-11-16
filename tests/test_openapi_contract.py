@@ -18,9 +18,9 @@ DOC = Path(__file__).resolve().parents[1] / "api" / "openapi.json"
 
 def test_committed_openapi_matches_the_app():
     live = json.dumps(app.openapi(), indent=2, sort_keys=True) + "\n"
-    assert DOC.exists(), "api/openapi.json missing — run: uv run python scripts/export_openapi.py"
+    assert DOC.exists(), "api/openapi.json missing - run: uv run python scripts/export_openapi.py"
     assert DOC.read_text(encoding="utf-8") == live, (
-        "api/openapi.json is stale — run: uv run python scripts/export_openapi.py "
+        "api/openapi.json is stale - run: uv run python scripts/export_openapi.py "
         "&& (cd web && pnpm gen:types)"
     )
 

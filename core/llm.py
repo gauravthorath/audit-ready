@@ -1,4 +1,4 @@
-"""LLM client — the ONLY module in the project that talks to an LLM provider (NFR-1).
+"""LLM client - the ONLY module in the project that talks to an LLM provider (NFR-1).
 
 Everything else calls `chat()` and stays provider-ignorant. Swapping OpenRouter
 for a customer's own endpoint (CR-4) means changing env vars, not code:
@@ -13,7 +13,7 @@ Design notes
 - Raises a single exception type, `LLMError`, so callers can fail gracefully
   without knowing about the zoo of SDK exceptions underneath (FR-15).
 - Retries transient failures (rate limits, timeouts) with exponential backoff;
-  never retries auth or bad-request errors — those won't fix themselves.
+  never retries auth or bad-request errors - those won't fix themselves.
 - Framework-agnostic: no LangChain imports here (FR-7). LangChain will get its
   own handle to OpenRouter in assistant/agent.py; this module serves the plain
   tools and the eval harness.
@@ -45,7 +45,7 @@ DEFAULT_MODEL = os.getenv("AUDITREADY_MODEL", "openai/gpt-4o-mini")
 UNAUTHENTICATED_PLACEHOLDER = "not-needed"
 
 # Grader model for the eval harness's LLM-as-judge metrics (FR-18, CR-7). NOT
-# core/judge.py's verdict model — that is DEFAULT_MODEL like everything else.
+# core/judge.py's verdict model - that is DEFAULT_MODEL like everything else.
 # Defaults to a different family from the system model on purpose: a model
 # grading its own answers marks them generously, which is the self-grading
 # bias the v1 numbers carry. Overridable per run, so the grader can be
@@ -83,7 +83,7 @@ def llm_api_key() -> str:
         return UNAUTHENTICATED_PLACEHOLDER
     raise LLMError(
         "No LLM credential is set. Copy .env.example to .env and add "
-        "OPENROUTER_API_KEY from https://openrouter.ai/keys — or point "
+        "OPENROUTER_API_KEY from https://openrouter.ai/keys - or point "
         "AUDITREADY_LLM_BASE_URL at your own OpenAI-compatible endpoint."
     )
 
@@ -167,7 +167,7 @@ def chat(
         [{"role": "system", "content": ...}, {"role": "user", "content": ...}]
 
     Temperature defaults to 0: compliance verdicts should be as deterministic
-    as the model allows — creativity is a bug here, not a feature.
+    as the model allows - creativity is a bug here, not a feature.
     """
     model = model or DEFAULT_MODEL
     last_error: Exception | None = None
@@ -213,7 +213,7 @@ def chat(
 # ---------------------------------------------------------------------------
 # Model pricing (FR-17 support)
 #
-# OpenRouter publishes every model's rates on a public, keyless endpoint —
+# OpenRouter publishes every model's rates on a public, keyless endpoint -
 # so the UI's cost display can use the ACTUAL price of whatever model
 # AUDITREADY_MODEL selects, instead of a hardcoded sheet that silently goes
 # stale (or worse, stays priced for gpt-4o-mini after someone switches to a
@@ -225,7 +225,7 @@ def _pricing_from_payload(payload: dict, model: str) -> tuple[float, float] | No
     """Extract (input, output) USD per 1M tokens for one model from the
     /models response. Pure and unit-testable; the payload is untrusted
     external data, so every missing/malformed shape returns None rather
-    than raising — pricing is a display nicety, never worth crashing for.
+    than raising - pricing is a display nicety, never worth crashing for.
 
     OpenRouter quotes prices as USD-per-single-token strings (e.g.
     "0.00000015"); we scale to per-million, the unit humans reason in.
@@ -248,7 +248,7 @@ def _pricing_from_payload(payload: dict, model: str) -> tuple[float, float] | No
 def get_model_pricing(model: str | None = None) -> tuple[float, float] | None:
     """Fetch the live (input, output) USD-per-1M-token rates for a model.
 
-    Returns None on any failure (offline, timeout, unknown model) — callers
+    Returns None on any failure (offline, timeout, unknown model) - callers
     fall back to their own estimate. Deliberately uncached here: the caller
     owns the caching policy (the Streamlit app caches for an hour), and a
     stateless function stays trivially testable.

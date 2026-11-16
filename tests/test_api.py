@@ -2,7 +2,7 @@
 
 No network, no key, no LLM. The real routes serve the real checklist packs and
 the real synthetic corpus; only the LangGraph runner is swapped for a fake via
-`app.state.runner` — the same seam `tests/test_batch.py` uses. That means a full
+`app.state.runner` - the same seam `tests/test_batch.py` uses. That means a full
 audit runs end to end through `/audit`: thread, progress, aggregation, report,
 markdown, SSE.
 
@@ -69,7 +69,7 @@ class FakeAgent:
     """Stands in for AuditAgent: no model, scripted outcomes by question text.
 
     It carries `snapshot`/`restore` because the API now rebuilds an agent from a
-    stored record on every turn (Step 41) — a fake without them would let a
+    stored record on every turn (Step 41) - a fake without them would let a
     broken seam pass.
     """
 

@@ -1,8 +1,8 @@
 """Walking skeleton: judge ONE ticket against ONE control (no RAG yet).
 
 This is the conceptual heart of AuditReady: given a record and a control's
-sufficiency rubric, get the LLM to return a *structured, defensible* verdict —
-satisfied / partial / gap — with a rationale and citations back to the record.
+sufficiency rubric, get the LLM to return a *structured, defensible* verdict -
+satisfied / partial / gap - with a rationale and citations back to the record.
 
 Why build this before retrieval, tools, or UI (the "walking skeleton" idea):
 the riskiest question in the whole project is "can an LLM actually apply a
@@ -13,7 +13,7 @@ passed in directly. Step 7's check_ticket tool will reuse this module and
 swap the direct ticket for retrieved evidence.
 
 Key concepts in this file (see LEARNING.md Step 4 for the full walkthrough):
-1. Judging prompt design — role, rubric, evidence, output contract.
+1. Judging prompt design - role, rubric, evidence, output contract.
 2. Structured output: forcing JSON and validating it with Pydantic.
 3. The corrective-retry pattern for malformed LLM output.
 """
@@ -30,7 +30,7 @@ from core.checklists import Control
 from core.llm import ChatResult, chat
 
 # Prompt wording lives in core/prompts.py (with the other prompts) so a
-# prompt change shows up in a diff as a prompt change — see that module's
+# prompt change shows up in a diff as a prompt change - see that module's
 # docstring for the system/user split rationale.
 from core.prompts import JUDGE_SYSTEM, build_judge_user_prompt
 
@@ -45,7 +45,7 @@ class JudgeError(Exception):
 # Same "parse, don't validate" move as the checklist loader, but pointed at
 # the LLM instead of a YAML file: the model's reply is untrusted text until
 # it has passed through this schema. If the model invents a fourth verdict
-# ("mostly-satisfied") or omits the rationale, validation fails loudly here —
+# ("mostly-satisfied") or omits the rationale, validation fails loudly here -
 # nothing downstream ever sees a malformed verdict.
 # ---------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ class Verdict(BaseModel):
 
     not_applicable exists because forcing every (record, control) pair into
     satisfied/partial/gap poisons the metrics: an internal ticket with no
-    customer can't "fail" the client-communication control — calling it a
+    customer can't "fail" the client-communication control - calling it a
     gap would be a false positive, and false positives are what kill
     auditor trust (they stop reading the report).
     """
@@ -93,7 +93,7 @@ def _parse_verdict(text: str) -> Verdict:
 
     Even instruction-following models sometimes wrap JSON in ```json fences
     or add a polite sentence before it. Rather than demanding perfection,
-    we slice from the first '{' to the last '}' — cheap, and robust to the
+    we slice from the first '{' to the last '}' - cheap, and robust to the
     common failure shapes. Anything that still fails json.loads or schema
     validation raises ValueError for the caller's retry logic.
     """
@@ -156,7 +156,7 @@ def judge_ticket(
                 "content": (
                     f"Your reply could not be used: {first_error}. "
                     "Respond again with ONLY the JSON object in the required "
-                    "schema — no fences, no commentary."
+                    "schema - no fences, no commentary."
                 ),
             }
         )

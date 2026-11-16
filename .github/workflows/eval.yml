@@ -3,8 +3,8 @@
 #
 # Why it is a separate workflow from tests.yml: a full run is ~130k prompt
 # tokens and needs a provider key, so it is scoped to the paths that can
-# actually move a number — a prompt, a rubric, retrieval, the agent graph, the
-# thresholds themselves — plus a manual button for everything else.
+# actually move a number - a prompt, a rubric, retrieval, the agent graph, the
+# thresholds themselves - plus a manual button for everything else.
 name: eval gate
 
 on:
@@ -53,10 +53,10 @@ jobs:
             echo "available=true" >> "$GITHUB_OUTPUT"
           else
             # A fork, or a clone by someone marking the work, has no secret.
-            # Failing there would be noise about their setup, not our code —
+            # Failing there would be noise about their setup, not our code -
             # so say so plainly and still check the committed numbers.
             echo "available=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::no OPENROUTER_API_KEY — checking committed numbers only"
+            echo "::notice::no OPENROUTER_API_KEY - checking committed numbers only"
           fi
 
       - name: Re-run the evals

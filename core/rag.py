@@ -1,11 +1,11 @@
 """Advanced RAG: query decomposition + multi-query retrieval (FR-3).
 
-Why naive RAG fails here — the problem this module exists to solve:
+Why naive RAG fails here - the problem this module exists to solve:
 a control's sufficiency rubric bundles SEVERAL independent evidence
 requirements. The client-comm rubric alone demands (a) a resolution comment,
 (b) a logged client communication, (c) an explicit acknowledgement. Embed
-that whole rubric as ONE query and you get one blurry vector — an average
-of three meanings — which ranks chunks that vaguely resemble *all* of it
+that whole rubric as ONE query and you get one blurry vector - an average
+of three meanings - which ranks chunks that vaguely resemble *all* of it
 above chunks that precisely satisfy *one* requirement. The acknowledgement
 comment you actually need can lose to a generically "compliance-flavoured"
 paragraph.
@@ -41,12 +41,12 @@ class RAGError(Exception):
 
 
 # ---------------------------------------------------------------------------
-# Decomposition — one LLM call turns a rubric into focused sub-queries
+# Decomposition - one LLM call turns a rubric into focused sub-queries
 # ---------------------------------------------------------------------------
 
 
 class _QueryList(BaseModel):
-    """Output contract for decomposition — same 'parse, don't validate' move
+    """Output contract for decomposition - same 'parse, don't validate' move
     as Verdict in core/judge.py: the model's reply is untrusted until it
     passes this schema. Bounds keep a rambling model from turning one
     control into 15 searches (cost) or collapsing it into 1 (defeats the
@@ -71,7 +71,7 @@ def _parse_queries(text: str) -> list[str]:
         raise ValueError(f"JSON does not match the query-list schema: {e}") from e
 
 
-# Decompositions depend only on the CONTROL, not the ticket — so when
+# Decompositions depend only on the CONTROL, not the ticket - so when
 # check_ticket sweeps 20 tickets x 9 controls, each control is decomposed
 # once, not 20 times. Plain dict, process-lifetime: packs are immutable
 # while the app runs, and a fresh process rebuilds it for pennies.
@@ -87,11 +87,11 @@ _decomposition_lock = threading.Lock()
 def decompose_control(control: Control) -> list[str]:
     """Turn one control's rubric into 2-6 focused evidence sub-queries.
 
-    Prompt wording lives in core/prompts.py — the rubric AND the
+    Prompt wording lives in core/prompts.py - the rubric AND the
     expected_evidence list are deliberately both included (see
     build_decompose_user_prompt's docstring for why).
 
-    One corrective retry on malformed output, then RAGError — same
+    One corrective retry on malformed output, then RAGError - same
     rationale as judge_ticket: one retry absorbs formatting slips without
     hiding a systematically broken prompt.
     """
@@ -109,7 +109,7 @@ def decompose_control(control: Control) -> list[str]:
 
 
 def _decompose_uncached(control: Control) -> list[str]:
-    """The decomposition LLM call itself — only reached while holding
+    """The decomposition LLM call itself - only reached while holding
     _decomposition_lock with a confirmed cache miss."""
     messages = [
         {"role": "system", "content": DECOMPOSE_SYSTEM},
@@ -141,13 +141,13 @@ def _decompose_uncached(control: Control) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# Multi-query retrieval — run every sub-query, merge, dedupe
+# Multi-query retrieval - run every sub-query, merge, dedupe
 # ---------------------------------------------------------------------------
 
 
 @dataclass
 class EvidenceBundle:
-    """Everything retrieval did for one (control, scope) — queries INCLUDED.
+    """Everything retrieval did for one (control, scope) - queries INCLUDED.
 
     Carrying the sub-queries alongside the hits is deliberate: the Streamlit
     UI's RAG-visualisation panel (FR bonus) shows the user *how* evidence
@@ -169,12 +169,12 @@ def multi_query_search(
     chunk's BEST similarity across queries.
 
     Max-similarity merge is the simplest sane policy: a chunk is as relevant
-    as its best-matching sub-query says it is — a chunk that scores 0.6 on
+    as its best-matching sub-query says it is - a chunk that scores 0.6 on
     "client acknowledgement" and 0.1 on "resolution comment" is a strong
     acknowledgement hit, and averaging would wrongly punish it for not being
     everything at once. (Reciprocal Rank Fusion is the fancier alternative;
     it only starts to matter when result lists are long and scores aren't
-    comparable — revisit if we ever mix BM25 in.)
+    comparable - revisit if we ever mix BM25 in.)
     """
     best: dict[str, SearchHit] = {}
     for query in queries:
@@ -196,7 +196,7 @@ def retrieve_evidence(
     are generic by nature ("client acknowledgement approving closure"), and
     generic queries only rank reliably INSIDE a scope. Corpus-wide they'd
     surface every ticket's approvals. (Safe because every corpus email and
-    change record relates to exactly one ticket — its ticket_id metadata is
+    change record relates to exactly one ticket - its ticket_id metadata is
     a single id, so equality matching works.)
     """
     queries = decompose_control(control)

@@ -20,7 +20,7 @@ manual checklist items.
 2. **Pick controls** the synthetic corpus can actually evidence. For ISO 27001
    the fit is access-change approval, incident handling and lessons learned,
    change management, supplier/vendor communication, logging of security
-   events. Aim for 5–7 controls in a subset pack; breadth is not the point.
+   events. Aim for 5-7 controls in a subset pack; breadth is not the point.
 
 3. **Write each control, own-worded.** No sentence lifted from a standard.
    The `sufficiency_rubric` is the product: enumerate (a), (b), (c) conditions,

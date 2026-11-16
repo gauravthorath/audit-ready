@@ -13,7 +13,7 @@ venv/
 # Personal learning journal (stays local, never submitted)
 LEARNING.md
 
-# Vector store (regenerable from corpus — never commit derived data)
+# Vector store (regenerable from corpus - never commit derived data)
 .chroma/
 *.chroma/
 
@@ -40,7 +40,7 @@ assistant/data/live-*/
 # Local status scratch file (not part of the submission)
 TODO.md
 
-# Marketing / portfolio narrative kit stays local — drafts, screenshots, the
+# Marketing / portfolio narrative kit stays local - drafts, screenshots, the
 # story bank, the deck and the measurement runs are working material, and some
 # of it names things that should never reach a repository. The public landing
 # page is the exception: it is already deployed, so it is versioned here.
@@ -51,11 +51,11 @@ marketing/*
 .coverage
 htmlcov/
 
-# Personal preparation docs — for the author, not the reviewer (the submission
+# Personal preparation docs - for the author, not the reviewer (the submission
 # keeps DEMO.md and V2_PLAN.md; these two are the rehearsal and the self-check)
 docs/REHEARSAL.md
 docs/WALKTHROUGH.md
 
-# Agent guides that `next dev` regenerates into web/ — tooling, not product
+# Agent guides that `next dev` regenerates into web/ - tooling, not product
 web/AGENTS.md
 web/CLAUDE.md

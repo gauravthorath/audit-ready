@@ -1,4 +1,4 @@
-# assistant/ — the v1 deliverable
+# assistant/ - the v1 deliverable
 
 Streamlit chatbot (LangChain + OpenRouter) over the ISO 9001 knowledge base,
 wrapping `core/`. Answers audit-readiness questions with grounded, cited
@@ -22,20 +22,20 @@ readiness for release sign-off?"*
 
 ## What's here
 
-- `app.py` — Streamlit chat UI: sources/tool-results expander with verdict
+- `app.py` - Streamlit chat UI: sources/tool-results expander with verdict
   badges, RAG-trail visualisation, security banners, token + cost display,
-  conversation export (JSON). **No business logic** — presentation only.
-- `agent.py` — LangChain tool-calling agent: `@tool`-wrapped core functions,
+  conversation export (JSON). **No business logic** - presentation only.
+- `agent.py` - LangChain tool-calling agent: `@tool`-wrapped core functions,
   hardened system prompt (control catalog injected, grounding + security
   rules), hand-written tool loop, sliding-window memory.
-- `data/checklists/iso9001.yaml` — 9 own-worded ISO 9001 controls, each with
+- `data/checklists/iso9001.yaml` - 9 own-worded ISO 9001 controls, each with
   a machine-judgeable sufficiency rubric (no copyrighted ISO text).
-- `data/checklists/iso27001.yaml` — 6 own-worded ISO/IEC 27001:2022 Annex A
+- `data/checklists/iso27001.yaml` - 6 own-worded ISO/IEC 27001:2022 Annex A
   controls over the same corpus (CR-5). Loaded by the same code path;
   its answer key is `audit/eval/ground_truth_iso27001.yaml`.
-- `data/corpus/` — synthetic corpus: 20 tickets, 10 emails, 7 change records
+- `data/corpus/` - synthetic corpus: 20 tickets, 10 emails, 7 change records
   with planted deficiencies, including a prompt-injection payload (TCK-1010).
-- `eval/` — ground truth (46 labelled verdicts), 12 labelled questions,
+- `eval/` - ground truth (46 labelled verdicts), 12 labelled questions,
   `run_eval.py` harness, `results.json` (committed evidence).
 
 ## Evaluation results (answers gpt-4o-mini, temperature 0)
@@ -56,11 +56,11 @@ Agreement moved from 0.978 to 0.957 and false positives from 0.0 to 0.032
 because the 8.2.1 rubric was tightened on 2026-09-11: condition (c) now has to
 originate with the client, so an outbound "the work is done" email no longer
 counts as acknowledgement. A stricter rubric calls more things deficient, which
-is the trade it is supposed to make — a false positive gets reviewed, a missed
+is the trade it is supposed to make - a false positive gets reviewed, a missed
 deficiency reaches an auditor.
 
 Compliance agreement on this pack has read 0.957, 0.978, 0.978 and 0.957 across
-four runs at temperature 0, twice moving with no code change at all — the honest
+four runs at temperature 0, twice moving with no code change at all - the honest
 reading is that it sits around 0.95-0.98 and single-run differences under ~0.03
 are noise. Gap recall stayed at 1.0 in every one of them, which is the number
 that matters. V2 harness tells the sharper version of this story: its
@@ -94,7 +94,7 @@ by the agent; FR-18 permits "RAGAs or equivalent").
 - **Temperature 0 ≠ determinism.** One borderline ticket flipped verdicts
   between eval runs (provider-side nondeterminism). Single-run numbers have
   error bars; v2's CI gate (CR-7) should run repeats.
-- **Self-grading bias — closed 2026-09-02.** Part B was graded by the model
+- **Self-grading bias - closed 2026-09-02.** Part B was graded by the model
   under test; correctness was 0.12 optimistic. Now graded by a different
   family (`google/gemini-2.5-flash`) and the grader is configurable. Not
   fully solved, only made honest: one model still grades another, and

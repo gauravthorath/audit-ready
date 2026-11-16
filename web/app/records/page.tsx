@@ -36,7 +36,7 @@ export default function RecordsPage() {
         .then((rs) => { if (!cancelled) { setRows(rs); setError(null); } })
         .catch((e: Error) => {
           if (cancelled) return;
-          setError(`${e.message} — retrying…`);
+          setError(`${e.message} - retrying…`);
           timer = setTimeout(load, 3000);  // the API may still be loading its model
         });
     load();
@@ -46,7 +46,7 @@ export default function RecordsPage() {
   const show = (id: string) => api.record(id).then(setOpen).catch((e: Error) => setError(e.message));
 
   // Facet counts are taken over the *whole* corpus, not the filtered slice, so
-  // a bar never disappears because you clicked it — colour follows the entity.
+  // a bar never disappears because you clicked it - colour follows the entity.
   const facets = useMemo(() => {
     const count = (key: Facet) => {
       const m = new Map<string, number>();
@@ -154,7 +154,7 @@ export default function RecordsPage() {
                       <td>{r.priority}</td>
                       <td>{r.status}</td>
                       <td className="num">{r.comments}</td>
-                      <td className="mono text-[12px] text-dim">{[...(r.linked_changes ?? []), ...(r.linked_emails ?? [])].join(", ") || "—"}</td>
+                      <td className="mono text-[12px] text-dim">{[...(r.linked_changes ?? []), ...(r.linked_emails ?? [])].join(", ") || "-"}</td>
                     </tr>
                   ))}
                   {visible.length === 0 && (
@@ -223,14 +223,14 @@ export default function RecordsPage() {
                   ))}
                 </ul>
               </Field>
-              <Field label="Resolution"><p className="text-body">{open.resolution || <span className="text-dim">— none recorded</span>}</p></Field>
+              <Field label="Resolution"><p className="text-body">{open.resolution || <span className="text-dim">- none recorded</span>}</p></Field>
               <Field label="Sign-off">
-                {open.signoff ? <pre className="wrap mono text-[12px]">{JSON.stringify(open.signoff, null, 2)}</pre> : <span className="text-dim">— none recorded</span>}
+                {open.signoff ? <pre className="wrap mono text-[12px]">{JSON.stringify(open.signoff, null, 2)}</pre> : <span className="text-dim">- none recorded</span>}
               </Field>
               <Field label="Linked records">
                 <div className="flex flex-wrap gap-1.5">
                   {[...open.linked_changes, ...open.linked_emails].map((id) => <Code key={id}>{id}</Code>)}
-                  {open.linked_changes.length + open.linked_emails.length === 0 && <span className="text-dim">—</span>}
+                  {open.linked_changes.length + open.linked_emails.length === 0 && <span className="text-dim">-</span>}
                 </div>
               </Field>
               {typeof open.source_url === "string" && (

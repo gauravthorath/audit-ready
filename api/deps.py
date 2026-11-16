@@ -1,7 +1,7 @@
 """FastAPI dependencies: how a route reaches the things the app owns (CR-8).
 
-Routes never import a global. They declare what they need — the run registry,
-the session store, the price of the model, a pack by id — and FastAPI hands it
+Routes never import a global. They declare what they need - the run registry,
+the session store, the price of the model, a pack by id - and FastAPI hands it
 to them from `app.state`. That is the whole reason the test suite can swap the
 LangGraph agent, the pricing fetch, the reports directory and the chat agent
 without patching a private name: it assigns a different object to `app.state`
@@ -91,7 +91,7 @@ def current_actor(request: Request, _credentials=Depends(_bearer)) -> Actor:
 
     Everything downstream keys on `actor.id`: the rate limiter, the spend
     ledger, and the owner of a run. With `AUDITREADY_AUTH=none` that id is the
-    client address, which is exactly as trustworthy as it sounds — behind a
+    client address, which is exactly as trustworthy as it sounds - behind a
     proxy every caller shares one. That is the reason this seam exists.
     """
     return get_auth(request).authenticate(request)
@@ -119,7 +119,7 @@ def cached_pricing(model: str) -> Rate:
     """
     try:
         return get_model_pricing(model)
-    except Exception:  # noqa: BLE001 — pricing is a courtesy, never a failure
+    except Exception:  # noqa: BLE001 - pricing is a courtesy, never a failure
         return None
 
 

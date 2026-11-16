@@ -8,7 +8,7 @@
  * app needs, and it is per-tab, so signing in to one deployment in one tab
  * does not sign you in somewhere else in another.
  *
- * Nothing here decides *whether* a credential is needed — `GET /health` says
+ * Nothing here decides *whether* a credential is needed - `GET /health` says
  * which mode the deployment runs, and the API answers 401 when it wants one.
  * The UI reacts to that answer rather than predicting it, so the same build
  * works against an open laptop deployment and a locked-down one.
@@ -21,7 +21,7 @@ export function getToken(): string | null {
   try {
     return sessionStorage.getItem(KEY);
   } catch {
-    return null; // private window, blocked storage — the app still runs, unauthenticated
+    return null; // private window, blocked storage - the app still runs, unauthenticated
   }
 }
 

@@ -1,4 +1,4 @@
-"""Live smoke for the pgvector store — and the parity check that makes the
+"""Live smoke for the pgvector store - and the parity check that makes the
 switch safe to flip.
 
     docker compose up -d db

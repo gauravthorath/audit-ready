@@ -1,6 +1,6 @@
 /**
  * Small presentational pieces shared by the report and chat pages.
- * Presentation only — none of these compute a verdict or a score.
+ * Presentation only - none of these compute a verdict or a score.
  */
 
 import type { CheckResult, PairStatus, SecurityFlag, Verdict } from "@/lib/api";
@@ -62,8 +62,8 @@ export function StatTile({
 }
 
 /**
- * The score ledger: readiness with its denominator beside it — the one thing
- * this product insists on — then the counts as a ruled row. Wraps, never clips.
+ * The score ledger: readiness with its denominator beside it - the one thing
+ * this product insists on - then the counts as a ruled row. Wraps, never clips.
  */
 export function ScoreLedger({
   readiness,
@@ -90,7 +90,7 @@ export function ScoreLedger({
       <div className="ledger-score">
         <div>
           <div className="eyebrow">Readiness</div>
-          <div className={`pct mt-1.5 ${tone}`}>{pct === null ? "—" : `${pct}%`}</div>
+          <div className={`pct mt-1.5 ${tone}`}>{pct === null ? "-" : `${pct}%`}</div>
           <div className="mt-1.5 text-[12px] text-dim">
             {pct === null ? "nothing applicable to score" : "weighted by severity"}
           </div>
@@ -101,7 +101,7 @@ export function ScoreLedger({
             <span className="num">{verified}</span>
             <span className="den">{total}</span>
           </div>
-          <div className="mt-1.5 text-[12px] text-dim">pairs — the denominator</div>
+          <div className="mt-1.5 text-[12px] text-dim">pairs - the denominator</div>
         </div>
       </div>
       <div className="ledger-counts">
@@ -117,7 +117,7 @@ export function ScoreLedger({
         </div>
         <div>
           <div className="eyebrow">Est. cost</div>
-          <div className="val mt-2 text-ink">{cost ?? "—"}</div>
+          <div className="val mt-2 text-ink">{cost ?? "-"}</div>
           <div className="mt-1.5 text-[12px] text-dim">{costBasis ?? "model calls"}</div>
         </div>
       </div>
@@ -126,7 +126,7 @@ export function ScoreLedger({
 }
 
 export function RateBar({ rate }: { rate: number | null }) {
-  if (rate === null) return <span className="text-dim">—</span>;
+  if (rate === null) return <span className="text-dim">-</span>;
   const pct = Math.round(rate * 100);
   const tone = pct >= 80 ? "bg-green" : pct >= 50 ? "bg-amber" : "bg-red";
   return (
@@ -183,19 +183,19 @@ export function CheckResultView({ r }: { r: CheckResult }) {
       )}
       {check.status && check.status !== "ok" && (
         <Banner tone="amber">
-          Citation check: {check.status} — {check.note ?? ""}
+          Citation check: {check.status} - {check.note ?? ""}
         </Banner>
       )}
       {flags.length > 0 && (
         <Banner tone="red">
           🛡 Prompt-injection attempt quarantined at:{" "}
-          <span className="mono">{flags.map((f) => String((f as SecurityFlag).path ?? "")).join(", ")}</span> — needs human review
+          <span className="mono">{flags.map((f) => String((f as SecurityFlag).path ?? "")).join(", ")}</span> - needs human review
         </Banner>
       )}
       {(r.evidence_queries?.length || r.evidence_chunks?.length) && (
         <details className="rounded-md border border-line bg-neutral/60 px-3.5 py-2.5">
           <summary className="cursor-pointer text-[13px] font-semibold text-body">
-            RAG trail — how evidence was searched
+            RAG trail - how evidence was searched
           </summary>
           <div className="mt-3 flex flex-col gap-2.5 text-[13px]">
             <div>

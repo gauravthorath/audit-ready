@@ -8,7 +8,7 @@ the way they will be quoted.
 Method, and why each part is there:
 
 * **Warm up first.** The first pair of a cold process pays for loading the
-  sentence-transformer weights and the first retrieval — 8 of the 12.4s in the
+  sentence-transformer weights and the first retrieval - 8 of the 12.4s in the
   Step 37 smoke. Quoting that as "per pair" would be dishonest. One throwaway
   pair warms the process; only the runs after it are measured.
 * **Two sizes.** A 9-pair run (one ticket, every control) is the demo scale; a
@@ -166,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
     with TestClient(app) as client:
         print(f"model {DEFAULT_MODEL}; pricing {rate}; store {client.get('/health').json()['vector_store']}")
 
-        print("warm-up (1 pair, discarded — weights and first retrieval)", flush=True)
+        print("warm-up (1 pair, discarded - weights and first retrieval)", flush=True)
         run_audit(client, "warm-up", {"pack_id": args.pack, "ticket_ids": ["TCK-1001"],
                                       "control_ids": ["ISO9001-8.6-release-signoff"]})
         warm_mark = len(buf.getvalue())

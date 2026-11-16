@@ -1,4 +1,4 @@
-"""Prompts owned by the audit package — the verifier (CR-1 self-verify).
+"""Prompts owned by the audit package - the verifier (CR-1 self-verify).
 
 Why the verifier states its OWN verdict level instead of answering "do you
 agree?": the second checklist pack (ISO 27001, Step 19) showed a small model
@@ -15,10 +15,10 @@ a model re-reading its own answer under the same framing mostly agrees with
 itself (the self-grading bias v1's eval already documents). The
 verifier therefore gets a different job, not a second opinion:
 
-  * a different ROLE — a lead auditor reviewing another auditor's verdict level,
-  * a NARROWER task — do not re-judge; find a specific rubric condition or
+  * a different ROLE - a lead auditor reviewing another auditor's verdict level,
+  * a NARROWER task - do not re-judge; find a specific rubric condition or
     record fact the verdict gets wrong, or agree,
-  * a HIGH bar to object — style is not an issue; only checkable errors are.
+  * a HIGH bar to object - style is not an issue; only checkable errors are.
 
 That last point is the important trade-off. A verifier that objects freely
 would send every pair around the re-judge loop (doubling cost) and make
@@ -68,7 +68,7 @@ def build_verify_user_prompt(record: dict, control: Control, verdict: Verdict) -
     """The variable half: rubric, the (already sanitized) record, the verdict.
 
     The record goes in verbatim from the judge's own prompt so both calls
-    reason about the same bytes — the verifier must never see evidence the
+    reason about the same bytes - the verifier must never see evidence the
     judge did not, or its objections stop being about the judge's work.
     """
     return f"""\

@@ -1,4 +1,4 @@
-"""Correlation ids and structured logs — one id from the browser to the model call (NFR-5, NFR-6).
+"""Correlation ids and structured logs - one id from the browser to the model call (NFR-5, NFR-6).
 
 Until this module existed nothing in the engine logged. Uvicorn's access line
 was the only trace of a request, and it carried no id, so a slow audit could
@@ -11,7 +11,7 @@ How it fits together
 - A **context bag**, held in a `contextvars.ContextVar`. `bind(request_id=…)`
   adds fields for the duration of a `with` block; `current()` reads them.
   Contextvars follow the code across `await`, and across threads when the
-  thread is started with `contextvars.copy_context().run(...)` — which is what
+  thread is started with `contextvars.copy_context().run(...)` - which is what
   the API's audit thread and the batch runner's worker pool do, so a line
   logged deep inside `core.llm.chat()` still knows the request and the run
   that caused it.
@@ -54,7 +54,7 @@ _bag: contextvars.ContextVar[tuple[tuple[str, Any], ...]] = contextvars.ContextV
 
 # Minted ids are hex, short enough to read aloud, long enough not to collide in
 # a log. Accepted ids may also be UUIDs, ULIDs or a human's "trace-me-01":
-# letters, digits, dot, dash, underscore — nothing that could break a log line.
+# letters, digits, dot, dash, underscore - nothing that could break a log line.
 ID_LENGTH = 16
 _ID_ALPHABET = set("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ._-")
 
@@ -183,7 +183,7 @@ class JsonFormatter(logging.Formatter):
 
 
 class TextFormatter(logging.Formatter):
-    """`HH:MM:SS.mmm LEVEL logger event k=v k=v` — the same fields, for a terminal."""
+    """`HH:MM:SS.mmm LEVEL logger event k=v k=v` - the same fields, for a terminal."""
 
     def format(self, record: logging.LogRecord) -> str:
         ts = datetime.fromtimestamp(record.created).strftime("%H:%M:%S.%f")[:-3]

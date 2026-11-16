@@ -9,7 +9,7 @@ The mental model (see LEARNING.md Step 5 for the full walkthrough):
 - An embedding model maps text -> a fixed-length vector (here 384 floats)
   such that texts with similar MEANING land near each other. "Client agreed
   to close the ticket" and "customer approved closure" share almost no words
-  but sit close in vector space — that's the whole trick, and why this beats
+  but sit close in vector space - that's the whole trick, and why this beats
   keyword search for evidence-hunting.
 - A vector store persists (id, vector, text, metadata) rows and answers
   "nearest vectors to this query vector" fast.
@@ -20,7 +20,7 @@ The mental model (see LEARNING.md Step 5 for the full walkthrough):
 
 Why local embeddings: OpenRouter exposes no embeddings endpoint, and local
 embedding means corpus text never leaves the machine except inside judging
-prompts we control — a property the self-hosted story (CR-4)
+prompts we control - a property the self-hosted story (CR-4)
 keeps. all-MiniLM-L6-v2 is the classic small/fast/good-enough choice: 384
 dims, ~90MB, ~fractions of a second for our whole corpus on CPU.
 """
@@ -42,9 +42,9 @@ import chromadb
 DEFAULT_PERSIST_DIR = Path(os.getenv("AUDITREADY_PERSIST_DIR", ".chroma"))
 COLLECTION_NAME = "auditready_corpus"
 
-# Which store answers. "chroma" (default): the embedded, file-backed index —
+# Which store answers. "chroma" (default): the embedded, file-backed index -
 # zero setup, the eval was frozen on it. "pgvector": Postgres + the vector
-# extension (core/pgvector_store.py) — the scale path, one database to
+# extension (core/pgvector_store.py) - the scale path, one database to
 # self-host. Read at call time so a test or a CLI can flip it per process.
 STORE_KINDS = ("chroma", "pgvector")
 
@@ -66,7 +66,7 @@ def store_namespace(persist_dir: str | Path) -> str:
 
 
 def store_label(persist_dir: str | Path = DEFAULT_PERSIST_DIR) -> str:
-    """For /health and logs: which backend, and where — never a password."""
+    """For /health and logs: which backend, and where - never a password."""
     if store_kind() == "pgvector":
         from core import pgvector_store
 
@@ -86,7 +86,7 @@ EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 # ---------------------------------------------------------------------------
-# Embedding — lazy model singleton, same pattern as core/llm.py's client
+# Embedding - lazy model singleton, same pattern as core/llm.py's client
 # ---------------------------------------------------------------------------
 
 _model = None
@@ -108,7 +108,7 @@ def _embed(texts: list[str]) -> list[list[float]]:
     import core.retrieval without searching should pay none of that.
 
     normalize_embeddings=True scales every vector to length 1, which makes
-    cosine similarity equivalent to a plain dot product — cheaper, and the
+    cosine similarity equivalent to a plain dot product - cheaper, and the
     convention Chroma's cosine space expects.
     """
     global _model
@@ -121,7 +121,7 @@ def _embed(texts: list[str]) -> list[list[float]]:
 
 
 # ---------------------------------------------------------------------------
-# Chunking — corpus JSON -> (id, text, metadata) rows
+# Chunking - corpus JSON -> (id, text, metadata) rows
 # ---------------------------------------------------------------------------
 
 
@@ -130,7 +130,7 @@ class Chunk:
     """One unit of searchable text with its provenance.
 
     chunk_id is DETERMINISTIC (e.g. "TCK-1002#c1", "EML-2001") so re-running
-    ingestion produces the same ids — which is what makes citations stable
+    ingestion produces the same ids - which is what makes citations stable
     across rebuilds and lets upserts replace rather than duplicate.
     """
 
@@ -172,7 +172,7 @@ def _ticket_chunks(t: dict) -> list[Chunk]:
         Chunk(
             chunk_id=f"{t['ticket_id']}#header",
             text="\n".join(header_lines),
-            # Chroma metadata values must be scalars (str/int/float/bool) —
+            # Chroma metadata values must be scalars (str/int/float/bool) -
             # no lists. Anything list-shaped gets comma-joined; filters can
             # still match with $contains-style logic or exact doc ids.
             metadata={
@@ -257,7 +257,7 @@ def build_chunks(corpus_dir: str | Path) -> list[Chunk]:
 
 
 # ---------------------------------------------------------------------------
-# Vector store — ingest + search
+# Vector store - ingest + search
 # ---------------------------------------------------------------------------
 
 
@@ -266,7 +266,7 @@ def build_chunks(corpus_dir: str | Path) -> list[Chunk]:
 # 1. Thread-safety: concurrent construction races inside chromadb's shared-
 #    system registry (found live: parallel coverage_report died with
 #    "Could not connect to tenant default_tenant" / RustBindingsAPI errors).
-# 2. It was always wasteful — the client is designed to be long-lived.
+# 2. It was always wasteful - the client is designed to be long-lived.
 # The CLIENT is cached, not the collection: ingest() drops and recreates
 # the collection, and a cached collection handle would go stale.
 _clients: dict[str, "chromadb.ClientAPI"] = {}
@@ -352,7 +352,7 @@ def search(
     """Semantic search: embed the query, return the k nearest chunks.
 
     `where` is Chroma's metadata filter, e.g. {"doc_type": "email"} or
-    {"ticket_id": "TCK-1002"} — this is what makes "find evidence FOR THIS
+    {"ticket_id": "TCK-1002"} - this is what makes "find evidence FOR THIS
     TICKET" possible instead of hoping similarity alone stays on-topic.
     Chroma returns cosine DISTANCE (1 - similarity); we flip it back so
     bigger = better in every caller. pgvector's `<=>` is the same cosine

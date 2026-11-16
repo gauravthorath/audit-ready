@@ -11,9 +11,9 @@ Please **do not** open a public GitHub issue for security vulnerabilities.
 
 Prefer one of:
 
-1. **GitHub Security Advisories** — use *Report a vulnerability* on the
+1. **GitHub Security Advisories** - use *Report a vulnerability* on the
    repository’s Security tab (private disclosure to the maintainer).
-2. **Email** — [gauravjobs25@gmail.com](mailto:gauravjobs25@gmail.com) with
+2. **Email** - [gauravjobs25@gmail.com](mailto:gauravjobs25@gmail.com) with
    subject `AuditReady security`.
 
 Include steps to reproduce, impact, and any suggested fix if you have one.

@@ -1,4 +1,4 @@
-"""Smoke test for audit/batch.py — a scoped live batch, rendered.
+"""Smoke test for audit/batch.py - a scoped live batch, rendered.
 
     uv run python scripts/smoke_batch.py
 

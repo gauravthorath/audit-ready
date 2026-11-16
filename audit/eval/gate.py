@@ -1,7 +1,7 @@
 """The eval gate (CR-7): what CI refuses to let through.
 
 The harnesses in `assistant/eval/` and `audit/eval/` measure. This module
-*decides* — and the two jobs are worth keeping apart, because a number is only
+*decides* - and the two jobs are worth keeping apart, because a number is only
 a gate once something acts on it.
 
 It asks two questions, and the second one is the one that actually caught me
@@ -14,7 +14,7 @@ out during the build:
   2. **Are the numbers still about this code?** A committed `results.json` is
      evidence about the prompts, rubrics and retrieval code *as they stood when
      it ran*. Change a judge prompt and don't re-run, and the committed metrics
-     become a claim about software that no longer exists — while still looking
+     become a claim about software that no longer exists - while still looking
      like a passing gate. So the gate compares commit times: if any
      judgment-affecting input was committed after the results file, or is
      dirty in the working tree, the eval on record is stale and the gate fails.
@@ -57,7 +57,7 @@ WATCHED_INPUTS = (
 
 
 class GateError(RuntimeError):
-    """The gate could not run at all — a missing file, unreadable JSON."""
+    """The gate could not run at all - a missing file, unreadable JSON."""
 
 
 @dataclass(frozen=True)
@@ -79,7 +79,7 @@ class Violation:
 def dig(data: Any, dotted: str) -> Any:
     """Follow a dotted path into nested dicts. Returns None if the path breaks.
 
-    A broken path is not silently fine — `check_floors` reports it — because a
+    A broken path is not silently fine - `check_floors` reports it - because a
     renamed metric key is exactly how a gate quietly stops gating anything.
     """
     node = data
@@ -97,7 +97,7 @@ def check_floors(
     """Compare every threshold against the loaded results.
 
     `results` maps a results-file path to its parsed contents; `thresholds` maps
-    the same paths to `{metric: {min|max: value}}`. Pure — the caller does the
+    the same paths to `{metric: {min|max: value}}`. Pure - the caller does the
     file reading, so tests can hand it dictionaries.
     """
     violations: list[Violation] = []
@@ -111,7 +111,7 @@ def check_floors(
             value = dig(data, metric)
             if value is None:
                 violations.append(
-                    Violation(where, "metric missing from results — renamed, or the run skipped it")
+                    Violation(where, "metric missing from results - renamed, or the run skipped it")
                 )
                 continue
             if not isinstance(value, (int, float)):
@@ -172,7 +172,7 @@ def check_freshness(
     violations: list[Violation] = []
     if results_time is None:
         violations.append(
-            Violation(results_path, "never committed — an uncommitted eval is not evidence")
+            Violation(results_path, "never committed - an uncommitted eval is not evidence")
         )
         return violations
     for path, when in sorted(input_times.items()):
@@ -180,14 +180,14 @@ def check_freshness(
             violations.append(
                 Violation(
                     f"{results_path} vs {path}",
-                    f"{path} was committed after the eval ran — re-run the eval",
+                    f"{path} was committed after the eval ran - re-run the eval",
                 )
             )
     for path in dirty:
         violations.append(
             Violation(
                 f"{results_path} vs {path}",
-                f"{path} has uncommitted changes — the eval on record predates them",
+                f"{path} has uncommitted changes - the eval on record predates them",
             )
         )
     return violations
@@ -262,7 +262,7 @@ def main(argv: list[str] | None = None) -> int:
         part for part, on in (("floors", run_floors), ("freshness", run_freshness)) if on
     )
     if violations:
-        print(f"EVAL GATE FAILED ({checked}) — {len(violations)} problem(s):\n")
+        print(f"EVAL GATE FAILED ({checked}) - {len(violations)} problem(s):\n")
         for violation in violations:
             print(f"  - {violation}")
         print("\nRe-run the eval (see .claude/skills/eval-run) or fix the regression.")

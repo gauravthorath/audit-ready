@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design tokens — the same palette as marketing/deck, so the product and the
+ * Design tokens - the same palette as marketing/deck, so the product and the
  * slides read as one thing. IBM Plex via next/font (see layout.tsx).
  */
 @theme {
@@ -56,7 +56,7 @@ body {
   border-radius: 6px;
 }
 
-/* The score ledger — the page's one signature element. A reading, not a
+/* The score ledger - the page's one signature element. A reading, not a
    dashboard: the readiness figure, the denominator as a literal fraction, and
    the counts as a ruled row. Wraps under itself on a narrow column instead of
    clipping. */
@@ -261,7 +261,7 @@ pre.wrap { white-space: pre-wrap; word-break: break-word; }
 /* ---------------------------------------------------------------------------
  * Dark theme. next-themes puts `.dark` on <html> before first paint (inline
  * script), so there is no flash. Every colour above is a token, so the theme
- * is one block of overrides — no component knows which theme it is in.
+ * is one block of overrides - no component knows which theme it is in.
  *
  * The dark steps were picked, not inverted: text/status colours were checked
  * against the card surface (#171d25) and the page ground (#0f1419) and all sit
@@ -296,7 +296,7 @@ pre.wrap { white-space: pre-wrap; word-break: break-word; }
 }
 
 /* ---------------------------------------------------------------------------
- * Charts. Pure CSS/SVG — the marks are thin, the ink is the data, the chrome is
+ * Charts. Pure CSS/SVG - the marks are thin, the ink is the data, the chrome is
  * recessive. The 2px "surface gap" between stacked segments is a border in the
  * surface colour, so segments read as distinct without a stroke around them.
  * ------------------------------------------------------------------------- */

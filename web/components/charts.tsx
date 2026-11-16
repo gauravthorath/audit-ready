@@ -1,15 +1,15 @@
 /**
- * Charts — pure CSS/SVG, no library. Presentation only: every number drawn
+ * Charts - pure CSS/SVG, no library. Presentation only: every number drawn
  * here was counted by the engine; nothing is derived except pixel widths.
  *
  * Rules these follow (dataviz method): verdicts are *status* colours, so they
- * always ship with a label — a legend under every stack, a tooltip on every
+ * always ship with a label - a legend under every stack, a tooltip on every
  * mark, a table twin one toggle away. Marks are thin (≤14px stacks, ≤24px
  * columns); a 2px surface gap separates touching fills; chrome is recessive.
  */
 
 // ---------------------------------------------------------------------------
-// Verdict distribution — a stacked bar with a labelled legend
+// Verdict distribution - a stacked bar with a labelled legend
 // ---------------------------------------------------------------------------
 
 export type VerdictKey = "satisfied" | "partial" | "gap" | "not_applicable" | "needs_review" | "error";
@@ -98,7 +98,7 @@ export function sumCounts(all: Counts[]): Counts {
 }
 
 // ---------------------------------------------------------------------------
-// Per-control rows — label · stack · rate. The compact "chart" form of the
+// Per-control rows - label · stack · rate. The compact "chart" form of the
 // per-control table; the table is its twin.
 // ---------------------------------------------------------------------------
 
@@ -116,7 +116,7 @@ export function ControlStacks({
           </span>
           <VerdictStack counts={r.counts} />
           <span className="mono text-right text-[12px] text-dim">
-            {r.rate === null ? "—" : `${Math.round(r.rate * 100)}%`}
+            {r.rate === null ? "-" : `${Math.round(r.rate * 100)}%`}
           </span>
         </div>
       ))}
@@ -125,7 +125,7 @@ export function ControlStacks({
 }
 
 // ---------------------------------------------------------------------------
-// Facet bars — one hue, magnitude only. Each bar is a filter toggle.
+// Facet bars - one hue, magnitude only. Each bar is a filter toggle.
 // ---------------------------------------------------------------------------
 
 export function FacetBars({
@@ -156,7 +156,7 @@ export function FacetBars({
               onClick={() => onToggle(it.key)}
               title={`${on && anySelected ? "Remove" : "Filter by"} ${it.label}`}
             >
-              <span className="truncate">{it.label || "—"}</span>
+              <span className="truncate">{it.label || "-"}</span>
               <span className="track">
                 <span className="fill block" style={{ width: `${(100 * it.n) / max}%` }} />
               </span>
@@ -170,7 +170,7 @@ export function FacetBars({
 }
 
 // ---------------------------------------------------------------------------
-// Columns — a short series over time (runs, turns). Stacked when `values` has
+// Columns - a short series over time (runs, turns). Stacked when `values` has
 // more than one entry; the legend names the layers.
 // ---------------------------------------------------------------------------
 

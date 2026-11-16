@@ -112,7 +112,7 @@ def test_the_store_name_decides_the_backend_and_a_typo_fails_at_startup():
 
 
 # ---------------------------------------------------------------------------
-# The agent round-trip — the seam the store depends on
+# The agent round-trip - the seam the store depends on
 # ---------------------------------------------------------------------------
 
 
@@ -130,7 +130,7 @@ class _FakeLLM:
     def bind_tools(self, tools):
         return self
 
-    def invoke(self, messages):  # pragma: no cover — never called in these tests
+    def invoke(self, messages):  # pragma: no cover - never called in these tests
         raise AssertionError("no model call expected")
 
 

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * The audit report — the product surface (CR-2, CR-8).
+ * The audit report - the product surface (CR-2, CR-8).
  *
  * Reads exactly what audit/report_view.py reads, over HTTP: packs, records,
  * a run started with POST /audit, progress over SSE, the finished report from
@@ -84,7 +84,7 @@ export default function ReportPage() {
         })
         .catch((e: unknown) => {
           if (cancelled) return;
-          setLoadError(`${e instanceof Error ? e.message : String(e)} — retrying…`);
+          setLoadError(`${e instanceof Error ? e.message : String(e)} - retrying…`);
           timer = setTimeout(load, 3000);
         });
     load();
@@ -270,7 +270,7 @@ export default function ReportPage() {
           <div className="border-t border-line pt-4 md:col-span-3 xl:col-span-1">
             <div className="text-[12.5px] text-dim">
               <span className="mono text-ink">{nPairs}</span> pairs → about{" "}
-              <span className="mono">{2 * nPairs}–{3 * nPairs}</span> model calls (judge + verify,
+              <span className="mono">{2 * nPairs}-{3 * nPairs}</span> model calls (judge + verify,
               maybe one re-judge).
             </div>
             <Button
@@ -338,7 +338,7 @@ export default function ReportPage() {
             <div className="card p-5">
               <div className="flex items-center justify-between">
                 <div className="font-semibold">
-                  Auditing {progress?.total ?? "…"} record–control pairs…
+                  Auditing {progress?.total ?? "…"} record-control pairs…
                 </div>
                 <div className="mono text-[13px] text-dim">
                   {progress ? `${progress.done}/${progress.total}` : ""}
@@ -547,7 +547,7 @@ function ReportView({
                         </div>
                       </div>
                       <div className={`mono text-[20px] font-semibold leading-none ${tone}`}>
-                        {rate === null ? "—" : `${rate}%`}
+                        {rate === null ? "-" : `${rate}%`}
                       </div>
                     </div>
                     <VerdictStack counts={pc.counts as Counts} />
@@ -649,7 +649,7 @@ function PairItem({ r }: { r: PairRow }) {
           <span className="mono text-[13px]">{r.ticket_id}</span>
           <span className="text-dim">×</span>
           <span className="mono text-[13px]">{r.control_id}</span>
-          <span className="text-dim">—</span>
+          <span className="text-dim">-</span>
           <VerdictBadge verdict={r.verdict} />
           <span className="text-dim">·</span>
           <StatusBadge status={r.status} />

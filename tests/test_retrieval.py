@@ -1,13 +1,13 @@
-"""Unit tests for core/retrieval.py — the chunking layer.
+"""Unit tests for core/retrieval.py - the chunking layer.
 
 Embedding and Chroma search need models and a store (scripts/
 smoke_retrieval.py); chunking is pure data transformation, and it carries
 two contracts worth pinning down:
 
-1. Deterministic chunk ids ("TCK-1001#header", "TCK-1001#c0", "EML-2001") —
+1. Deterministic chunk ids ("TCK-1001#header", "TCK-1001#c0", "EML-2001") -
    citations reference these, so an id scheme change silently breaks every
    stored citation and upsert-dedup on rebuild.
-2. Chroma metadata must be scalar-only (str/int/float/bool) — a list slips
+2. Chroma metadata must be scalar-only (str/int/float/bool) - a list slips
    through as an ingest-time crash, so we catch it at the unit level.
 """
 
@@ -56,7 +56,7 @@ def test_ticket_yields_header_plus_one_chunk_per_comment():
 
 
 def test_chunk_ids_are_deterministic_across_reruns():
-    # Same input, same ids — the property that keeps citations stable and
+    # Same input, same ids - the property that keeps citations stable and
     # makes re-ingestion an upsert instead of a duplication.
     a = [c.chunk_id for c in _ticket_chunks(make_ticket())]
     b = [c.chunk_id for c in _ticket_chunks(make_ticket())]
@@ -66,7 +66,7 @@ def test_chunk_ids_are_deterministic_across_reruns():
 def test_header_carries_ticket_level_facts():
     header = _ticket_chunks(make_ticket())[0]
     assert "TCK-9001" in header.text
-    assert "approved by M. Chen" in header.text  # signoff — audit-critical
+    assert "approved by M. Chen" in header.text  # signoff - audit-critical
     assert header.metadata["doc_type"] == "ticket"
     assert header.metadata["ticket_id"] == "TCK-9001"
 
@@ -111,7 +111,7 @@ def test_email_becomes_one_chunk_with_ticket_join():
     )
     assert chunk.chunk_id == "EML-9101"
     assert "We approve closure" in chunk.text
-    # related_tickets joins the email to its ticket — but as a comma-joined
+    # related_tickets joins the email to its ticket - but as a comma-joined
     # STRING, because Chroma metadata cannot hold lists.
     assert chunk.metadata["ticket_id"] == "TCK-9001"
 
@@ -144,7 +144,7 @@ def test_all_metadata_values_are_chroma_safe_scalars():
 
 
 # ---------------------------------------------------------------------------
-# build_chunks — whole-corpus assembly from files
+# build_chunks - whole-corpus assembly from files
 # ---------------------------------------------------------------------------
 
 

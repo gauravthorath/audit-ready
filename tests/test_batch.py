@@ -1,4 +1,4 @@
-"""Hermetic tests for audit/batch.py — aggregation, isolation, rendering.
+"""Hermetic tests for audit/batch.py - aggregation, isolation, rendering.
 
 No network: the LangGraph runner is swapped for a fake via the `runner`
 argument. Under test is what the BATCH layer adds around per-pair results
@@ -150,9 +150,9 @@ def test_markdown_has_every_section_with_the_right_items():
         ("T3", MAJOR): RuntimeError("timeout"),
     })
     md = batch.render_markdown(r)
-    assert md.startswith("# Audit-readiness report — ISO 9001")
+    assert md.startswith("# Audit-readiness report - ISO 9001")
     assert "## Readiness score: 0%" in md
-    assert "**1 of 3** record–control pairs" in md
+    assert "**1 of 3** record-control pairs" in md
     assert "## Open gaps (1)" in md and "**T1 × " in md and "GAP (major)" in md
     assert "## Needs human review (1)" in md and "rubric not met" in md
     assert "## Errors (1)" in md and "RuntimeError: timeout" in md

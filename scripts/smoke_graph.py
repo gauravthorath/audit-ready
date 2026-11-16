@@ -1,4 +1,4 @@
-"""Smoke test for audit/graph.py — one control through the LangGraph agent.
+"""Smoke test for audit/graph.py - one control through the LangGraph agent.
 
     uv run python scripts/smoke_graph.py
 
@@ -10,12 +10,12 @@ Same three cases as scripts/smoke_tools.py so the graph can be compared with
 check_ticket like-for-like, plus one deliberately hard case:
 - TCK-1001 vs client-comm: clean, should finalize on the first pass.
 - TCK-1014 vs traceability: planted dangling references (CHG-3099, EML-2099
-  do not exist) — a judge that cites them trips check_citations, and the
+  do not exist) - a judge that cites them trips check_citations, and the
   graph must send that back as feedback rather than just report it.
 - TCK-1003 vs client-comm: internal ticket → not_applicable, not gap.
 
 PASS = verdict in the accepted set AND the graph ended with a status. A
-`needs_review` status is not a failure — it is the graph doing its job —
+`needs_review` status is not a failure - it is the graph doing its job -
 but it is printed loudly so a surprising flag is noticed.
 """
 

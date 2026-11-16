@@ -1,16 +1,16 @@
-"""Unit tests for core/tools.py — coverage_report's aggregation + progress.
+"""Unit tests for core/tools.py - coverage_report's aggregation + progress.
 
 check_ticket itself needs the LLM and the vector store (scripts/
 smoke_tools.py); what's unit-testable is everything coverage_report does
 AROUND it: pair fan-out, thread-pool execution, progress reporting, the
 severity-weighted readiness math, and per-control aggregation. So these
 tests replace check_ticket with a deterministic fake (monkeypatch) and
-replace the pack/ticket caches with tiny fixtures — hermetic, offline,
+replace the pack/ticket caches with tiny fixtures - hermetic, offline,
 and they pin the exact scoring policy (3:1 severity, partial=0.5,
 not_applicable out of the denominator).
 
 Testing concept: monkeypatch swaps a module attribute for the duration of
-one test and restores it automatically — here it cuts the LLM out of the
+one test and restores it automatically - here it cuts the LLM out of the
 dependency chain the same way a mock server cuts out a network.
 """
 
@@ -43,7 +43,7 @@ PACK = ChecklistPack.model_validate(
     }
 )
 
-# The verdict matrix the fake judge returns — chosen so every aggregation
+# The verdict matrix the fake judge returns - chosen so every aggregation
 # rule is exercised: full credit, none, half, and an excluded pair.
 VERDICTS = {
     ("T-1", "C-MAJ"): "satisfied",

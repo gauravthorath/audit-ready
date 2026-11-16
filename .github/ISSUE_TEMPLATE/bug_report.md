@@ -27,4 +27,4 @@ A clear description of the bug.
 
 ## Notes
 
-Synthetic data or logs only — do not paste real client records or secrets.
+Synthetic data or logs only - do not paste real client records or secrets.

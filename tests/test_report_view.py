@@ -1,7 +1,7 @@
 """Offline tests for audit/report_view.py's pure helpers.
 
 The Streamlit page itself is exercised by streamlit.testing.AppTest in
-test_app_pages (below) — no browser, no LLM. These tests pin the data
+test_app_pages (below) - no browser, no LLM. These tests pin the data
 shaping the page relies on: pack discovery (including a broken pack), the
 per-control and per-pair tables, and the call/cost estimates.
 """
@@ -87,8 +87,8 @@ def test_pair_rows_flatten_status_and_verifier():
     by_ticket = {r["Ticket"]: r for r in rows}
     assert by_ticket["T1"]["Verifier"] == "agrees" and by_ticket["T1"]["Status"] == "verdict"
     assert by_ticket["T2"]["Verifier"] == "objects" and by_ticket["T2"]["Attempts"] == 2
-    assert by_ticket["T3"]["Verdict"] == "—" and by_ticket["T3"]["Status"] == "error"
-    assert by_ticket["T3"]["Verifier"] == "—"
+    assert by_ticket["T3"]["Verdict"] == "-" and by_ticket["T3"]["Status"] == "error"
+    assert by_ticket["T3"]["Verifier"] == "-"
 
 
 # ---------------------------------------------------------------------------

@@ -1,9 +1,9 @@
-"""Unit tests for core/judge.py — the "parse, don't validate" seam.
+"""Unit tests for core/judge.py - the "parse, don't validate" seam.
 
 judge_ticket itself needs an LLM (covered by scripts/smoke_judge.py); what
 unit tests CAN pin down is the contract around it: _parse_verdict must turn
 messy model text into a validated Verdict or raise ValueError for the retry
-loop — never return something malformed.
+loop - never return something malformed.
 
 Testing a private function (leading underscore) is a deliberate choice here:
 _parse_verdict is the pure, deterministic core of the module, and testing it
@@ -49,14 +49,14 @@ def test_citations_default_to_empty_list_when_omitted():
     [
         "I think the ticket looks fine overall.",  # no JSON at all
         '{"verdict": "gap", "rationale": "x",',  # truncated JSON
-        # Schema violations — the LLM inventing its own vocabulary:
+        # Schema violations - the LLM inventing its own vocabulary:
         '{"verdict": "mostly-satisfied", "rationale": "close enough"}',
         '{"verdict": "gap"}',  # rationale missing entirely
         '{"verdict": "gap", "rationale": ""}',  # rationale empty (min_length=1)
     ],
 )
 def test_malformed_replies_raise_value_error_for_retry(bad_reply):
-    # ValueError is the contract with judge_ticket's corrective-retry loop —
+    # ValueError is the contract with judge_ticket's corrective-retry loop -
     # any other exception type would crash the agent instead of retrying.
     with pytest.raises(ValueError):
         _parse_verdict(bad_reply)

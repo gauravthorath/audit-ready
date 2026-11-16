@@ -1,7 +1,7 @@
 """Smoke test for the Linear evidence connector (CR-3).
 
 Hits the real Linear GraphQL API with a real personal API key, so it is a
-script and not a unit test. It proves the query still matches Linear's schema —
+script and not a unit test. It proves the query still matches Linear's schema -
 the failure mode a mocked test cannot catch, because a renamed field returns
 200 with an `errors` array rather than a transport error.
 
@@ -48,7 +48,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if not records.tickets:
-        print("FAIL: the workspace returned no issues — check the team key, or drop "
+        print("FAIL: the workspace returned no issues - check the team key, or drop "
               "--team to fetch everything")
         return 1
 
@@ -73,11 +73,11 @@ def main(argv: list[str] | None = None) -> int:
     for ticket_id, why in list(notes.items())[:2]:
         print(f"    {ticket_id}: {'; '.join(why)}")
     for field, why in records.detail.get("not_supplied", {}).items():
-        print(f"  not supplied: {field} — {why}")
+        print(f"  not supplied: {field} - {why}")
 
     if args.out:
         provenance = snapshot(records, args.out)
-        print(f"wrote {args.out}/ — provenance: {json.dumps(provenance['counts'])}")
+        print(f"wrote {args.out}/ - provenance: {json.dumps(provenance['counts'])}")
         print(f"  next: uv run python audit/batch.py --corpus {args.out} --pack <pack>")
 
     return 0

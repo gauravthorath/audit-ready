@@ -2,7 +2,7 @@
 
 The second live connector. `audit/mcp_evidence.py` proved the interface over
 MCP; this one proves the interface is not *about* MCP. Same `TicketSource`
-protocol, same `validate_ticket` gate, same snapshot-then-ingest path — a
+protocol, same `validate_ticket` gate, same snapshot-then-ingest path - a
 different transport underneath.
 
 *Why the REST API and not Atlassian's MCP server.* The plan said "Linear or Jira
@@ -26,7 +26,7 @@ the approval is worse than a slower fetch, so each issue's comments are read
 from `/issue/{key}/comment`, which pages honestly.
 
 *What Jira cannot supply.* There is no sign-off record in base Jira software
-projects — approvals are a Jira Service Management workflow feature. `signoff`
+projects - approvals are a Jira Service Management workflow feature. `signoff`
 is therefore None and the mapping notes say so, exactly as the GitHub connector
 does. Inventing an approver would be the one unforgivable bug in an audit tool.
 
@@ -170,7 +170,7 @@ _ADF_BLOCKS = frozenset(
 def flatten_adf(node: Any) -> str:
     """Atlassian Document Format down to plain prose.
 
-    The v3 API serves `description` and comment bodies as an ADF document — a
+    The v3 API serves `description` and comment bodies as an ADF document - a
     nested node tree, not a string. The judge reads prose and cites fields, so
     the tree has to become text at the boundary rather than leaking JSON into a
     prompt. Anything already a string passes through, because v2 responses and
@@ -367,7 +367,7 @@ class JiraIssuesSource:
 
     `jql` wins if given, otherwise a project key builds the obvious query. The
     ordering is pinned to `created ASC` so two fetches of an unchanged project
-    return the same snapshot — an audit that reshuffles its evidence between
+    return the same snapshot - an audit that reshuffles its evidence between
     runs is hard to trust and harder to diff.
     """
 
@@ -417,13 +417,13 @@ class JiraIssuesSource:
             raise ConnectorError(f"jira: {path} failed: {exc}") from exc
         if response.status_code == 401:
             raise ConnectorError(
-                "jira: 401 unauthorized — check AUDITREADY_JIRA_EMAIL matches the "
+                "jira: 401 unauthorized - check AUDITREADY_JIRA_EMAIL matches the "
                 "account that minted AUDITREADY_JIRA_TOKEN"
             )
         if response.status_code == 403:
-            raise ConnectorError("jira: 403 forbidden — the account cannot browse this project")
+            raise ConnectorError("jira: 403 forbidden - the account cannot browse this project")
         if response.status_code == 404:
-            raise ConnectorError(f"jira: 404 for {path} — check the site and project key")
+            raise ConnectorError(f"jira: 404 for {path} - check the site and project key")
         if response.status_code >= 400:
             raise ConnectorError(
                 f"jira: {path} returned {response.status_code}: {response.text[:300]}"

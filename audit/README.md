@@ -17,7 +17,7 @@ engine production-scale. Requirement ids are in `docs/REQUIREMENTS.md`
 | `jira_evidence.py` | Jira Cloud over the REST API: Basic auth with an API token, `/search/jql` token paging, ADF → prose, comments read per issue. | CR-3 |
 | `linear_evidence.py` | Linear over the GraphQL API: personal API key, Relay cursor paging, comments inline in one query. | CR-3 |
 | `email_evidence.py` | Exported mail as evidence: `.eml` files, a directory of them, or an `.mbox`; HTML→text, stable `EML-` ids, ticket references found in subject/body and the reverse `linked_emails` edge written onto the ticket. `--emails-from` on the CLI. | CR-3 |
-| `mcp_evidence.py` | `GitHubIssuesSource` — live GitHub Issues over the official MCP server (`langchain-mcp-adapters`), label→type/priority mapping with every guess recorded. | CR-3 |
+| `mcp_evidence.py` | `GitHubIssuesSource` - live GitHub Issues over the official MCP server (`langchain-mcp-adapters`), label→type/priority mapping with every guess recorded. | CR-3 |
 | `../Dockerfile`, `../compose.yaml` | Self-hosted image: locked venv, embedding weights baked in, non-root, healthcheck; `compose.local-llm.yaml` overlays a bundled Ollama. | CR-4 |
 | `../docker/entrypoint.sh` | First-boot corpus ingest into the `.chroma` volume, then exec Streamlit. | CR-4 |
 | `eval/ground_truth_iso27001.yaml` | Answer key for the ISO 27001 pack (22 labelled pairs). The ISO 9001 key stays frozen in `assistant/eval/`. | CR-5 |
@@ -28,7 +28,7 @@ needed zero Python changes; the picker and the batch CLI found it by path.
 ## Evidence connectors (CR-3)
 
 One interface, `TicketSource`: `name` and `fetch(limit) -> EvidenceRecords`.
-Everything downstream — retrieval, the agent, the batch report — reads the
+Everything downstream - retrieval, the agent, the batch report - reads the
 snapshot on disk, so a new source is a new `fetch`, not a new engine.
 
 Three live sources over three transports, which is what makes the abstraction
@@ -39,7 +39,7 @@ claim checkable rather than asserted:
 | `github` | MCP | token (or `gh auth token`) | `mcp_evidence.py` |
 | `jira` | REST v3 | email + API token, Basic | `jira_evidence.py` |
 | `linear` | GraphQL | personal API key | `linear_evidence.py` |
-| `eml` | file (`.eml` / `.mbox`) | none — the human exported it | `email_evidence.py` |
+| `eml` | file (`.eml` / `.mbox`) | none - the human exported it | `email_evidence.py` |
 | `teams` | **stubbed** | Entra app registration + admin consent | `connectors.py` (`STUBS`) |
 
 ```bash
@@ -64,16 +64,16 @@ uv run python audit/connectors.py --source json --path assistant/data/corpus \
     --emails-from assistant/data/mail-sample --out assistant/data/live-mail
 ```
 
-Don't have Jira or Linear credentials yet? One script walks the whole thing —
-site, project, token, workspace, key — and verifies each as it goes:
+Don't have Jira or Linear credentials yet? One script walks the whole thing -
+site, project, token, workspace, key - and verifies each as it goes:
 
 ```bash
 bash scripts/setup_connectors.sh
 ```
 
 Fresh tenants are empty. Seed both with the same kind of synthetic evidence the
-corpus has — an approval in a comment, a linked `CHG-`/`EML-` id in prose, a
-request with no approval at all, and the planted injection string — so a live
+corpus has - an approval in a comment, a linked `CHG-`/`EML-` id in prose, a
+request with no approval at all, and the planted injection string - so a live
 snapshot exercises the same paths the eval does. Idempotent by title; issues
 are created closed, because open tickets fail "approved before closure" for the
 wrong reason:
@@ -93,7 +93,7 @@ uv run python scripts/smoke_linear.py --team AUD
 **Why Jira and Linear are not over MCP.** Both ship official MCP servers and
 both are OAuth-only, which means a browser consent flow against a provisioned
 tenant. A connector that needs a human at a keyboard cannot run in CI, cannot
-run unattended, and cannot be smoke-tested — so these two use the REST and
+run unattended, and cannot be smoke-tested - so these two use the REST and
 GraphQL APIs, which take a token. The MCP claim is carried by GitHub, where it
 is true; asserting it here as well would be false.
 
@@ -111,7 +111,7 @@ not an approval. Nothing is invented to fill a field.
 
 Run against `langchain-ai/langgraph` (4 closed issues × 2 ISO 9001 controls),
 the report scored 0% readiness and every gap cited the missing `signoff` or the
-absent linked records — the honest answer for a source with no approval trail.
+absent linked records - the honest answer for a source with no approval trail.
 That is the connector working, not the agent failing.
 
 Snapshots are gitignored (`assistant/data/live/`): they are third-party content,
@@ -127,7 +127,7 @@ docker compose up             # http://localhost:8501
 One container and one named volume. The image is Python 3.12-slim with the
 locked venv copied from a builder stage, runs as uid 10001, and has a
 healthcheck on Streamlit's own `/_stcore/health`. The entrypoint ingests the
-corpus on first boot if the `.chroma` volume is empty, then execs Streamlit —
+corpus on first boot if the `.chroma` volume is empty, then execs Streamlit -
 so a fresh `docker compose up` reaches a working UI with no manual step.
 
 **Nothing is fetched at run time.** The embedding model
@@ -136,7 +136,7 @@ so a fresh `docker compose up` reaches a working UI with no manual step.
 That matters for CR-4: the only outbound request the container makes is the
 LLM call, and that address is yours to set.
 
-**BYO endpoint.** `core/llm.py` speaks one wire protocol — OpenAI's — so any
+**BYO endpoint.** `core/llm.py` speaks one wire protocol - OpenAI's - so any
 compatible server works without a code change:
 
 ```bash
@@ -158,7 +158,7 @@ a non-OpenRouter host with no key present, and neither `.env` nor
 
 ## Evaluation (2026-09-11, gpt-4o-mini, temperature 0)
 
-`uv run python audit/eval/run_eval.py` — every labelled pair of both packs
+`uv run python audit/eval/run_eval.py` - every labelled pair of both packs
 through the LangGraph agent. Committed evidence: `eval/results.json`, which
 stamps the model that produced it.
 
@@ -169,10 +169,10 @@ Committed run, with the range observed over the two runs on these packs:
 | exact agreement | 0.935 | 0.955 | 0.941 |
 | gap recall | 1.0 | 1.0 | **1.0 in both runs** |
 | flagged recall (any deficiency noticed) | 1.0 | 1.0 | **1.0 in both runs** |
-| false-positive rate | 0.032 (0.032–0.065) | 0.067 | 0.043 (0.043–0.065) |
-| citation validity | 0.935 (0.913–0.935) | 0.909 (0.909–1.0) | 0.926 (0.926–0.941) |
-| review rate (parked for a human) | — | — | 0.103 (0.088–0.103) |
-| **agreement on what it finalized** | — | — | **0.984 (0.952–0.984)** |
+| false-positive rate | 0.032 (0.032-0.065) | 0.067 | 0.043 (0.043-0.065) |
+| citation validity | 0.935 (0.913-0.935) | 0.909 (0.909-1.0) | 0.926 (0.926-0.941) |
+| review rate (parked for a human) | - | - | 0.103 (0.088-0.103) |
+| **agreement on what it finalized** | - | - | **0.984 (0.952-0.984)** |
 | deficiencies finalized as compliant | 0 | 0 | **0 in both runs** |
 
 **Why a range, and why these numbers are lower than the ones this file used to
@@ -200,12 +200,12 @@ the rollout is the remedy; 8.2.1 accepted an outbound "the work is done" email
 as client acknowledgement. Both are now closed in the rubric text (iso27001
 pack 0.1.2, iso9001 pack 0.1.1) and both post-fix runs show zero such misses,
 with exact agreement identical across them. One paragraph of YAML each, no
-Python — the config-as-data claim doing real work on a real defect.
+Python - the config-as-data claim doing real work on a real defect.
 
 **Read the last three rows, not the first.** On ISO 9001 the plain judge scores
 0.957 against this agent's 0.935. Earlier runs reversed that ordering more than
 once, and an earlier version of this file claimed a +0.021 win from the verify
-loop that a clean re-run did not reproduce. Withdrawn — and seven runs have
+loop that a clean re-run did not reproduce. Withdrawn - and seven runs have
 since supplied the mechanism. The agent spends three to five model calls per
 pair where the plain judge spends one, so it inherits more variance; v1
 reproduced to three decimals over the same eight days that moved nine of this
@@ -226,7 +226,7 @@ band, because a planted deficiency surviving to audit day is the failure this
 whole system exists to prevent.
 
 Residual disagreements: one on ISO 9001 finalized as a verdict (TCK-1017,
-partial labelled where the agent said gap — v1 misses it too), the rest
+partial labelled where the agent said gap - v1 misses it too), the rest
 parked rather than answered wrongly. Temperature 0 is not determinism; treat
 any single-run swing under ~0.03 as noise, which is why `eval/thresholds.yaml`
 sets floors instead of comparing runs.
@@ -239,12 +239,12 @@ are joined by id, not left to similarity retrieval.
 ## Planned (see V2_PLAN.md)
 
 - A recorded walkthrough of the batch report
-- Live Gmail / Microsoft Graph mailbox connectors — the `.eml`/`.mbox` import
+- Live Gmail / Microsoft Graph mailbox connectors - the `.eml`/`.mbox` import
   is built; a live connector waits on the consent and scope design the README's
   ethics section describes
 - A source that carries real approval records (Jira Service Management,
   ServiceNow), since `signoff` is `None` on every live ticket today
 
 Out of scope this round: Gmail/Outlook, pgvector. The React dashboard (CR-8)
-landed on 2026-09-07 as `api/` + `web/` — see `docs/V2_PLAN.md` for why it was
+landed on 2026-09-07 as `api/` + `web/` - see `docs/V2_PLAN.md` for why it was
 OUT, why that changed, and the rule that kept the engine untouched.

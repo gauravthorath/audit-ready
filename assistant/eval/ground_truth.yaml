@@ -24,7 +24,7 @@ tickets:
     label: deficient
     verdicts:
       ISO9001-8.6-release-signoff: gap     # closed with no approval record
-    notes: "Internal ticket (edge case): client-comm control not applicable — reporter is internal monitoring."
+    notes: "Internal ticket (edge case): client-comm control not applicable - reporter is internal monitoring."
 
   TCK-1004:
     label: clean
@@ -39,7 +39,7 @@ tickets:
     verdicts:
       ISO9001-10.2-corrective-action: gap  # high-priority incident: fix re-run manually, no root cause, no prevention
       ISO9001-8.2.1-client-comm: satisfied
-    notes: "Planted: incident closed with immediate fix only — no RCA, no corrective action."
+    notes: "Planted: incident closed with immediate fix only - no RCA, no corrective action."
 
   TCK-1006:
     label: clean
@@ -67,7 +67,7 @@ tickets:
     verdicts:
       ISO9001-7.5-documented-info: gap     # closed with empty resolution, zero comments
       ISO9001-8.6-release-signoff: gap
-    notes: "Planted: silently closed ticket — empty resolution, no comments, no sign-off."
+    notes: "Planted: silently closed ticket - empty resolution, no comments, no sign-off."
 
   TCK-1010:
     label: deficient
@@ -100,7 +100,7 @@ tickets:
     label: deficient
     verdicts:
       ISO9001-8.5.2-traceability: gap      # references CHG-3099 and EML-2099, which do not exist in the record set
-    notes: "Planted: dangling references — resolution cites artifacts absent from the corpus."
+    notes: "Planted: dangling references - resolution cites artifacts absent from the corpus."
 
   TCK-1015:
     label: deficient
@@ -133,7 +133,7 @@ tickets:
     label: deficient
     verdicts:
       ISO9001-9.1.2-customer-satisfaction: gap  # formal complaint closed same day with no follow-up action recorded
-    notes: "Planted: complaint acknowledged and shelved — no improvement plan, no follow-up record."
+    notes: "Planted: complaint acknowledged and shelved - no improvement plan, no follow-up record."
 
   TCK-1020:
     label: clean

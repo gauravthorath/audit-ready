@@ -1,5 +1,5 @@
 # Every push: the checks that cost nothing. No API key, no network beyond the
-# package index, seconds not minutes — so there is never a reason to skip them.
+# package index, seconds not minutes - so there is never a reason to skip them.
 name: tests
 
 on:
@@ -15,7 +15,7 @@ jobs:
         with:
           # The eval-staleness check compares `git log -1` times per file, and
           # the default shallow clone (depth 1) gives every file the same commit
-          # time — which would make the check silently pass whatever the state
+          # time - which would make the check silently pass whatever the state
           # of the repo. Full history or the gate is theatre.
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
         # at the moment the import is added rather than at the rewrite.
         run: |
           if grep -rn "langchain\|langgraph" core/; then
-            echo "::error::core/ imported a framework — see CLAUDE.md, NFR-1"
+            echo "::error::core/ imported a framework - see CLAUDE.md, NFR-1"
             exit 1
           fi
           echo "core/ is clean"

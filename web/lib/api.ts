@@ -1,5 +1,5 @@
 /**
- * The typed client for api/ — every shape here mirrors a Python dict one-to-one.
+ * The typed client for api/ - every shape here mirrors a Python dict one-to-one.
  *
  * This file is the only place the browser knows a URL. Components import
  * functions, never fetch; if the wire changes, it changes here and the
@@ -11,7 +11,7 @@ export const API_URL =
 
 export class ApiError extends Error {
   status: number;
-  /** The correlation id of the failed call — the same id the API logged under. */
+  /** The correlation id of the failed call - the same id the API logged under. */
   requestId: string;
   constructor(status: number, detail: string, requestId: string) {
     // The reference goes into the message itself so every place that already
@@ -38,7 +38,7 @@ function newRequestId(): string {
 }
 
 // ---------------------------------------------------------------------------
-// Shapes — generated from api/openapi.json (see `pnpm gen:types`), aliased here
+// Shapes - generated from api/openapi.json (see `pnpm gen:types`), aliased here
 // so components import stable names. If a Python response model changes and the
 // JSON is re-exported, `tsc` fails at every site that assumed the old shape.
 // That is the point: one contract, and drift is a compile error, not a bug
@@ -128,7 +128,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       if (typeof body.detail === "string") detail = body.detail;
       else if (body.detail) detail = JSON.stringify(body.detail);
     } catch {
-      /* not JSON — keep statusText */
+      /* not JSON - keep statusText */
     }
     const ref = res.headers.get(REQUEST_ID_HEADER) ?? requestId;
     console.error(`[auditready] ${init?.method ?? "GET"} ${path} -> ${res.status} (ref ${ref})`);
@@ -181,7 +181,7 @@ export function streamRun(
 ): () => void {
   // EventSource cannot set a header, so a locked deployment could not stream
   // progress at all. The caller falls back to polling `api.run` on error,
-  // which does carry the credential — the progress bar stutters, the run does
+  // which does carry the credential - the progress bar stutters, the run does
   // not break. (Passing the token in the URL would put a credential in every
   // access log; that is worse than a slower bar.)
   const es = new EventSource(`${API_URL}/audit/${run_id}/events`);

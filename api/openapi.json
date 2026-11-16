@@ -310,7 +310,7 @@
         "type": "object"
       },
       "PackOut": {
-        "description": "A checklist pack. Invalid packs are listed too \u2014 with `error` set and no id.",
+        "description": "A checklist pack. Invalid packs are listed too - with `error` set and no id.",
         "properties": {
           "controls": {
             "items": {
@@ -790,7 +790,7 @@
         "type": "object"
       },
       "ReportOut": {
-        "description": "`audit.batch.BatchReport.to_dict()` \u2014 dataclass fields plus the derived lists.",
+        "description": "`audit.batch.BatchReport.to_dict()` - dataclass fields plus the derived lists.",
         "properties": {
           "completion_tokens": {
             "title": "Completion Tokens",
@@ -1274,7 +1274,7 @@
         "type": "object"
       },
       "ToolCallOut": {
-        "description": "One tool invocation. `result` is whatever the tool returned \u2014 JSON if it was JSON.",
+        "description": "One tool invocation. `result` is whatever the tool returned - JSON if it was JSON.",
         "properties": {
           "args": {
             "additionalProperties": true,
@@ -1434,7 +1434,7 @@
         "summary": "List Audits"
       },
       "post": {
-        "description": "Start a batch audit and return immediately with a run id.\n\nUnknown ids fail HERE, synchronously, before a thread or a token is spent \u2014\n`run_batch` already checks them, and doing it up front turns a 500 five\nseconds later into a 404 now. The same rule covers the limits: too many\nruns, too many pairs, or a run the day's budget cannot pay for are all\nrefused here, with the estimate in the sentence.",
+        "description": "Start a batch audit and return immediately with a run id.\n\nUnknown ids fail HERE, synchronously, before a thread or a token is spent -\n`run_batch` already checks them, and doing it up front turns a 500 five\nseconds later into a 404 now. The same rule covers the limits: too many\nruns, too many pairs, or a run the day's budget cannot pay for are all\nrefused here, with the estimate in the sentence.",
         "operationId": "start_audit_audit_post",
         "requestBody": {
           "content": {
@@ -1633,7 +1633,7 @@
         "summary": "My Chats"
       },
       "post": {
-        "description": "One conversational turn. The agent keeps memory across turns of a session.\n\nErrors follow the Streamlit page exactly (FR-15): a guardrail violation is\nsafe to show verbatim (400); the model being down is a 503 with a plain\nsentence; anything else is a 500 with no detail, because a stack trace in a\nbrowser is a leak, not a diagnostic. Over the rate limit or the daily\nbudget is a 429 that says so \u2014 refused before a token is spent.",
+        "description": "One conversational turn. The agent keeps memory across turns of a session.\n\nErrors follow the Streamlit page exactly (FR-15): a guardrail violation is\nsafe to show verbatim (400); the model being down is a 503 with a plain\nsentence; anything else is a 500 with no detail, because a stack trace in a\nbrowser is a leak, not a diagnostic. Over the rate limit or the daily\nbudget is a 429 that says so - refused before a token is spent.",
         "operationId": "chat_chat_post",
         "requestBody": {
           "content": {

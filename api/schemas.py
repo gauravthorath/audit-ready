@@ -1,4 +1,4 @@
-"""Response models — the wire contract, written down once (CR-8).
+"""Response models - the wire contract, written down once (CR-8).
 
 Until this file existed every route returned `dict[str, Any]`, so the OpenAPI
 document FastAPI generates said "object" about everything and the TypeScript
@@ -14,7 +14,7 @@ that file. One source of truth, three consumers, a test on the seam.
 Two deliberate softnesses. Rows carry `extra="allow"` and mostly-optional
 fields, because a row is whatever `audit/graph.run_control` (or the error
 path in `audit/batch`) produced, and a response model that rejects a real
-row would turn a finished audit into a 500 — the exact failure this layer must
+row would turn a finished audit into a 500 - the exact failure this layer must
 never introduce. And a ticket keeps unknown keys, because the synthetic corpus
 itself carries one (`satisfaction_survey`) and the retrieval layer indexes
 whatever it is given.
@@ -45,7 +45,7 @@ class ControlOut(BaseModel):
 
 
 class PackOut(BaseModel):
-    """A checklist pack. Invalid packs are listed too — with `error` set and no id."""
+    """A checklist pack. Invalid packs are listed too - with `error` set and no id."""
 
     id: str | None
     standard: str | None = None
@@ -107,8 +107,8 @@ class TicketOut(BaseModel):
 
 class HealthOut(BaseModel):
     ok: bool
-    auth: str      # none | token | oidc — which credential this deployment asks for
-    sessions: str  # memory | postgres — whether a conversation survives a restart
+    auth: str      # none | token | oidc - which credential this deployment asks for
+    sessions: str  # memory | postgres - whether a conversation survives a restart
     model: str
     corpus_dir: str
     vector_store: str  # "chroma:<dir>" or "pgvector:<host>:<port>/<db>/<namespace>"
@@ -157,7 +157,7 @@ class SessionOut(BaseModel):
 
 
 class ToolCallOut(BaseModel):
-    """One tool invocation. `result` is whatever the tool returned — JSON if it was JSON."""
+    """One tool invocation. `result` is whatever the tool returned - JSON if it was JSON."""
 
     name: str
     args: dict[str, Any]
@@ -196,7 +196,7 @@ class SessionSummaryOut(BaseModel):
 class StartAuditOut(BaseModel):
     run_id: str
     total_pairs: int
-    estimated_calls: list[int]  # [low, high] — judge + verify, maybe one re-judge
+    estimated_calls: list[int]  # [low, high] - judge + verify, maybe one re-judge
 
 
 class ProgressOut(BaseModel):
@@ -250,7 +250,7 @@ class PerControlOut(BaseModel):
 
 
 class ReportOut(BaseModel):
-    """`audit.batch.BatchReport.to_dict()` — dataclass fields plus the derived lists."""
+    """`audit.batch.BatchReport.to_dict()` - dataclass fields plus the derived lists."""
 
     pack_id: str
     standard: str

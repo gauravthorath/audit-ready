@@ -1,4 +1,4 @@
-"""GitHub Issues over MCP — the one live evidence connector (CR-3).
+"""GitHub Issues over MCP - the one live evidence connector (CR-3).
 
 Why MCP rather than the REST API. The REST call would be shorter. The point of
 CR-3 is not to fetch JSON, it is to show the engine reading a real system
@@ -21,7 +21,7 @@ snapshot's provenance rather than hidden:
     is derived, never invented.
   * `signoff` stays None. Closing an issue is not an approval, and pretending
     otherwise would manufacture the exact evidence an audit exists to check.
-    Controls that require sign-off will report a gap against this source — that
+    Controls that require sign-off will report a gap against this source - that
     finding is true, and it is about the source system, not about the engine.
 """
 
@@ -128,8 +128,8 @@ def github_token(explicit: str | None = None) -> str:
 def unwrap(payload: Any) -> Any:
     """Pull the JSON out of an MCP tool result.
 
-    The server answers with content blocks — `[{"type": "text", "text": "<json>"}]`
-    — so the useful payload is a JSON string inside a list inside a result. This
+    The server answers with content blocks - `[{"type": "text", "text": "<json>"}]`
+    - so the useful payload is a JSON string inside a list inside a result. This
     lives in one function because every tool call needs it and because the shape
     is the server's, not ours; if it changes, one place changes.
     """
@@ -175,7 +175,7 @@ def text_of(value: Any) -> str:
     """GitHub serves issue text HTML-escaped; audit records should read as prose.
 
     `I&#39;d like` in a comment is not a quoting bug to leave for the judge to
-    puzzle over — it is an artifact of the transport. Unescape once here, at the
+    puzzle over - it is an artifact of the transport. Unescape once here, at the
     boundary, so every downstream reader (retrieval, judge, report) sees the
     same text a human sees on the issue page.
     """
@@ -429,7 +429,7 @@ class GitHubIssuesSource:
 
         The index projection omits `closed_at` and `state_reason`, which is
         exactly the closure evidence an audit asks for, so each issue costs a
-        second call. Comments cost a third — and a ticket without its comment
+        second call. Comments cost a third - and a ticket without its comment
         thread is a ticket with its evidence removed.
         """
         number = issue.get("number")

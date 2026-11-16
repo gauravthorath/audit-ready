@@ -1,15 +1,15 @@
-"""AuditReady — Streamlit chat UI (FR-11, 12, 15, 16, 19, 20 + FR-9, FR-17).
+"""AuditReady - Streamlit chat UI (FR-11, 12, 15, 16, 19, 20 + FR-9, FR-17).
 
 THE RULE OF THIS FILE: no business logic. Every capability lives in core/
 or assistant/agent.py; this file only renders. V2 swaps this shell
-for React+FastAPI (CR-8) — anything written here beyond presentation would
+for React+FastAPI (CR-8) - anything written here beyond presentation would
 have to be rewritten there, so if a line makes a decision about auditing,
 it's in the wrong file.
 
 Run:  uv run streamlit run assistant/app.py
 
 Pages: "Compliance chat" (this file) and, when the audit package is
-present, "Audit report" (audit/report_view.py) — same shell, two panels.
+present, "Audit report" (audit/report_view.py) - same shell, two panels.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ from core.retrieval import ingest, store_is_empty, store_label
 from assistant.agent import DEFAULT_MODEL, AuditAgent
 
 # Fallback price sheet (FR-17): gpt-4o-mini's rate, USD per 1M tokens. Used
-# only when the live lookup below fails (offline demo, OpenRouter hiccup) —
+# only when the live lookup below fails (offline demo, OpenRouter hiccup) -
 # and the sidebar labels which of the two it is showing.
 FALLBACK_PRICE_PER_M = (0.15, 0.60)
 
@@ -35,7 +35,7 @@ FALLBACK_PRICE_PER_M = (0.15, 0.60)
 @st.cache_data(ttl=3600, show_spinner=False)
 def _model_pricing(model: str) -> tuple[float, float] | None:
     """Live OpenRouter rates, cached for an hour. st.cache_data (not
-    session_state) because pricing is per-model, not per-conversation —
+    session_state) because pricing is per-model, not per-conversation -
     one fetch serves every session and rerun until the TTL expires."""
     return get_model_pricing(model)
 
@@ -53,7 +53,7 @@ st.logo(_MARK, size="medium")
 
 # ---------------------------------------------------------------------------
 # Session state: the agent (holds conversation memory) + a render log.
-# st.session_state survives Streamlit's rerun-on-every-interaction model —
+# st.session_state survives Streamlit's rerun-on-every-interaction model -
 # without it we'd build a fresh agent (and lose memory) on every click.
 # ---------------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ def _get_agent() -> AuditAgent | None:
         try:
             st.session_state.agent = AuditAgent()
             st.session_state.agent_error = None
-        except Exception as exc:  # missing key etc. — show, don't crash
+        except Exception as exc:  # missing key etc. - show, don't crash
             st.session_state.agent_error = str(exc)
     return st.session_state.agent
 
@@ -82,7 +82,7 @@ def _render_check_result(result: dict) -> None:
     """One check_ticket verdict: badge, rationale, citations, RAG trail."""
     badge = VERDICT_BADGES.get(result.get("verdict", ""), result.get("verdict", "?"))
     st.markdown(
-        f"**{result.get('control_id', '?')}** — {badge} "
+        f"**{result.get('control_id', '?')}** - {badge} "
         f"(severity: {result.get('severity', '?')})"
     )
     st.markdown(f"_{result.get('rationale', '')}_")
@@ -90,11 +90,11 @@ def _render_check_result(result: dict) -> None:
         st.markdown("**Citations:** " + ", ".join(f"`{c}`" for c in result["citations"]))
     check = result.get("citation_check", {})
     if check.get("status") and check["status"] != "ok":
-        st.warning(f"Citation check: {check['status']} — {check.get('note', '')}")
+        st.warning(f"Citation check: {check['status']} - {check.get('note', '')}")
     if result.get("security_flags"):
         paths = ", ".join(f["path"] for f in result["security_flags"])
-        st.error(f"🛡️ Prompt-injection attempt quarantined at: {paths} — needs human review")
-    with st.expander("RAG trail — how evidence was searched", expanded=False):
+        st.error(f"🛡️ Prompt-injection attempt quarantined at: {paths} - needs human review")
+    with st.expander("RAG trail - how evidence was searched", expanded=False):
         st.markdown("**Evidence sub-queries** (decomposed from the rubric):")
         for q in result.get("evidence_queries", []):
             st.markdown(f"- {q}")
@@ -125,7 +125,7 @@ def _render_tool_call(call: dict) -> None:
         if score is not None:
             st.metric("Readiness score", f"{score:.1%}")
         for cid, row in result.get("per_control", {}).items():
-            st.markdown(f"- **{cid}** — {row['counts']}")
+            st.markdown(f"- **{cid}** - {row['counts']}")
     else:
         st.code(json.dumps(result, indent=2)[:2000] if not isinstance(result, str) else result[:2000])
 
@@ -140,12 +140,12 @@ def _turn_has_security_flags(turn: dict) -> bool:
 
 def chat_page() -> None:
     """The v1 chatbot, now one page of a multipage app (see bottom).
-    Body unchanged from the v1 deliverable — only indented."""
+    Body unchanged from the v1 deliverable - only indented."""
     with st.sidebar:
         st.title("📋 AuditReady")
         st.caption(
             "Grounded, cited compliance answers over tickets, emails and change "
-            "records — ISO 9001 sample pack."
+            "records - ISO 9001 sample pack."
         )
         st.divider()
 
@@ -165,7 +165,7 @@ def chat_page() -> None:
         st.divider()
 
         if store_is_empty():
-            st.warning(f"Vector index {store_label()} is empty — build it before asking questions.")
+            st.warning(f"Vector index {store_label()} is empty - build it before asking questions.")
         if st.button("Rebuild vector index"):
             with st.spinner("Chunking + embedding corpus…"):
                 n = ingest()
@@ -246,12 +246,12 @@ def chat_page() -> None:
             "error": None,
         }
         with st.chat_message("assistant"):
-            # FR-16: st.status instead of a bare spinner — a coverage sweep is
+            # FR-16: st.status instead of a bare spinner - a coverage sweep is
             # up to 180 LLM judgments, and a silent spinner for minutes reads
             # as "hung". The agent forwards per-judgment progress from
             # coverage_report's thread-pool loop (called on this thread, so
             # updating widgets here is safe), and the bar appears only when a
-            # sweep actually starts — quick questions just see the status line.
+            # sweep actually starts - quick questions just see the status line.
             status = st.status("Consulting the audit tools…")  # FR-20
             _bar: list = []  # created lazily on the first progress event
 
@@ -290,7 +290,7 @@ def chat_page() -> None:
 
 # ---------------------------------------------------------------------------
 # Pages. V2 adds the batch audit report as a second page (plan
-# item 5 — "the chatbot becomes one panel", CR-8's idea without the React
+# item 5 - "the chatbot becomes one panel", CR-8's idea without the React
 # rewrite). The import is optional so a chat-only checkout still runs.
 # ---------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 """Everything the API reads from the environment, parsed once (CR-8, NFR-4).
 
-Before this module each `AUDITREADY_*` variable was read where it was used —
-`REPORTS_DIR` at import time in one place, `WEB_ORIGINS` in another — so a
+Before this module each `AUDITREADY_*` variable was read where it was used -
+`REPORTS_DIR` at import time in one place, `WEB_ORIGINS` in another - so a
 test that wanted a different reports directory had to patch a module global
 and a reader who wanted to know what the API could be told had to grep. Now
 there is one dataclass, built by one function, and the app carries it on
@@ -26,7 +26,7 @@ from pathlib import Path
 # with AUDITREADY_WEB_ORIGIN, comma-separated.
 DEFAULT_WEB_ORIGINS = ("http://localhost:3000", "http://127.0.0.1:3000")
 
-# Any origin on a private network is also allowed — the "Network" URL that
+# Any origin on a private network is also allowed - the "Network" URL that
 # `next dev` prints is a different origin from localhost and its fetches would
 # fail silently otherwise. Never "*": this API has no auth yet, and a wildcard
 # would let any website a user visits call their local engine.

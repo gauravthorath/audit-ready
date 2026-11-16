@@ -2,7 +2,7 @@
 # watch. That touches transformers' lazy loader, which imports optional model
 # code (torchvision, for ZoeDepth) and fails on a machine that has no reason to
 # have it. The watcher only exists for hot-reload during development, so it is
-# off. Edit a file, restart the app — the price of a quiet log.
+# off. Edit a file, restart the app - the price of a quiet log.
 [server]
 fileWatcherType = "none"
 headless = true

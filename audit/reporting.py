@@ -11,7 +11,7 @@ So the helpers moved here, and `report_view.py` re-exports them. Nothing in this
 module knows what a widget or a route is; it turns a `BatchReport` into rows and
 a token count into dollars, and that is all. The tests in
 `tests/test_report_view.py` still address them through `report_view`, which is
-the point of re-exporting — the move changed a file path, not a contract.
+the point of re-exporting - the move changed a file path, not a contract.
 
 Req: CR-2 (the report as a product surface), CR-8.
 """
@@ -53,7 +53,7 @@ def estimate_calls(n_pairs: int) -> tuple[int, int]:
 
 # Measured, not guessed: the committed v2 eval (audit/eval/results.json,
 # 2026-09-11, gpt-4o-mini) spent 206,483 prompt and 19,590 completion tokens
-# over 68 pairs — about 3,040 + 290 per pair, re-judges included. Rounded up a
+# over 68 pairs - about 3,040 + 290 per pair, re-judges included. Rounded up a
 # little so the budget check errs towards refusing, never towards overspending.
 TYPICAL_PROMPT_TOKENS_PER_PAIR = 3_200
 TYPICAL_COMPLETION_TOKENS_PER_PAIR = 320
@@ -89,9 +89,9 @@ def pair_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ver = r.get("verification") or {}
         out.append({
             "Ticket": r["ticket_id"], "Control": r["control_id"],
-            "Verdict": r.get("verdict") or "—", "Status": r["status"],
-            "Attempts": r.get("attempts", "—"),
-            "Verifier": {True: "agrees", False: "objects", None: "—"}.get(ver.get("agrees"), "—"),
+            "Verdict": r.get("verdict") or "-", "Status": r["status"],
+            "Attempts": r.get("attempts", "-"),
+            "Verifier": {True: "agrees", False: "objects", None: "-"}.get(ver.get("agrees"), "-"),
             "Citations": len(r.get("citations") or []),
         })
     return out
