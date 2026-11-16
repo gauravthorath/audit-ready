@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+Sitemap: https://auditready-nine.vercel.app/
