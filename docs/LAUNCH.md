@@ -8,9 +8,9 @@ YouTube lives locally in `marketing/POSTS.md` (gitignored); numbers come from
 
 - [x] Apache-2.0 `LICENSE` + `NOTICE`
 - [x] README licence + contributing / security docs
-- [ ] Repo public, topics set, homepage → landing page
-- [ ] Pin `audit-ready` on the GitHub profile
-- [ ] Redeploy `marketing/site/` so the CTA points at GitHub
+- [x] Repo public, topics set, homepage → https://auditready-nine.vercel.app
+- [ ] Pin `audit-ready` on the GitHub profile (GitHub has no public pin API — drag it to the top of https://github.com/gauravthorath pinned repos in the UI)
+- [x] Redeploy `marketing/site/` so the CTA points at GitHub
 - [ ] Link the repo from LinkedIn / CV as open source (Apache-2.0)
 
 ## Week 1 — posts (every 3–4 days)
