@@ -298,13 +298,16 @@ Deliberately out of scope for this build, and why:
 - **ISO 20000 / CMMI packs.** Two standards already prove the config-as-data
   claim; a third is a YAML file and a domain expert's afternoon.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Security issues: [SECURITY.md](SECURITY.md).
+
 ## Licence
 
-Proprietary. Copyright 2026 Gaurav Thorat, all rights reserved — see
-[`LICENSE`](LICENSE). Anyone given access by the author may read and run this
-repository to evaluate it. Nothing here grants a right to redistribute, reuse
-or host the work.
+Licensed under the [Apache License, Version 2.0](LICENSE). Copyright 2026
+Gaurav Thorat.
 
-`NOTICE` records what the copyright does *not* cover: the checklist packs are
-own-worded paraphrases of clause intent written for this project, not the text
-of ISO 9001 or ISO 27001, and the corpus is synthetic.
+[`NOTICE`](NOTICE) records what the copyright does *not* cover: the checklist
+packs are own-worded paraphrases of clause intent written for this project, not
+the text of ISO 9001 or ISO 27001, and the corpus is synthetic. AuditReady
+drafts findings for a human to verify and sign — it does not certify compliance.

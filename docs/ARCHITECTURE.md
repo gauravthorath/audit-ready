@@ -132,25 +132,15 @@ Compliance data is sensitive, so the model companies accept is **self-hosted / i
 
 ## 10. Licensing
 
-**Proprietary, all rights reserved** (see `LICENSE`). The repository is private and
-access is granted for evaluation only — a reader given access by the author
-assessment, and anyone else the copyright holder chooses to show it to. No right to
-redistribute, reuse or host is granted to anyone.
+**Apache License 2.0** (see `LICENSE` and `NOTICE`). The repository is public so
+employers, reviewers and contributors can read and run the full stack — engine,
+agents, connectors, eval harness and self-hosted deployment — without requesting
+access.
 
-Why not open source: the reasoning layer, the rubric design and the evaluation
-harness are the parts that took the work and the parts a buyer would pay for.
-Publishing them under a permissive licence would hand over exactly that, permanently
-and irrevocably, in exchange for portfolio visibility that a private demo and a
-written walkthrough already provide.
-
-A compliance buyer's real question is "does our data leave our network", and the
-answer to that is the self-hosted deployment (§9), not the licence. Auditability for a
-buyer can be granted under review access when it is asked for.
-
-If commercialised later, open-core stays available as an option: a small engine core
-opened deliberately, with the reasoning layer, connectors and hosted management
-kept proprietary. That is a decision to make with a customer in front of you, not
-before one exists.
+A compliance buyer's real question remains "does our data leave our network",
+and the answer to that is the self-hosted deployment (§9), not the licence.
+`NOTICE` records that checklist packs are own-worded paraphrases (not ISO text)
+and that the corpus is synthetic; the product drafts findings and never certifies.
 
 ---
 

@@ -3,7 +3,7 @@ name = "auditready"
 version = "0.1.0"
 description = "AuditReady — a grounded, cited AI assistant for compliance audit-readiness (ISO 9001 first)"
 requires-python = ">=3.12,<3.13"
-license = "LicenseRef-Proprietary"
+license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 dependencies = [
     "chromadb>=1.5.9",

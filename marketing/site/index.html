@@ -1100,7 +1100,7 @@
         <div class="term">
           <div class="term-bar">Self-host with your own model endpoint</div>
 <pre><span class="c"># clone, configure, run</span>
-git clone https://github.com/&lt;your-org&gt;/audit-ready.git
+git clone https://github.com/gauravthorath/audit-ready.git
 cp .env.example .env
 docker compose up
 
@@ -1205,8 +1205,8 @@ uv run python audit/batch.py <span class="g">--pack</span> assistant/data/checkl
             A compliance tool asks for an unusual amount of trust: it reads your internal records and
             tells you what an auditor will find. "Trust our accuracy claims" is not a reasonable thing
             to ask, so none of it is asked here. The evaluation harness, the answer keys, the rubrics
-            and the failures all live in the repository, and every number on this page is reproduced
-            by one command against a frozen key. Ask for access and you can watch it run, change a
+            and the failures all live in the public repository, and every number on this page is
+            reproduced by one command against a frozen key. Clone it, watch it run, change a
             prompt, and see the gate reject the regression.
           </p>
           <p>
@@ -1218,8 +1218,8 @@ uv run python audit/batch.py <span class="g">--pack</span> assistant/data/checkl
         </div>
         <div class="lic-grid">
           <div>
-            <span class="lic-k">Source available for review</span>
-            <p class="lic-v">The engine, the agent, the connector layer, the eval harness and the gate — plus the Docker setup used for the numbers on this page. Read it under review access, not from a public mirror.</p>
+            <span class="lic-k">Open source</span>
+            <p class="lic-v">The engine, the agent, the connector layer, the eval harness and the gate — plus the Docker setup used for the numbers on this page. Apache-2.0 on GitHub; clone and run it yourself.</p>
           </div>
           <div>
             <span class="lic-k">Reproduce the numbers</span>
@@ -1230,20 +1230,21 @@ uv run python audit/batch.py <span class="g">--pack</span> assistant/data/checkl
             <p class="lic-v">A new standard is a YAML file of controls and rubric conditions. Writing one for ISO 20000 or CMMI needs no code change, and your criteria text stays yours.</p>
           </div>
           <div>
-            <span class="lic-k">All rights reserved</span>
-            <p class="lic-v">Proprietary. Access is granted for evaluation, and a deployment runs inside your own network. <code>NOTICE</code> states what the copyright does not cover: the rubrics paraphrase clause intent and are not ISO's text.</p>
+            <span class="lic-k">Apache License 2.0</span>
+            <p class="lic-v">Deploy inside your own network with a BYO LLM endpoint. <code>NOTICE</code> states what the copyright does not cover: the rubrics paraphrase clause intent and are not ISO's text.</p>
           </div>
         </div>
         <div class="cta-row" style="margin-top:32px">
-          <a class="btn btn-solid" href="mailto:gauravjobs25@gmail.com?subject=AuditReady%20%E2%80%94%20access%20request">
-            Request access
+          <a class="btn btn-solid" href="https://github.com/gauravthorath/audit-ready">
+            View on GitHub
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
               <path d="M2 7h9M7.5 3.5L11 7l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
             </svg>
           </a>
           <span class="cta-note">
-            <a href="mailto:gauravjobs25@gmail.com?subject=AuditReady%20%E2%80%94%20access%20request">gauravjobs25@gmail.com</a>
-            &nbsp;·&nbsp; the repository is private; access is granted for evaluation
+            <a href="https://github.com/gauravthorath/audit-ready">github.com/gauravthorath/audit-ready</a>
+            &nbsp;·&nbsp; Apache-2.0 &nbsp;·&nbsp;
+            <a href="mailto:gauravjobs25@gmail.com?subject=AuditReady">gauravjobs25@gmail.com</a>
           </span>
         </div>
       </div>
