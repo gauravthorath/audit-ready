@@ -15,11 +15,14 @@ YouTube lives locally in `marketing/POSTS.md` (gitignored); numbers come from
 
 ## Week 1 — posts (every 3–4 days)
 
-Order matters: lead with honesty about eval numbers so later claims land.
+Drafts are ready in local `marketing/POSTS.md`. Order matters: lead with
+honesty about eval numbers so later claims land.
 
-1. **LinkedIn — the retraction** (eval gate caught a false README claim)
-2. **LinkedIn — the self-grading judge** (same-model LLM-as-judge bias)
-3. Continue from `marketing/POSTS.md` (technical posts with committed numbers)
+1. **LinkedIn — the retraction** (eval gate caught a false README claim) — copy from POSTS.md §LinkedIn 1; attach D1
+2. **LinkedIn — the self-grading judge** (same-model LLM-as-judge bias) — §LinkedIn 2
+3. Continue down `marketing/POSTS.md` (one post every 3–4 days)
+
+After post 1 goes live, tick it here so you do not double-post.
 
 Voice: concrete, past tense, numbers over adjectives. Point each post at the
 public repo: https://github.com/gauravthorath/audit-ready
